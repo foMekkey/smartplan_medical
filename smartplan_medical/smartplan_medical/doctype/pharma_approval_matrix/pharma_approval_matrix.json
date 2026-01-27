@@ -1,0 +1,131 @@
+{
+ "actions": [],
+ "autoname": "field:approval_type",
+ "creation": "2026-01-27 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "approval_type",
+  "description",
+  "column_break_main",
+  "is_active",
+  "auto_approve_below",
+  "levels_section",
+  "approval_levels",
+  "notification_section",
+  "notify_on_request",
+  "notify_on_approval",
+  "notify_on_rejection",
+  "column_break_notify",
+  "escalation_hours",
+  "escalation_role"
+ ],
+ "fields": [
+  {
+   "fieldname": "approval_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "نوع الموافقة",
+   "options": "\nتجاوز حد الخصم\nتجاوز حد الائتمان\nبيع لعميل محجوب\nتحصيل غير مطابق\nصرف عمولة",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "الوصف"
+  },
+  {
+   "fieldname": "column_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "نشط"
+  },
+  {
+   "fieldname": "auto_approve_below",
+   "fieldtype": "Currency",
+   "label": "موافقة تلقائية أقل من"
+  },
+  {
+   "fieldname": "levels_section",
+   "fieldtype": "Section Break",
+   "label": "مستويات الموافقة"
+  },
+  {
+   "fieldname": "approval_levels",
+   "fieldtype": "Table",
+   "label": "مستويات الموافقة",
+   "options": "Pharma Approval Level"
+  },
+  {
+   "fieldname": "notification_section",
+   "fieldtype": "Section Break",
+   "label": "الإشعارات"
+  },
+  {
+   "default": "1",
+   "fieldname": "notify_on_request",
+   "fieldtype": "Check",
+   "label": "إشعار عند الطلب"
+  },
+  {
+   "default": "1",
+   "fieldname": "notify_on_approval",
+   "fieldtype": "Check",
+   "label": "إشعار عند الموافقة"
+  },
+  {
+   "default": "1",
+   "fieldname": "notify_on_rejection",
+   "fieldtype": "Check",
+   "label": "إشعار عند الرفض"
+  },
+  {
+   "fieldname": "column_break_notify",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "24",
+   "fieldname": "escalation_hours",
+   "fieldtype": "Int",
+   "label": "ساعات التصعيد"
+  },
+  {
+   "fieldname": "escalation_role",
+   "fieldtype": "Link",
+   "label": "دور التصعيد",
+   "options": "Role"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-01-27 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Smartplan Medical",
+ "name": "Pharma Approval Matrix",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

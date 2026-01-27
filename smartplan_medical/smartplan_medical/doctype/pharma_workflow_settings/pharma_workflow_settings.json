@@ -1,0 +1,237 @@
+{
+ "actions": [],
+ "creation": "2026-01-27 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "general_section",
+  "enable_workflow",
+  "strict_status_flow",
+  "column_break_general",
+  "prevent_delete_after_submit",
+  "prevent_edit_after_approval",
+  "auto_creation_section",
+  "auto_create_invoice",
+  "auto_create_payment",
+  "auto_create_delivery_note",
+  "column_break_auto",
+  "validate_stock_on_dispatch",
+  "enforce_fefo",
+  "check_batch_expiry",
+  "validation_section",
+  "check_credit_limit",
+  "check_customer_status",
+  "check_customer_blocked",
+  "column_break_validation",
+  "max_discount_percent",
+  "batch_expiry_warning_days",
+  "min_batch_expiry_days",
+  "integration_section",
+  "log_all_processes",
+  "retry_failed_on_schedule",
+  "column_break_integration",
+  "max_retry_attempts",
+  "retry_interval_minutes"
+ ],
+ "fields": [
+  {
+   "fieldname": "general_section",
+   "fieldtype": "Section Break",
+   "label": "الإعدادات العامة"
+  },
+  {
+   "default": "1",
+   "fieldname": "enable_workflow",
+   "fieldtype": "Check",
+   "label": "تفعيل سير العمل"
+  },
+  {
+   "default": "1",
+   "description": "التحقق من تسلسل الحالات: Draft → Submitted → Approved → Completed → Locked",
+   "fieldname": "strict_status_flow",
+   "fieldtype": "Check",
+   "label": "انضباط صارم للحالات"
+  },
+  {
+   "fieldname": "column_break_general",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "description": "منع حذف المستندات بعد الإرسال",
+   "fieldname": "prevent_delete_after_submit",
+   "fieldtype": "Check",
+   "label": "منع الحذف بعد الإرسال"
+  },
+  {
+   "default": "1",
+   "description": "منع تعديل المستندات بعد الاعتماد",
+   "fieldname": "prevent_edit_after_approval",
+   "fieldtype": "Check",
+   "label": "منع التعديل بعد الاعتماد"
+  },
+  {
+   "fieldname": "auto_creation_section",
+   "fieldtype": "Section Break",
+   "label": "الإنشاء التلقائي"
+  },
+  {
+   "default": "1",
+   "description": "إنشاء فاتورة مبيعات تلقائياً بعد اعتماد إذن الصرف",
+   "fieldname": "auto_create_invoice",
+   "fieldtype": "Check",
+   "label": "إنشاء فاتورة تلقائياً بعد الصرف"
+  },
+  {
+   "default": "1",
+   "description": "إنشاء قيد دفع تلقائياً بعد اعتماد التحصيل",
+   "fieldname": "auto_create_payment",
+   "fieldtype": "Check",
+   "label": "إنشاء قيد دفع تلقائياً بعد التحصيل"
+  },
+  {
+   "default": "0",
+   "description": "إنشاء إذن تسليم تلقائياً",
+   "fieldname": "auto_create_delivery_note",
+   "fieldtype": "Check",
+   "label": "إنشاء إذن تسليم تلقائياً"
+  },
+  {
+   "fieldname": "column_break_auto",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "description": "التحقق من توفر المخزون قبل الصرف",
+   "fieldname": "validate_stock_on_dispatch",
+   "fieldtype": "Check",
+   "label": "التحقق من المخزون عند الصرف"
+  },
+  {
+   "default": "1",
+   "description": "First Expiry First Out - صرف الأقرب انتهاءً أولاً",
+   "fieldname": "enforce_fefo",
+   "fieldtype": "Check",
+   "label": "إلزام FEFO"
+  },
+  {
+   "default": "1",
+   "description": "التحقق من صلاحية التشغيلات قبل الصرف",
+   "fieldname": "check_batch_expiry",
+   "fieldtype": "Check",
+   "label": "التحقق من صلاحية التشغيلات"
+  },
+  {
+   "fieldname": "validation_section",
+   "fieldtype": "Section Break",
+   "label": "إعدادات التحقق"
+  },
+  {
+   "default": "1",
+   "description": "التحقق من حد الائتمان قبل البيع",
+   "fieldname": "check_credit_limit",
+   "fieldtype": "Check",
+   "label": "التحقق من حد الائتمان"
+  },
+  {
+   "default": "1",
+   "description": "التحقق من حالة العميل قبل البيع",
+   "fieldname": "check_customer_status",
+   "fieldtype": "Check",
+   "label": "التحقق من حالة العميل"
+  },
+  {
+   "default": "1",
+   "description": "منع البيع للعملاء المحجوبين بدون موافقة",
+   "fieldname": "check_customer_blocked",
+   "fieldtype": "Check",
+   "label": "التحقق من حجب العميل"
+  },
+  {
+   "fieldname": "column_break_validation",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "10",
+   "description": "أقصى نسبة خصم مسموحة بدون موافقة",
+   "fieldname": "max_discount_percent",
+   "fieldtype": "Percent",
+   "label": "أقصى نسبة خصم بدون موافقة"
+  },
+  {
+   "default": "90",
+   "description": "عدد الأيام لتحذير قرب انتهاء الصلاحية",
+   "fieldname": "batch_expiry_warning_days",
+   "fieldtype": "Int",
+   "label": "أيام تحذير انتهاء الصلاحية"
+  },
+  {
+   "default": "30",
+   "description": "الحد الأدنى من الأيام المتبقية للصلاحية للصرف",
+   "fieldname": "min_batch_expiry_days",
+   "fieldtype": "Int",
+   "label": "الحد الأدنى لأيام الصلاحية"
+  },
+  {
+   "fieldname": "integration_section",
+   "fieldtype": "Section Break",
+   "label": "إعدادات التكامل"
+  },
+  {
+   "default": "1",
+   "description": "تسجيل جميع العمليات في سجل العمليات",
+   "fieldname": "log_all_processes",
+   "fieldtype": "Check",
+   "label": "تسجيل جميع العمليات"
+  },
+  {
+   "default": "1",
+   "description": "إعادة محاولة العمليات الفاشلة تلقائياً",
+   "fieldname": "retry_failed_on_schedule",
+   "fieldtype": "Check",
+   "label": "إعادة المحاولة التلقائية"
+  },
+  {
+   "fieldname": "column_break_integration",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "3",
+   "description": "الحد الأقصى لعدد محاولات إعادة المعالجة",
+   "fieldname": "max_retry_attempts",
+   "fieldtype": "Int",
+   "label": "الحد الأقصى للمحاولات"
+  },
+  {
+   "default": "30",
+   "description": "الفترة بين محاولات إعادة المعالجة بالدقائق",
+   "fieldname": "retry_interval_minutes",
+   "fieldtype": "Int",
+   "label": "فترة إعادة المحاولة (دقائق)"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-01-27 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Smartplan Medical",
+ "name": "Pharma Workflow Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

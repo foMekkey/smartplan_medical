@@ -1,0 +1,373 @@
+{
+ "actions": [],
+ "creation": "2026-01-27 10:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "company_info_section",
+  "company_name",
+  "company_tax_id",
+  "company_address",
+  "column_break_1",
+  "company_phone",
+  "company_email",
+  "warehouse_settings_section",
+  "default_warehouse",
+  "low_stock_alert_threshold",
+  "expiry_alert_days_before",
+  "column_break_2",
+  "enable_batch_tracking",
+  "enable_expiry_tracking",
+  "discount_settings_section",
+  "default_item_discount",
+  "default_invoice_discount",
+  "max_discount_allowed",
+  "column_break_3",
+  "enable_special_discount",
+  "expiry_discount_policy",
+  "pricing_settings_section",
+  "default_price_list",
+  "auto_update_prices",
+  "column_break_4",
+  "profit_margin_percentage",
+  "payment_settings_section",
+  "default_payment_terms",
+  "cash_collection_policy",
+  "column_break_5",
+  "enable_credit_limit",
+  "default_credit_days",
+  "notification_settings_section",
+  "enable_low_stock_alerts",
+  "enable_expiry_alerts",
+  "enable_payment_alerts",
+  "column_break_6",
+  "alert_email_recipients",
+  "user_permissions_section",
+  "restrict_warehouse_access",
+  "restrict_customer_access",
+  "column_break_7",
+  "enable_audit_trail",
+  "tele_sales_settings_section",
+  "default_commission_rate",
+  "commission_calculation_basis",
+  "column_break_8",
+  "enable_customer_assignment",
+  "delivery_settings_section",
+  "enable_route_tracking",
+  "enable_vehicle_tracking",
+  "column_break_9",
+  "require_delivery_signature"
+ ],
+ "fields": [
+  {
+   "fieldname": "company_info_section",
+   "fieldtype": "Section Break",
+   "label": "\u0645\u0639\u0644\u0648\u0645\u0627\u062a \u0627\u0644\u0634\u0631\u0643\u0629"
+  },
+  {
+   "fieldname": "company_name",
+   "fieldtype": "Data",
+   "label": "\u0627\u0633\u0645 \u0627\u0644\u0634\u0631\u0643\u0629"
+  },
+  {
+   "fieldname": "company_tax_id",
+   "fieldtype": "Data",
+   "label": "\u0627\u0644\u0631\u0642\u0645 \u0627\u0644\u0636\u0631\u064a\u0628\u064a"
+  },
+  {
+   "fieldname": "company_address",
+   "fieldtype": "Small Text",
+   "label": "\u0639\u0646\u0648\u0627\u0646 \u0627\u0644\u0634\u0631\u0643\u0629"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "company_phone",
+   "fieldtype": "Data",
+   "label": "\u0647\u0627\u062a\u0641 \u0627\u0644\u0634\u0631\u0643\u0629",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "company_email",
+   "fieldtype": "Data",
+   "label": "\u0628\u0631\u064a\u062f \u0627\u0644\u0634\u0631\u0643\u0629",
+   "options": "Email"
+  },
+  {
+   "fieldname": "warehouse_settings_section",
+   "fieldtype": "Section Break",
+   "label": "\u0625\u0639\u062f\u0627\u062f\u0627\u062a \u0627\u0644\u0645\u062e\u0627\u0632\u0646"
+  },
+  {
+   "fieldname": "default_warehouse",
+   "fieldtype": "Link",
+   "label": "\u0627\u0644\u0645\u062e\u0632\u0646 \u0627\u0644\u0627\u0641\u062a\u0631\u0627\u0636\u064a",
+   "options": "Pharma Warehouse"
+  },
+  {
+   "default": "100",
+   "fieldname": "low_stock_alert_threshold",
+   "fieldtype": "Float",
+   "label": "\u062d\u062f \u0627\u0644\u062a\u0646\u0628\u064a\u0647 \u0644\u0627\u0646\u062e\u0641\u0627\u0636 \u0627\u0644\u0645\u062e\u0632\u0648\u0646"
+  },
+  {
+   "default": "30",
+   "fieldname": "expiry_alert_days_before",
+   "fieldtype": "Int",
+   "label": "\u0639\u062f\u062f \u0623\u064a\u0627\u0645 \u0627\u0644\u062a\u0646\u0628\u064a\u0647 \u0642\u0628\u0644 \u0627\u0644\u0635\u0644\u0627\u062d\u064a\u0629"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "enable_batch_tracking",
+   "fieldtype": "Check",
+   "label": "\u062a\u0641\u0639\u064a\u0644 \u062a\u062a\u0628\u0639 \u0627\u0644\u062a\u0634\u063a\u064a\u0644\u0629"
+  },
+  {
+   "default": "1",
+   "fieldname": "enable_expiry_tracking",
+   "fieldtype": "Check",
+   "label": "\u062a\u0641\u0639\u064a\u0644 \u062a\u062a\u0628\u0639 \u0627\u0644\u0635\u0644\u0627\u062d\u064a\u0629"
+  },
+  {
+   "fieldname": "discount_settings_section",
+   "fieldtype": "Section Break",
+   "label": "\u0625\u0639\u062f\u0627\u062f\u0627\u062a \u0627\u0644\u062e\u0635\u0648\u0645\u0627\u062a"
+  },
+  {
+   "default": "0",
+   "fieldname": "default_item_discount",
+   "fieldtype": "Percent",
+   "label": "\u062e\u0635\u0645 \u0627\u0641\u062a\u0631\u0627\u0636\u064a \u0639\u0644\u0649 \u0627\u0644\u0635\u0646\u0641"
+  },
+  {
+   "default": "0",
+   "fieldname": "default_invoice_discount",
+   "fieldtype": "Percent",
+   "label": "\u062e\u0635\u0645 \u0627\u0641\u062a\u0631\u0627\u0636\u064a \u0639\u0644\u0649 \u0627\u0644\u0641\u0627\u062a\u0648\u0631\u0629"
+  },
+  {
+   "default": "50",
+   "fieldname": "max_discount_allowed",
+   "fieldtype": "Percent",
+   "label": "\u0623\u0642\u0635\u0649 \u062e\u0635\u0645 \u0645\u0633\u0645\u0648\u062d"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "enable_special_discount",
+   "fieldtype": "Check",
+   "label": "\u062a\u0641\u0639\u064a\u0644 \u0627\u0644\u062e\u0635\u0645 \u0627\u0644\u062e\u0627\u0635"
+  },
+  {
+   "fieldname": "expiry_discount_policy",
+   "fieldtype": "Select",
+   "label": "\u0633\u064a\u0627\u0633\u0629 \u062e\u0635\u0645 \u0642\u0631\u0628 \u0627\u0644\u0635\u0644\u0627\u062d\u064a\u0629",
+   "options": "\u0644\u0627 \u064a\u0648\u062c\u062f\n10% \u0644\u0640 3 \u0634\u0647\u0648\u0631\n20% \u0644\u0640 2 \u0634\u0647\u0631\n30% \u0644\u0640 1 \u0634\u0647\u0631"
+  },
+  {
+   "fieldname": "pricing_settings_section",
+   "fieldtype": "Section Break",
+   "label": "\u0625\u0639\u062f\u0627\u062f\u0627\u062a \u0627\u0644\u062a\u0633\u0639\u064a\u0631"
+  },
+  {
+   "fieldname": "default_price_list",
+   "fieldtype": "Data",
+   "label": "\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0623\u0633\u0639\u0627\u0631 \u0627\u0644\u0627\u0641\u062a\u0631\u0627\u0636\u064a\u0629"
+  },
+  {
+   "default": "0",
+   "fieldname": "auto_update_prices",
+   "fieldtype": "Check",
+   "label": "\u062a\u062d\u062f\u064a\u062b \u0627\u0644\u0623\u0633\u0639\u0627\u0631 \u062a\u0644\u0642\u0627\u0626\u064a\u0627\u064b"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "profit_margin_percentage",
+   "fieldtype": "Percent",
+   "label": "\u0646\u0633\u0628\u0629 \u0647\u0627\u0645\u0634 \u0627\u0644\u0631\u0628\u062d \u0627\u0644\u0627\u0641\u062a\u0631\u0627\u0636\u064a\u0629"
+  },
+  {
+   "fieldname": "payment_settings_section",
+   "fieldtype": "Section Break",
+   "label": "\u0625\u0639\u062f\u0627\u062f\u0627\u062a \u0627\u0644\u062f\u0641\u0639 \u0648\u0627\u0644\u062a\u062d\u0635\u064a\u0644"
+  },
+  {
+   "fieldname": "default_payment_terms",
+   "fieldtype": "Select",
+   "label": "\u0634\u0631\u0648\u0637 \u0627\u0644\u062f\u0641\u0639 \u0627\u0644\u0627\u0641\u062a\u0631\u0627\u0636\u064a\u0629",
+   "options": "\u0646\u0642\u062f\u064a\n\u0622\u062c\u0644 30 \u064a\u0648\u0645\n\u0622\u062c\u0644 60 \u064a\u0648\u0645\n\u0622\u062c\u0644 90 \u064a\u0648\u0645"
+  },
+  {
+   "fieldname": "cash_collection_policy",
+   "fieldtype": "Small Text",
+   "label": "\u0633\u064a\u0627\u0633\u0629 \u0627\u0644\u062a\u062d\u0635\u064a\u0644 \u0627\u0644\u0646\u0642\u062f\u064a"
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "enable_credit_limit",
+   "fieldtype": "Check",
+   "label": "\u062a\u0641\u0639\u064a\u0644 \u062d\u062f \u0627\u0644\u0627\u0626\u062a\u0645\u0627\u0646"
+  },
+  {
+   "default": "30",
+   "fieldname": "default_credit_days",
+   "fieldtype": "Int",
+   "label": "\u0639\u062f\u062f \u0623\u064a\u0627\u0645 \u0627\u0644\u0627\u0626\u062a\u0645\u0627\u0646 \u0627\u0644\u0627\u0641\u062a\u0631\u0627\u0636\u064a"
+  },
+  {
+   "fieldname": "notification_settings_section",
+   "fieldtype": "Section Break",
+   "label": "\u0625\u0639\u062f\u0627\u062f\u0627\u062a \u0627\u0644\u062a\u0646\u0628\u064a\u0647\u0627\u062a"
+  },
+  {
+   "default": "1",
+   "fieldname": "enable_low_stock_alerts",
+   "fieldtype": "Check",
+   "label": "\u062a\u0641\u0639\u064a\u0644 \u062a\u0646\u0628\u064a\u0647\u0627\u062a \u0627\u0646\u062e\u0641\u0627\u0636 \u0627\u0644\u0645\u062e\u0632\u0648\u0646"
+  },
+  {
+   "default": "1",
+   "fieldname": "enable_expiry_alerts",
+   "fieldtype": "Check",
+   "label": "\u062a\u0641\u0639\u064a\u0644 \u062a\u0646\u0628\u064a\u0647\u0627\u062a \u0627\u0644\u0635\u0644\u0627\u062d\u064a\u0629"
+  },
+  {
+   "default": "1",
+   "fieldname": "enable_payment_alerts",
+   "fieldtype": "Check",
+   "label": "\u062a\u0641\u0639\u064a\u0644 \u062a\u0646\u0628\u064a\u0647\u0627\u062a \u0627\u0644\u062f\u0641\u0639"
+  },
+  {
+   "fieldname": "column_break_6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "alert_email_recipients",
+   "fieldtype": "Small Text",
+   "label": "\u0645\u0633\u062a\u0644\u0645\u064a \u0627\u0644\u062a\u0646\u0628\u064a\u0647\u0627\u062a \u0628\u0627\u0644\u0628\u0631\u064a\u062f"
+  },
+  {
+   "fieldname": "user_permissions_section",
+   "fieldtype": "Section Break",
+   "label": "\u0635\u0644\u0627\u062d\u064a\u0627\u062a \u0627\u0644\u0645\u0633\u062a\u062e\u062f\u0645\u064a\u0646"
+  },
+  {
+   "default": "0",
+   "fieldname": "restrict_warehouse_access",
+   "fieldtype": "Check",
+   "label": "\u062a\u0642\u064a\u064a\u062f \u0627\u0644\u0648\u0635\u0648\u0644 \u0644\u0644\u0645\u062e\u0627\u0632\u0646"
+  },
+  {
+   "default": "0",
+   "fieldname": "restrict_customer_access",
+   "fieldtype": "Check",
+   "label": "\u062a\u0642\u064a\u064a\u062f \u0627\u0644\u0648\u0635\u0648\u0644 \u0644\u0644\u0639\u0645\u0644\u0627\u0621"
+  },
+  {
+   "fieldname": "column_break_7",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "enable_audit_trail",
+   "fieldtype": "Check",
+   "label": "\u062a\u0641\u0639\u064a\u0644 \u0633\u062c\u0644 \u0627\u0644\u062a\u062f\u0642\u064a\u0642"
+  },
+  {
+   "fieldname": "tele_sales_settings_section",
+   "fieldtype": "Section Break",
+   "label": "\u0625\u0639\u062f\u0627\u062f\u0627\u062a \u0627\u0644\u0645\u0628\u064a\u0639\u0627\u062a \u0627\u0644\u0647\u0627\u062a\u0641\u064a\u0629"
+  },
+  {
+   "default": "0",
+   "fieldname": "default_commission_rate",
+   "fieldtype": "Currency",
+   "label": "\u0645\u0639\u062f\u0644 \u0627\u0644\u0639\u0645\u0648\u0644\u0629 \u0627\u0644\u0627\u0641\u062a\u0631\u0627\u0636\u064a"
+  },
+  {
+   "fieldname": "commission_calculation_basis",
+   "fieldtype": "Select",
+   "label": "\u0623\u0633\u0627\u0633 \u062d\u0633\u0627\u0628 \u0627\u0644\u0639\u0645\u0648\u0644\u0629",
+   "options": "\u0644\u0643\u0644 \u0645\u0644\u064a\u0648\u0646 \u062c\u0646\u064a\u0647\n\u0646\u0633\u0628\u0629 \u0645\u0626\u0648\u064a\u0629 \u0645\u0646 \u0627\u0644\u0645\u0628\u064a\u0639\u0627\u062a\n\u062b\u0627\u0628\u062a\u0629 \u0634\u0647\u0631\u064a\u0627\u064b"
+  },
+  {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "enable_customer_assignment",
+   "fieldtype": "Check",
+   "label": "\u062a\u0641\u0639\u064a\u0644 \u0625\u0633\u0646\u0627\u062f \u0627\u0644\u0639\u0645\u0644\u0627\u0621"
+  },
+  {
+   "fieldname": "delivery_settings_section",
+   "fieldtype": "Section Break",
+   "label": "\u0625\u0639\u062f\u0627\u062f\u0627\u062a \u0627\u0644\u062a\u0648\u0635\u064a\u0644"
+  },
+  {
+   "default": "1",
+   "fieldname": "enable_route_tracking",
+   "fieldtype": "Check",
+   "label": "\u062a\u0641\u0639\u064a\u0644 \u062a\u062a\u0628\u0639 \u062e\u0637\u0648\u0637 \u0627\u0644\u0633\u064a\u0631"
+  },
+  {
+   "default": "1",
+   "fieldname": "enable_vehicle_tracking",
+   "fieldtype": "Check",
+   "label": "\u062a\u0641\u0639\u064a\u0644 \u062a\u062a\u0628\u0639 \u0627\u0644\u0633\u064a\u0627\u0631\u0627\u062a"
+  },
+  {
+   "fieldname": "column_break_9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "require_delivery_signature",
+   "fieldtype": "Check",
+   "label": "\u064a\u062a\u0637\u0644\u0628 \u062a\u0648\u0642\u064a\u0639 \u0639\u0646\u062f \u0627\u0644\u0627\u0633\u062a\u0644\u0627\u0645"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-01-27 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Smartplan Medical",
+ "name": "Pharma General Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

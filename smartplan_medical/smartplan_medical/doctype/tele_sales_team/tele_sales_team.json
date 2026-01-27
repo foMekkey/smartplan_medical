@@ -1,0 +1,150 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:employee_name",
+ "creation": "2026-01-27 10:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "employee_name",
+  "email",
+  "phone",
+  "mobile",
+  "column_break_1",
+  "basic_salary",
+  "commission_per_million",
+  "section_break_target",
+  "monthly_target",
+  "target_from_date",
+  "target_to_date",
+  "section_break_2",
+  "assigned_customers",
+  "section_break_3",
+  "is_active"
+ ],
+ "fields": [
+  {
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "\u0627\u0633\u0645 \u0627\u0644\u0645\u0648\u0638\u0641",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "\u0627\u0644\u0628\u0631\u064a\u062f \u0627\u0644\u0625\u0644\u0643\u062a\u0631\u0648\u0646\u064a",
+   "options": "Email"
+  },
+  {
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "label": "\u0631\u0642\u0645 \u0627\u0644\u0647\u0627\u062a\u0641",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "mobile",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "\u0631\u0642\u0645 \u0627\u0644\u062c\u0648\u0627\u0644",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "basic_salary",
+   "fieldtype": "Currency",
+   "label": "\u0627\u0644\u0631\u0627\u062a\u0628 \u0627\u0644\u0623\u0633\u0627\u0633\u064a",
+   "reqd": 1
+  },
+  {
+   "fieldname": "commission_per_million",
+   "fieldtype": "Currency",
+   "label": "\u0627\u0644\u0639\u0645\u0648\u0644\u0629 \u0644\u0643\u0644 \u0645\u0644\u064a\u0648\u0646 \u062c\u0646\u064a\u0647",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_target",
+   "fieldtype": "Section Break",
+   "label": "\u0627\u0644\u0645\u0633\u062a\u0647\u062f\u0641 \u0627\u0644\u0634\u0647\u0631\u064a"
+  },
+  {
+   "fieldname": "monthly_target",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "\u0627\u0644\u0645\u0633\u062a\u0647\u062f\u0641 \u0627\u0644\u0634\u0647\u0631\u064a"
+  },
+  {
+   "fieldname": "target_from_date",
+   "fieldtype": "Date",
+   "label": "\u0645\u0646 \u062a\u0627\u0631\u064a\u062e"
+  },
+  {
+   "fieldname": "target_to_date",
+   "fieldtype": "Date",
+   "label": "\u0625\u0644\u0649 \u062a\u0627\u0631\u064a\u062e"
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break",
+   "label": "\u0627\u0644\u0639\u0645\u0644\u0627\u0621 \u0627\u0644\u0645\u0633\u0646\u062f\u064a\u0646"
+  },
+  {
+   "fieldname": "assigned_customers",
+   "fieldtype": "Table",
+   "label": "\u0627\u0644\u0639\u0645\u0644\u0627\u0621",
+   "options": "Tele Sales Assigned Customer"
+  },
+  {
+   "fieldname": "section_break_3",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "label": "\u0646\u0634\u0637"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-01-27 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Smartplan Medical",
+ "name": "Tele Sales Team",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "employee_name",
+ "track_changes": 1
+}

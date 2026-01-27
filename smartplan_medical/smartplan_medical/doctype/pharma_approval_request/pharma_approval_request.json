@@ -1,0 +1,305 @@
+{
+ "actions": [],
+ "autoname": "APR-.YYYY.-.#####",
+ "creation": "2026-01-27 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "request_section",
+  "approval_type",
+  "priority",
+  "column_break_request",
+  "request_date",
+  "requested_by",
+  "document_section",
+  "reference_doctype",
+  "reference_docname",
+  "column_break_doc",
+  "customer",
+  "amount",
+  "details_section",
+  "current_value",
+  "limit_value",
+  "exceeded_value",
+  "column_break_details",
+  "reason",
+  "justification",
+  "approval_section",
+  "workflow_state",
+  "approved_by",
+  "column_break_approval",
+  "approval_date",
+  "approval_remarks",
+  "audit_section",
+  "audit_log",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "request_section",
+   "fieldtype": "Section Break",
+   "label": "بيانات طلب الموافقة"
+  },
+  {
+   "fieldname": "approval_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "نوع الموافقة",
+   "options": "\nتجاوز حد الخصم\nتجاوز حد الائتمان\nبيع لعميل محجوب\nتحصيل غير مطابق\nصرف عمولة",
+   "reqd": 1
+  },
+  {
+   "default": "متوسط",
+   "fieldname": "priority",
+   "fieldtype": "Select",
+   "label": "الأولوية",
+   "options": "منخفض\nمتوسط\nعالي\nعاجل"
+  },
+  {
+   "fieldname": "column_break_request",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "request_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "تاريخ الطلب",
+   "reqd": 1
+  },
+  {
+   "fieldname": "requested_by",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "مقدم الطلب",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "document_section",
+   "fieldtype": "Section Break",
+   "label": "المستند المرتبط"
+  },
+  {
+   "fieldname": "reference_doctype",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "نوع المستند",
+   "options": "\nTele Sales Order\nWarehouse Dispatch\nDelivery Collection\nCommission Calculation",
+   "reqd": 1
+  },
+  {
+   "fieldname": "reference_docname",
+   "fieldtype": "Dynamic Link",
+   "label": "رقم المستند",
+   "options": "reference_doctype",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_doc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "العميل",
+   "options": "Pharma Customer"
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "label": "المبلغ"
+  },
+  {
+   "fieldname": "details_section",
+   "fieldtype": "Section Break",
+   "label": "تفاصيل التجاوز"
+  },
+  {
+   "fieldname": "current_value",
+   "fieldtype": "Currency",
+   "label": "القيمة الحالية"
+  },
+  {
+   "fieldname": "limit_value",
+   "fieldtype": "Currency",
+   "label": "الحد المسموح"
+  },
+  {
+   "fieldname": "exceeded_value",
+   "fieldtype": "Currency",
+   "label": "قيمة التجاوز",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_details",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Small Text",
+   "label": "سبب الطلب",
+   "reqd": 1
+  },
+  {
+   "fieldname": "justification",
+   "fieldtype": "Text Editor",
+   "label": "المبررات"
+  },
+  {
+   "fieldname": "approval_section",
+   "fieldtype": "Section Break",
+   "label": "قرار الموافقة"
+  },
+  {
+   "default": "مسودة",
+   "fieldname": "workflow_state",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "حالة الطلب",
+   "options": "مسودة\nمُرسل\nقيد المراجعة\nمُعتمد\nمرفوض\nمُغلق",
+   "read_only": 1
+  },
+  {
+   "fieldname": "approved_by",
+   "fieldtype": "Link",
+   "label": "تمت الموافقة بواسطة",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_approval",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "approval_date",
+   "fieldtype": "Datetime",
+   "label": "تاريخ القرار",
+   "read_only": 1
+  },
+  {
+   "fieldname": "approval_remarks",
+   "fieldtype": "Small Text",
+   "label": "ملاحظات الموافقة"
+  },
+  {
+   "fieldname": "audit_section",
+   "fieldtype": "Section Break",
+   "label": "سجل التدقيق"
+  },
+  {
+   "fieldname": "audit_log",
+   "fieldtype": "Table",
+   "label": "سجل التدقيق",
+   "options": "Pharma Audit Log Entry"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Pharma Approval Request",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-01-27 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Smartplan Medical",
+ "name": "Pharma Approval Request",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Stock Manager",
+   "share": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales User",
+   "share": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [
+  {
+   "color": "Red",
+   "title": "مسودة"
+  },
+  {
+   "color": "Blue",
+   "title": "مُرسل"
+  },
+  {
+   "color": "Orange",
+   "title": "قيد المراجعة"
+  },
+  {
+   "color": "Green",
+   "title": "مُعتمد"
+  },
+  {
+   "color": "Red",
+   "title": "مرفوض"
+  },
+  {
+   "color": "Gray",
+   "title": "مُغلق"
+  }
+ ],
+ "track_changes": 1
+}

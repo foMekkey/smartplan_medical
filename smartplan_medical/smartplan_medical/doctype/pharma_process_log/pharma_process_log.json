@@ -1,0 +1,210 @@
+{
+ "actions": [],
+ "autoname": "PL-.YYYY.-.#####",
+ "creation": "2026-01-27 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "source_section",
+  "source_doctype",
+  "source_docname",
+  "column_break_source",
+  "target_doctype",
+  "target_docname",
+  "status_section",
+  "status",
+  "retry_count",
+  "can_retry",
+  "column_break_status",
+  "process_date",
+  "processed_by",
+  "last_retry_date",
+  "error_section",
+  "error_message",
+  "error_traceback",
+  "audit_section",
+  "audit_log",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "source_section",
+   "fieldtype": "Section Break",
+   "label": "بيانات المستند المصدر"
+  },
+  {
+   "fieldname": "source_doctype",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "نوع المستند المصدر",
+   "options": "\nTele Sales Order\nWarehouse Dispatch\nDelivery Collection\nCommission Calculation",
+   "reqd": 1
+  },
+  {
+   "fieldname": "source_docname",
+   "fieldtype": "Dynamic Link",
+   "in_list_view": 1,
+   "label": "اسم المستند المصدر",
+   "options": "source_doctype",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_source",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "target_doctype",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "نوع المستند الناتج",
+   "options": "\nSales Invoice\nDelivery Note\nPayment Entry\nJournal Entry"
+  },
+  {
+   "fieldname": "target_docname",
+   "fieldtype": "Dynamic Link",
+   "label": "المستند الناتج في ERPNext",
+   "options": "target_doctype"
+  },
+  {
+   "fieldname": "status_section",
+   "fieldtype": "Section Break",
+   "label": "حالة العملية"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "الحالة",
+   "options": "Pending\nProcessing\nSuccess\nFailed\nRetry",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "retry_count",
+   "fieldtype": "Int",
+   "label": "عدد المحاولات"
+  },
+  {
+   "default": "1",
+   "fieldname": "can_retry",
+   "fieldtype": "Check",
+   "label": "قابل لإعادة المحاولة"
+  },
+  {
+   "fieldname": "column_break_status",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "process_date",
+   "fieldtype": "Datetime",
+   "label": "تاريخ المعالجة"
+  },
+  {
+   "fieldname": "processed_by",
+   "fieldtype": "Link",
+   "label": "تمت المعالجة بواسطة",
+   "options": "User"
+  },
+  {
+   "fieldname": "last_retry_date",
+   "fieldtype": "Datetime",
+   "label": "تاريخ آخر محاولة"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "error_section",
+   "fieldtype": "Section Break",
+   "label": "تفاصيل الخطأ"
+  },
+  {
+   "fieldname": "error_message",
+   "fieldtype": "Small Text",
+   "label": "رسالة الخطأ"
+  },
+  {
+   "fieldname": "error_traceback",
+   "fieldtype": "Code",
+   "label": "تفاصيل الخطأ التقني"
+  },
+  {
+   "fieldname": "audit_section",
+   "fieldtype": "Section Break",
+   "label": "سجل التدقيق"
+  },
+  {
+   "fieldname": "audit_log",
+   "fieldtype": "Table",
+   "label": "سجل التدقيق",
+   "options": "Pharma Audit Log Entry"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Pharma Process Log",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-01-27 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Smartplan Medical",
+ "name": "Pharma Process Log",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Stock Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager",
+   "share": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
