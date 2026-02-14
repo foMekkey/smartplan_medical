@@ -1,18 +1,32 @@
 """
 Sales Order Server Events
-Handles stock reservation, over-reservation validation, and discount logic.
-Migrated from database Server Scripts to app code.
+Handles stock reservation, over-reservation validation, discount logic,
+and auto-creation of Sales Invoice / Delivery Note on submit.
 """
 import frappe
-from frappe.utils import flt
+from frappe.utils import flt, getdate, today
 
+
+def before_validate(doc, method):
+    """Auto-fill delivery_date with today if not set, so ERPNext validation passes."""
+    if not doc.delivery_date:
+        doc.delivery_date = today()
+    for row in doc.items:
+        if not row.delivery_date:
+            row.delivery_date = doc.delivery_date
 
 def before_save(doc, method):
     """
     Validate that requested qty does not exceed available stock.
-    (Migrated from Server Script: 'over reservation')
+    Block items with zero stock completely.
     """
+    if doc.docstatus == 2:
+        return  # Skip on cancel
+
     for row in doc.items:
+        # Set price before discount (read-only display field)
+        row.custom_price_before_discount = flt(row.price_list_rate)
+
         if not row.item_code:
             continue
 
@@ -20,8 +34,8 @@ def before_save(doc, method):
         if not warehouse:
             continue
 
-        # Get actual stock qty
-        actual = frappe.get_all(
+        # Get actual stock qty from Bin
+        bin_data = frappe.get_all(
             "Bin",
             filters={
                 "item_code": row.item_code,
@@ -30,9 +44,9 @@ def before_save(doc, method):
             fields=["actual_qty"],
         )
 
-        actual_qty = actual[0].actual_qty if actual else 0
+        actual_qty = bin_data[0].actual_qty if bin_data else 0
 
-        # Get reservations from other orders
+        # Get reservations from OTHER orders (exclude current order)
         reserved = frappe.db.sql(
             """
             SELECT IFNULL(SUM(qty), 0)
@@ -44,9 +58,21 @@ def before_save(doc, method):
             (row.item_code, warehouse, doc.name),
         )[0][0]
 
-        available = actual_qty - reserved
+        available = flt(actual_qty) - flt(reserved)
 
+        # Block if no stock at all
+        if actual_qty <= 0:
+            frappe.throw(
+                f"""<b>⛔ لا يوجد رصيد للصنف في المخزن</b><br><br>
+<b>الصنف:</b> {row.item_code}<br>
+<b>المخزن:</b> {warehouse}<br>
+<b>الرصيد الحالي:</b> {actual_qty}<br><br>
+يرجى اختيار صنف آخر أو تغيير المخزن."""
+            )
+
+        # Block if requested qty exceeds available
         if row.qty > available:
+            # Show who has reservations
             reservations = frappe.db.sql(
                 """
                 SELECT sales_order, sales_person, qty
@@ -61,7 +87,7 @@ def before_save(doc, method):
             for r in reservations:
                 details += f"<br>طلب: {r.sales_order} | مندوب: {r.sales_person} | كمية: {r.qty}"
 
-            frappe.msgprint(
+            frappe.throw(
                 f"""<b>لا يمكن حجز كمية أكبر من المتاح</b><br><br>
 <b>الصنف:</b> {row.item_code}<br>
 <b>المخزن:</b> {warehouse}<br><br>
@@ -72,15 +98,24 @@ def before_save(doc, method):
 <b>الحجوزات الحالية:</b>
 {details}"""
             )
-            frappe.throw("لا يمكن حجز كمية أكبر من المتاح")
 
+    # Calculate total before discount
+    total_before = sum(
+        flt(row.price_list_rate) * flt(row.qty)
+        for row in doc.items
+        if row.item_code
+    )
+    doc.custom_total_before_discount = total_before
 
 def after_save(doc, method):
     """
     Create stock reservations for each item in the Sales Order.
+    Only for draft orders (docstatus=0).
     Deletes old reservations first, then re-creates them.
-    (Migrated from Server Script: 'Stock Reservation')
     """
+    if doc.docstatus != 0:
+        return  # Only create reservations for drafts
+
     # Delete old reservations for this order
     old = frappe.get_all(
         "Stock Reservation",
@@ -104,25 +139,32 @@ def after_save(doc, method):
         reservation.insert(ignore_permissions=True)
 
 
+def on_submit(doc, method):
+    """
+    On Sales Order submit:
+    1. Delete stock reservations (stock is now committed via SO)
+    2. Create Delivery Note (draft) FIRST
+    3. Create Sales Invoice (submitted)
+    """
+    frappe.logger().info(f"on_submit fired for Sales Order: {doc.name}")
+
+    # Delete stock reservations — stock is now committed
+    _delete_reservations(doc.name)
+
+    # Create Delivery Note (draft) FIRST — before billing
+    _create_delivery_note(doc)
+
+    # Create Sales Invoice (submitted)
+    _create_sales_invoice(doc)
+
+
 def after_cancel(doc, method):
-    """
-    Delete stock reservations when the Sales Order is cancelled.
-    (Migrated from Server Script: 'Stock Reservation_cancelled')
-    """
-    reservations = frappe.get_all(
-        "Stock Reservation",
-        filters={"sales_order": doc.name},
-        pluck="name",
-    )
-    for r in reservations:
-        frappe.delete_doc("Stock Reservation", r, ignore_permissions=True)
+    """Delete stock reservations when the Sales Order is cancelled."""
+    _delete_reservations(doc.name)
 
 
 def before_insert(doc, method):
-    """
-    Apply discount from custom_discount_ field to item rates.
-    (Migrated from Server Script: 'discount' - was disabled)
-    """
+    """Apply discount from custom_discount_ field to item rates."""
     for item in doc.items:
         if item.get("custom_discount_") and item.get("price_list_rate"):
             discount = flt(item.custom_discount_)
@@ -134,3 +176,62 @@ def before_insert(doc, method):
             item.discount_percentage = discount
             item.rate = new_rate
             item.amount = new_rate * qty
+
+
+# ============================================================
+# Helper functions
+# ============================================================
+
+def _delete_reservations(sales_order_name):
+    """Delete all Stock Reservations linked to a Sales Order."""
+    reservations = frappe.get_all(
+        "Stock Reservation",
+        filters={"sales_order": sales_order_name},
+        pluck="name",
+    )
+    for r in reservations:
+        frappe.delete_doc("Stock Reservation", r, ignore_permissions=True)
+
+
+def _create_sales_invoice(so_doc):
+    """Create and submit a Sales Invoice from the Sales Order."""
+    from erpnext.selling.doctype.sales_order.sales_order import make_sales_invoice
+
+    si = make_sales_invoice(so_doc.name)
+    si.flags.ignore_permissions = True
+    si.flags.ignore_mandatory = True
+    si.set_posting_time = 0
+
+    # Copy custom fields (always copy, even if empty)
+    si.custom_sales_person = so_doc.get("custom_sales_person") or ""
+
+    si.insert(ignore_permissions=True, ignore_mandatory=True)
+    si.submit()
+
+    frappe.msgprint(
+        f'✅ تم إنشاء فاتورة مبيعات: <a href="/app/sales-invoice/{si.name}">{si.name}</a>',
+        alert=True,
+        indicator="green",
+    )
+
+
+def _create_delivery_note(so_doc):
+    """Create a Delivery Note (draft) from the Sales Order."""
+    from erpnext.selling.doctype.sales_order.sales_order import make_delivery_note
+
+    dn = make_delivery_note(so_doc.name)
+    dn.flags.ignore_permissions = True
+    dn.flags.ignore_mandatory = True
+
+    # Copy custom fields (always copy, even if empty)
+    dn.custom_sales_person = so_doc.get("custom_sales_person") or ""
+
+    dn.insert(ignore_permissions=True, ignore_mandatory=True)
+    # NOTE: Delivery Note stays as DRAFT — not submitted
+
+    frappe.msgprint(
+        f'📦 تم إنشاء إذن تسليم (مسودة): <a href="/app/delivery-note/{dn.name}">{dn.name}</a>',
+        alert=True,
+        indicator="blue",
+    )
+

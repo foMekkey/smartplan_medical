@@ -31,7 +31,8 @@ app_license = "MIT"
 
 # include js in doctype views
 doctype_js = {
-    "Sales Order": "public/js/sales_order_custom.js"
+    "Sales Order": "public/js/sales_order_custom.js",
+    "Customer": "public/js/customer_custom.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -59,6 +60,7 @@ doctype_js = {
 
 # before_install = "smartplan_medical.install.before_install"
 # after_install = "smartplan_medical.install.after_install"
+after_migrate = ["smartplan_medical.setup_customizations.after_migrate"]
 
 # Desk Notifications
 # -------------------
@@ -89,15 +91,7 @@ doctype_js = {
 # Document Events
 # ---------------
 # Hook on document methods and events
-
-doc_events = {
-    "Sales Order": {
-        "before_save": "smartplan_medical.sales_order_events.before_save",
-        "after_save": "smartplan_medical.sales_order_events.after_save",
-        "on_cancel": "smartplan_medical.sales_order_events.after_cancel",
-        "before_insert": "smartplan_medical.sales_order_events.before_insert",
-    }
-}
+# (Sales Order events are in the main doc_events dict below)
 
 # Scheduled Tasks
 # ---------------
@@ -109,7 +103,12 @@ scheduler_events = {
     ],
     "hourly": [
         "smartplan_medical.smartplan_medical.tasks.retry_failed_processes"
-    ]
+    ],
+    "cron": {
+        "*/15 * * * *": [
+            "smartplan_medical.auto_cancel_orders.auto_cancel_expired_orders"
+        ]
+    }
 }
 
 # Document Events
@@ -125,6 +124,14 @@ doc_events = {
     },
     "Tele Sales Order": {
         "validate": "smartplan_medical.smartplan_medical.utils.validate_tele_sales_order"
+    },
+    "Sales Order": {
+        "before_validate": "smartplan_medical.sales_order_events.before_validate",
+        "before_save": "smartplan_medical.sales_order_events.before_save",
+        "after_save": "smartplan_medical.sales_order_events.after_save",
+        "on_submit": "smartplan_medical.sales_order_events.on_submit",
+        "on_cancel": "smartplan_medical.sales_order_events.after_cancel",
+        "before_insert": "smartplan_medical.sales_order_events.before_insert",
     }
 }
 

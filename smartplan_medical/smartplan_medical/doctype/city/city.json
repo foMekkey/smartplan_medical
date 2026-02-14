@@ -1,0 +1,77 @@
+{
+    "actions": [],
+    "autoname": "field:city_name",
+    "creation": "2026-02-14 14:00:00.000000",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "city_name",
+        "city_name_en",
+        "governorate"
+    ],
+    "fields": [
+        {
+            "fieldname": "city_name",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "\u0627\u0633\u0645 \u0627\u0644\u0645\u062f\u064a\u0646\u0629/\u0627\u0644\u0645\u0631\u0643\u0632",
+            "reqd": 1,
+            "unique": 1
+        },
+        {
+            "fieldname": "city_name_en",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "City Name (EN)"
+        },
+        {
+            "fieldname": "governorate",
+            "fieldtype": "Link",
+            "in_list_view": 1,
+            "label": "\u0627\u0644\u0645\u062d\u0627\u0641\u0638\u0629",
+            "options": "Governorate",
+            "reqd": 1
+        }
+    ],
+    "links": [],
+    "modified": "2026-02-14 14:00:00.000000",
+    "modified_by": "Administrator",
+    "module": "Smartplan Medical",
+    "name": "City",
+    "naming_rule": "By fieldname",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        },
+        {
+            "create": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "Sales User",
+            "share": 1,
+            "write": 1
+        },
+        {
+            "read": 1,
+            "role": "All"
+        }
+    ],
+    "quick_entry": 1,
+    "sort_field": "city_name",
+    "sort_order": "ASC",
+    "title_field": "city_name",
+    "track_changes": 0
+}

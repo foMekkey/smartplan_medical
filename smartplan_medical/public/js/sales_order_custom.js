@@ -5,6 +5,13 @@
 
 frappe.ui.form.on("Sales Order", {
     refresh(frm) {
+        // Remove mandatory from delivery_date
+        frm.set_df_property('delivery_date', 'reqd', 0);
+        let grid = frm.fields_dict.items.grid;
+        grid.update_docfield_property('delivery_date', 'reqd', 0);
+        grid.update_docfield_property('delivery_date', 'in_list_view', 0);
+        grid.refresh();
+
         if (frm.doc.docstatus === 0) {
             frm.add_custom_button(
                 __("📦 Fetch New Stock"),
@@ -31,6 +38,9 @@ frappe.ui.form.on("Sales Order", {
                         color: "#5e64ff",
                     });
             }, 300);
+
+            // Show auto-cancel countdown timer
+            show_auto_cancel_timer(frm);
         }
 
         // Sales Person filter
@@ -44,6 +54,18 @@ frappe.ui.form.on("Sales Order", {
 
         // Calculate total discount on refresh
         calculate_total_discount(frm);
+
+        // Populate price before discount for existing items
+        let total_before = 0;
+        (frm.doc.items || []).forEach(row => {
+            if (row.price_list_rate && !row.custom_price_before_discount) {
+                frappe.model.set_value(row.doctype, row.name, 'custom_price_before_discount', row.price_list_rate);
+            }
+            total_before += (parseFloat(row.price_list_rate) || 0) * (parseFloat(row.qty) || 0);
+        });
+        if (total_before && !frm.doc.custom_total_before_discount) {
+            frm.set_value('custom_total_before_discount', total_before);
+        }
 
         // Load customer balance on refresh
         load_customer_balance(frm);
@@ -954,76 +976,287 @@ function add_expiring_items(d, frm) {
 // ==========================================
 
 frappe.ui.form.on("Sales Order Item", {
-    // Stock reservation warning when qty changes
     qty(frm, cdt, cdn) {
-        show_reservation_details(frm, cdt, cdn);
         apply_discount_and_calculate_total(frm, cdt, cdn);
     },
 
-    // Item Stock availability check
+    // Item Stock availability popup — shows all warehouses with reservations
     item_code(frm, cdt, cdn) {
         let row = locals[cdt][cdn];
-        let warehouse = row.warehouse || frm.doc.set_warehouse;
-        if (!row.item_code || !warehouse) return;
+        if (!row.item_code) return;
+
+        let set_warehouse = frm.doc.set_warehouse || "";
 
         frappe.call({
-            method: "erpnext.stock.utils.get_stock_balance",
+            method: "smartplan_medical.stock_api.get_item_stock_info",
             args: {
                 item_code: row.item_code,
-                warehouse: warehouse
+                set_warehouse: set_warehouse
             },
             callback(r) {
-                let qty = r.message || 0;
-                if (qty <= 0) {
-                    frappe.call({
-                        method: "frappe.client.get_list",
-                        args: {
-                            doctype: "Bin",
-                            filters: {
-                                item_code: row.item_code,
-                                actual_qty: [">", 0]
-                            },
-                            fields: ["warehouse", "actual_qty"],
-                            order_by: "actual_qty desc"
-                        },
-                        callback(res) {
-                            let html = `
-                                <div style="font-size:14px">
-                                    <p><b>الصنف غير متوفر في المخزن المختار</b></p>
-                                    <p style="color:#666">المتاح في المخازن التالية:</p>
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>المخزن</th>
-                                                <th>الكمية المتاحة</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                            `;
+                if (!r.message) return;
+                let data = r.message;
 
-                            if (res.message && res.message.length) {
-                                res.message.forEach(d => {
-                                    html += `
-                                        <tr>
-                                            <td>${d.warehouse}</td>
-                                            <td>${d.actual_qty}</td>
-                                        </tr>
-                                    `;
-                                });
-                            } else {
-                                html += `<tr><td colspan="2">لا يوجد رصيد في أي مخزن</td></tr>`;
-                            }
+                // Build the popup HTML
+                let html = `
+                <div style="font-family: inherit;">
+                    <!-- Summary Header -->
+                    <div style="display: flex; gap: 15px; margin-bottom: 16px; flex-wrap: wrap;">
+                        <div style="flex:1; min-width:120px; padding: 12px 16px; border-radius: 8px;
+                            background: linear-gradient(135deg, #e8f5e9, #c8e6c9); text-align: center;">
+                            <div style="font-size: 11px; color: #2e7d32; font-weight: 600; margin-bottom: 4px;">إجمالي المخزون</div>
+                            <div style="font-size: 22px; font-weight: 700; color: #1b5e20;">${data.total_actual}</div>
+                        </div>
+                        <div style="flex:1; min-width:120px; padding: 12px 16px; border-radius: 8px;
+                            background: linear-gradient(135deg, #fff3e0, #ffe0b2); text-align: center;">
+                            <div style="font-size: 11px; color: #e65100; font-weight: 600; margin-bottom: 4px;">المحجوز</div>
+                            <div style="font-size: 22px; font-weight: 700; color: #bf360c;">${data.total_reserved}</div>
+                        </div>
+                        <div style="flex:1; min-width:120px; padding: 12px 16px; border-radius: 8px;
+                            background: linear-gradient(135deg, #e3f2fd, #bbdefb); text-align: center;">
+                            <div style="font-size: 11px; color: #1565c0; font-weight: 600; margin-bottom: 4px;">المتاح للبيع</div>
+                            <div style="font-size: 22px; font-weight: 700; color: #0d47a1;">${data.total_available}</div>
+                        </div>
+                    </div>
 
-                            html += "</tbody></table></div>";
+                    <!-- Warehouse Table -->
+                    <table class="table table-bordered" style="margin-bottom: 0; font-size: 13px;">
+                        <thead>
+                            <tr style="background: #f5f5f5;">
+                                <th style="padding: 8px 12px;">المخزن</th>
+                                <th style="padding: 8px 12px; text-align: center;">المخزون</th>
+                                <th style="padding: 8px 12px; text-align: center;">المحجوز</th>
+                                <th style="padding: 8px 12px; text-align: center;">المتاح</th>
+                                <th style="padding: 8px 12px;">تفاصيل الحجز</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
 
-                            frappe.msgprint({
-                                title: "Stock Availability",
-                                message: html,
-                                indicator: "red"
+                if (data.warehouses.length === 0) {
+                    html += `<tr><td colspan="5" style="text-align:center; padding: 20px; color: #d32f2f; font-weight: 600;">
+                        ⛔ لا يوجد رصيد لهذا الصنف في أي مخزن
+                    </td></tr>`;
+                } else {
+                    data.warehouses.forEach(wh => {
+                        // Highlight selected warehouse
+                        let rowStyle = wh.is_selected
+                            ? 'background: linear-gradient(135deg, #e8f5e9, #f1f8e9); border-right: 4px solid #4caf50;'
+                            : '';
+                        let badge = wh.is_selected
+                            ? ' <span style="background:#4caf50; color:#fff; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: 600; margin-right: 6px;">المخزن المختار ✓</span>'
+                            : '';
+
+                        // Available qty color
+                        let availColor = wh.available_qty > 0 ? '#2e7d32' : '#d32f2f';
+
+                        // Reservation details with batch allocations
+                        let resHtml = '';
+                        if (wh.reservations.length > 0) {
+                            wh.reservations.forEach(r => {
+                                let batchInfo = '';
+                                if (r.batch_allocations && r.batch_allocations.length > 0) {
+                                    batchInfo = '<div style="margin-top: 3px; padding: 2px 0;">';
+                                    r.batch_allocations.forEach(ba => {
+                                        batchInfo += `<span style="background: #e3f2fd; color: #1565c0; padding: 1px 6px; border-radius: 8px; font-size: 10px; margin-left: 3px;">🏷️ ${ba.batch_no}: ${ba.qty}</span>`;
+                                    });
+                                    batchInfo += '</div>';
+                                }
+
+                                resHtml += `<div style="margin: 2px 0; padding: 3px 8px; background: #fff3e0; border-radius: 4px; font-size: 11px;">
+                                    <span style="color: #e65100;">📋</span>
+                                    <a href="/app/sales-order/${r.sales_order}" target="_blank" style="color: #1565c0; font-weight: 600;">${r.sales_order}</a>
+                                    <span style="color: #666; margin: 0 4px;">|</span>
+                                    <span>${r.sales_person || '—'}</span>
+                                    <span style="color: #666; margin: 0 4px;">|</span>
+                                    <span style="font-weight: 600; color: #e65100;">${r.qty}</span>
+                                    ${batchInfo}
+                                </div>`;
                             });
+                        } else {
+                            resHtml = '<span style="color: #999; font-size: 11px;">لا يوجد حجز</span>';
                         }
+
+                        html += `
+                        <tr style="${rowStyle}">
+                            <td style="padding: 8px 12px; font-weight: 500;">${wh.warehouse}${badge}</td>
+                            <td style="padding: 8px 12px; text-align: center; font-weight: 600;">${wh.actual_qty}</td>
+                            <td style="padding: 8px 12px; text-align: center; font-weight: 600; color: #e65100;">${wh.reserved_qty}</td>
+                            <td style="padding: 8px 12px; text-align: center; font-weight: 700; color: ${availColor};">${wh.available_qty}</td>
+                            <td style="padding: 6px 12px;">${resHtml}</td>
+                        </tr>`;
                     });
                 }
+
+                html += `</tbody></table>`;
+
+                // Batch Details Section with input fields
+                if (data.batches && data.batches.length > 0) {
+                    // Get current allocations from the row
+                    let currentAllocs = {};
+                    if (row.custom_batch_allocations) {
+                        try {
+                            let parsed = JSON.parse(row.custom_batch_allocations);
+                            parsed.forEach(a => { currentAllocs[a.batch_no] = a.qty; });
+                        } catch (e) { }
+                    }
+
+                    html += `
+                    <div style="margin-top: 18px; padding-top: 14px; border-top: 2px solid #eee;">
+                        <h5 style="margin-bottom: 10px; color: #333; font-weight: 600;">
+                            🏷️ تحديد الكميات من الباتشات
+                        </h5>
+                        <div id="batch-alloc-msg" style="margin-bottom: 8px; padding: 8px 14px; background: #e3f2fd; border-radius: 6px; font-size: 13px; color: #1565c0; font-weight: 600;">
+                            الكمية المخصصة: <b id="batch-alloc-total" style="font-size: 16px;">0</b>
+                        </div>
+                        <table class="table table-bordered" style="margin-bottom: 0; font-size: 13px;">
+                            <thead>
+                                <tr style="background: #f0f4ff;">
+                                    <th style="padding: 8px 12px;">رقم الباتش</th>
+                                    <th style="padding: 8px 12px; text-align: center;">المتاح</th>
+                                    <th style="padding: 8px 12px; text-align: center;">تاريخ الانتهاء</th>
+                                    <th style="padding: 8px 12px; text-align: center;">الحالة</th>
+                                    <th style="padding: 8px 12px; text-align: center;">الكمية المطلوبة</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+
+                    let today = new Date();
+                    data.batches.forEach((batch, idx) => {
+                        let expiryDate = batch.expiry_date ? new Date(batch.expiry_date) : null;
+                        let daysLeft = expiryDate ? Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24)) : null;
+
+                        let statusBadge = '';
+                        let batchRowStyle = '';
+                        if (daysLeft !== null) {
+                            if (daysLeft <= 0) {
+                                statusBadge = '<span style="background:#d32f2f; color:#fff; padding: 2px 10px; border-radius: 12px; font-size: 11px;">منتهي ❌</span>';
+                                batchRowStyle = 'background: #ffebee;';
+                            } else if (daysLeft <= 90) {
+                                statusBadge = `<span style="background:#ff9800; color:#fff; padding: 2px 10px; border-radius: 12px; font-size: 11px;">⚠️ ${daysLeft} يوم</span>`;
+                                batchRowStyle = 'background: #fff8e1;';
+                            } else {
+                                statusBadge = `<span style="background:#4caf50; color:#fff; padding: 2px 10px; border-radius: 12px; font-size: 11px;">✓ ${daysLeft} يوم</span>`;
+                            }
+                        } else {
+                            statusBadge = '<span style="color: #999;">—</span>';
+                        }
+
+                        let allocVal = currentAllocs[batch.batch_no] || 0;
+
+                        html += `
+                        <tr style="${batchRowStyle}">
+                            <td style="padding: 8px 12px; font-weight: 600;">${batch.batch_no}</td>
+                            <td style="padding: 8px 12px; text-align: center; font-weight: 600;">${batch.qty}</td>
+                            <td style="padding: 8px 12px; text-align: center; font-weight: 500;">${batch.expiry_date || '—'}</td>
+                            <td style="padding: 8px 12px; text-align: center;">${statusBadge}</td>
+                            <td style="padding: 4px 8px; text-align: center;">
+                                <input type="number" class="batch-alloc-input form-control"
+                                    data-batch="${batch.batch_no}" data-max="${batch.qty}"
+                                    value="${allocVal}" min="0" max="${batch.qty}"
+                                    style="width: 80px; margin: 0 auto; text-align: center; font-weight: 600; font-size: 14px;">
+                            </td>
+                        </tr>`;
+                    });
+
+                    html += `</tbody></table>
+                        <div style="margin-top: 12px; text-align: center;">
+                            <button class="btn btn-primary btn-sm" id="btn-save-batch-alloc"
+                                style="padding: 6px 30px; font-size: 13px; font-weight: 600; border-radius: 8px;">
+                                ✅ تأكيد تخصيص الباتشات
+                            </button>
+                        </div>
+                    </div>`;
+                }
+
+                html += `</div>`;
+
+                let indicator = data.total_available > 0 ? "blue" : "red";
+
+                let dialog = new frappe.ui.Dialog({
+                    title: `📦 رصيد الصنف: ${row.item_code}`,
+                    size: 'extra-large',
+                });
+                dialog.$body.html(html);
+                dialog.show();
+
+                // Widen the dialog
+                setTimeout(() => {
+                    dialog.$wrapper.find('.modal-dialog').css('max-width', '1100px');
+                }, 100);
+
+                // Update total on input change
+                dialog.$body.on('input', '.batch-alloc-input', function () {
+                    let total = 0;
+                    dialog.$body.find('.batch-alloc-input').each(function () {
+                        let val = parseFloat($(this).val()) || 0;
+                        let max = parseFloat($(this).data('max')) || 0;
+                        if (val > max) { $(this).val(max); val = max; }
+                        if (val < 0) { $(this).val(0); val = 0; }
+                        total += val;
+                    });
+                    dialog.$body.find('#batch-alloc-total').text(total);
+
+                    let msgDiv = dialog.$body.find('#batch-alloc-msg');
+                    if (total > 0) {
+                        msgDiv.css({ 'background': '#e8f5e9', 'color': '#2e7d32' });
+                    } else {
+                        msgDiv.css({ 'background': '#e3f2fd', 'color': '#1565c0' });
+                    }
+                });
+
+                // Trigger initial total calc
+                dialog.$body.find('.batch-alloc-input').first().trigger('input');
+
+                // Save button
+                dialog.$body.on('click', '#btn-save-batch-alloc', function () {
+                    let allocations = [];
+                    let total = 0;
+                    dialog.$body.find('.batch-alloc-input').each(function () {
+                        let qty = parseFloat($(this).val()) || 0;
+                        if (qty > 0) {
+                            allocations.push({
+                                batch_no: $(this).data('batch'),
+                                qty: qty
+                            });
+                            total += qty;
+                        }
+                    });
+
+                    if (total <= 0) {
+                        frappe.msgprint({
+                            title: 'خطأ',
+                            message: 'يجب تخصيص كمية من باتش واحد على الأقل',
+                            indicator: 'red'
+                        });
+                        return;
+                    }
+
+                    // Auto-set item qty to match the total batch allocation
+                    frappe.model.set_value(cdt, cdn, 'qty', total);
+
+                    // Save batch allocations to the row
+                    frappe.model.set_value(cdt, cdn, 'custom_batch_allocations', JSON.stringify(allocations));
+                    frm.dirty();
+
+                    // If SO is saved, also save via API
+                    if (frm.doc.name && !frm.doc.__islocal) {
+                        frappe.call({
+                            method: 'smartplan_medical.stock_api.save_batch_allocations',
+                            args: {
+                                so_name: frm.doc.name,
+                                item_code: row.item_code,
+                                allocations: JSON.stringify(allocations)
+                            },
+                            callback() {
+                                frappe.show_alert({ message: '✅ تم حفظ تخصيص الباتشات', indicator: 'green' });
+                            }
+                        });
+                    } else {
+                        frappe.show_alert({ message: '✅ تم تخصيص الباتشات — سيتم الحفظ عند حفظ الطلب', indicator: 'blue' });
+                    }
+
+                    dialog.hide();
+                });
             }
         });
     },
@@ -1034,6 +1267,8 @@ frappe.ui.form.on("Sales Order Item", {
     },
 
     price_list_rate(frm, cdt, cdn) {
+        let row = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, 'custom_price_before_discount', row.price_list_rate || 0);
         apply_discount_and_calculate_total(frm, cdt, cdn);
     },
 
@@ -1042,66 +1277,7 @@ frappe.ui.form.on("Sales Order Item", {
     }
 });
 
-// ==========================================
-// Stock Reservation Warning
-// ==========================================
 
-function show_reservation_details(frm, cdt, cdn) {
-    let row = locals[cdt][cdn];
-    let warehouse = row.warehouse || frm.doc.set_warehouse;
-
-    if (!row.item_code || !warehouse) return;
-
-    let available = row.custom_available_qty || 0;
-
-    if (row.qty <= available) return;
-
-    frappe.call({
-        method: "frappe.client.get_list",
-        args: {
-            doctype: "Stock Reservation",
-            filters: {
-                item_code: row.item_code,
-                warehouse: warehouse
-            },
-            fields: ["sales_order", "sales_person", "qty"]
-        },
-        callback(res) {
-            let html = `
-                <div>
-                    <h4 style="color:#d9534f">الكمية غير متاحة</h4>
-                    <b>الصنف:</b> ${row.item_code}<br>
-                    <b>المخزن:</b> ${warehouse}<br><br>
-                    <b>المتاح للبيع:</b> ${available}<br>
-                    <b>المطلوب:</b> ${row.qty}<br><br>
-                    <b>الحجوزات الحالية:</b>
-                    <table class="table table-bordered">
-                        <tr>
-                            <th>الطلب</th>
-                            <th>المندوب</th>
-                            <th>الكمية</th>
-                        </tr>
-            `;
-
-            (res.message || []).forEach(d => {
-                html += `
-                    <tr>
-                        <td>${d.sales_order}</td>
-                        <td>${d.sales_person}</td>
-                        <td>${d.qty}</td>
-                    </tr>
-                `;
-            });
-
-            html += "</table></div>";
-            frappe.msgprint({
-                title: "Stock Reservation",
-                message: html,
-                indicator: "red"
-            });
-        }
-    });
-}
 
 // ==========================================
 // Calculate Discount
@@ -1517,4 +1693,145 @@ function show_invoices_dialog(frm, invoices, total_outstanding, total_invoices, 
     setTimeout(() => {
         dialog.$wrapper.find('.modal-dialog').css('max-width', '1300px');
     }, 100);
+}
+
+
+/**
+ * Auto-Cancel Countdown Timer
+ * Shows a live countdown on draft Sales Orders indicating when they will be auto-deleted.
+ */
+function show_auto_cancel_timer(frm) {
+    // Only show on saved drafts (not new unsaved docs)
+    if (frm.is_new() || frm.doc.docstatus !== 0) return;
+
+    // Clear any existing timer
+    if (frm._auto_cancel_interval) {
+        clearInterval(frm._auto_cancel_interval);
+        frm._auto_cancel_interval = null;
+    }
+
+    // Remove existing timer banner
+    frm.$wrapper.find('.auto-cancel-timer-banner').remove();
+
+    // Fetch timeout setting
+    frappe.call({
+        method: 'frappe.client.get_value',
+        args: {
+            doctype: 'Selling Settings',
+            fieldname: 'custom_so_auto_cancel_hours'
+        },
+        async: false,
+        callback(r) {
+            let timeout_hours = (r.message && r.message.custom_so_auto_cancel_hours) || 2;
+            timeout_hours = parseFloat(timeout_hours);
+
+            if (timeout_hours <= 0) return; // Disabled
+
+            let creation = frappe.datetime.str_to_obj(frm.doc.creation);
+            let deadline = frappe.datetime.add_to_date(creation, { hours: timeout_hours });
+            let now = frappe.datetime.now_datetime();
+
+            // Create the timer banner
+            let $banner = $(`
+                <div class="auto-cancel-timer-banner" style="
+                    padding: 12px 20px;
+                    margin: 10px 0;
+                    border-radius: 8px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    font-size: 14px;
+                    font-weight: 600;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                    transition: all 0.3s ease;
+                ">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 20px;">⏳</span>
+                        <span class="timer-label">الوقت المتبقي قبل الحذف التلقائي</span>
+                    </div>
+                    <div class="timer-value" style="
+                        font-size: 22px;
+                        font-weight: 700;
+                        font-family: monospace;
+                        letter-spacing: 2px;
+                    "></div>
+                </div>
+            `);
+
+            frm.$wrapper.find('.form-message').after($banner);
+
+            function updateTimer() {
+                let now_dt = new Date();
+                let deadline_dt = new Date(deadline);
+                let diff_ms = deadline_dt - now_dt;
+
+                if (diff_ms <= 0) {
+                    $banner.css({
+                        background: 'linear-gradient(135deg, #ff4444, #cc0000)',
+                        color: '#fff'
+                    });
+                    $banner.find('.timer-value').text('⛔ تم انتهاء الوقت - سيتم الحذف قريباً');
+                    clearInterval(frm._auto_cancel_interval);
+                    // Refresh after a moment
+                    setTimeout(() => {
+                        frm.reload_doc();
+                    }, 5000);
+                    return;
+                }
+
+                let total_seconds = Math.floor(diff_ms / 1000);
+                let hours = Math.floor(total_seconds / 3600);
+                let minutes = Math.floor((total_seconds % 3600) / 60);
+                let seconds = total_seconds % 60;
+
+                let time_str = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+                $banner.find('.timer-value').text(time_str);
+
+                // Calculate percentage remaining
+                let total_ms = timeout_hours * 3600 * 1000;
+                let pct = (diff_ms / total_ms) * 100;
+
+                if (pct > 50) {
+                    $banner.css({
+                        background: 'linear-gradient(135deg, #d4edda, #c3e6cb)',
+                        color: '#155724',
+                        border: '1px solid #c3e6cb'
+                    });
+                } else if (pct > 20) {
+                    $banner.css({
+                        background: 'linear-gradient(135deg, #fff3cd, #ffeeba)',
+                        color: '#856404',
+                        border: '1px solid #ffeeba'
+                    });
+                } else {
+                    $banner.css({
+                        background: 'linear-gradient(135deg, #f8d7da, #f5c6cb)',
+                        color: '#721c24',
+                        border: '1px solid #f5c6cb'
+                    });
+                    // Pulse animation for urgency
+                    if (pct < 10) {
+                        $banner.css('animation', 'pulse 1s infinite');
+                    }
+                }
+            }
+
+            // Add pulse animation
+            if (!document.getElementById('auto-cancel-timer-style')) {
+                $('head').append(`
+                    <style id="auto-cancel-timer-style">
+                        @keyframes pulse {
+                            0% { opacity: 1; transform: scale(1); }
+                            50% { opacity: 0.85; transform: scale(1.01); }
+                            100% { opacity: 1; transform: scale(1); }
+                        }
+                    </style>
+                `);
+            }
+
+            updateTimer();
+            frm._auto_cancel_interval = setInterval(updateTimer, 1000);
+        }
+    });
 }
