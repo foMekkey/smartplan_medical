@@ -1,0 +1,104 @@
+{
+  "actions": [],
+  "allow_rename": 1,
+  "autoname": "field:legal_name",
+  "creation": "2026-02-01 12:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "section_break_1",
+    "legal_name",
+    "trade_name",
+    "erpnext_supplier",
+    "supplier_type",
+    "email",
+    "phone",
+    "country",
+    "address",
+    "notes"
+  ],
+  "fields": [
+    {
+      "fieldname": "section_break_1",
+      "fieldtype": "Section Break",
+      "label": "البيانات الأساسية"
+    },
+    {
+      "fieldname": "legal_name",
+      "fieldtype": "Data",
+      "label": "الاسم القانوني",
+      "reqd": 1
+    },
+    {
+      "fieldname": "trade_name",
+      "fieldtype": "Data",
+      "label": "الاسم التجاري"
+    },
+    {
+      "fieldname": "erpnext_supplier",
+      "fieldtype": "Link",
+      "label": "مورد ERPNext",
+      "options": "Supplier",
+      "description": "رابط إلى مورد في نظام ERPNext (يتم الإنشاء/المزامنة أوتوماتيكيا)",
+      "read_only": 0
+    },
+    {
+      "fieldname": "supplier_type",
+      "fieldtype": "Select",
+      "label": "نوع المورد",
+      "options": "Company\nIndividual",
+      "default": "Company"
+    },
+    {
+      "fieldname": "email",
+      "fieldtype": "Data",
+      "label": "البريد الإلكتروني"
+    },
+    {
+      "fieldname": "phone",
+      "fieldtype": "Data",
+      "label": "رقم الهاتف"
+    },
+    {
+      "fieldname": "country",
+      "fieldtype": "Link",
+      "label": "البلد",
+      "options": "Country"
+    },
+    {
+      "fieldname": "address",
+      "fieldtype": "Text",
+      "label": "العنوان"
+    },
+    {
+      "fieldname": "notes",
+      "fieldtype": "Small Text",
+      "label": "ملاحظات"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2026-02-01 12:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Smartplan Medical",
+  "name": "Pharma Supplier",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "submit": 0,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
+}

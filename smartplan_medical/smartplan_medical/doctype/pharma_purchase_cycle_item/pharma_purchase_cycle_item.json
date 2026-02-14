@@ -1,0 +1,65 @@
+{
+    "actions": [],
+    "creation": "2026-02-01 10:40:00.000000",
+    "doctype": "DocType",
+    "editable_grid": 1,
+    "engine": "InnoDB",
+    "field_order": [
+        "pharma_item",
+        "item_name",
+        "qty",
+        "rate",
+        "amount"
+    ],
+    "fields": [
+        {
+            "fieldname": "pharma_item",
+            "fieldtype": "Link",
+            "in_list_view": 1,
+            "label": "الصنف",
+            "options": "Pharma Item",
+            "reqd": 1
+        },
+        {
+            "fieldname": "item_name",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "اسم الصنف",
+            "fetch_from": "pharma_item.item_name",
+            "read_only": 1
+        },
+        {
+            "fieldname": "qty",
+            "fieldtype": "Float",
+            "in_list_view": 1,
+            "label": "الكمية",
+            "reqd": 1
+        },
+        {
+            "fieldname": "rate",
+            "fieldtype": "Currency",
+            "in_list_view": 1,
+            "label": "السعر",
+            "reqd": 1
+        },
+        {
+            "fieldname": "amount",
+            "fieldtype": "Currency",
+            "in_list_view": 1,
+            "label": "الإجمالي",
+            "read_only": 1
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "istable": 1,
+    "links": [],
+    "modified": "2026-02-01 10:40:00.000000",
+    "modified_by": "Administrator",
+    "module": "Smartplan Medical",
+    "name": "Pharma Purchase Cycle Item",
+    "owner": "Administrator",
+    "permissions": [],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": []
+}

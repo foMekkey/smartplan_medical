@@ -1,0 +1,247 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "naming_series:",
+ "creation": "2026-01-27 12:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "transaction_type",
+  "bank_account",
+  "column_break_1",
+  "posting_date",
+  "amount",
+  "section_break_details",
+  "party_type",
+  "party",
+  "party_name",
+  "column_break_details",
+  "description",
+  "reference_no",
+  "section_break_cashbox",
+  "from_cashbox",
+  "to_cashbox",
+  "section_break_accounting",
+  "journal_entry",
+  "payment_entry",
+  "column_break_accounting",
+  "balance_before",
+  "balance_after",
+  "section_break_status",
+  "status",
+  "remarks",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "التسلسل",
+   "options": "BT-.YYYY.-",
+   "reqd": 1
+  },
+  {
+   "fieldname": "transaction_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "نوع العملية",
+   "options": "إيداع نقدي\nسحب نقدي\nتحويل وارد\nتحويل صادر\nرسوم بنكية\nفوائد",
+   "reqd": 1
+  },
+  {
+   "fieldname": "bank_account",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "الحساب البنكي",
+   "options": "Bank Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "التاريخ",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "المبلغ",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_details",
+   "fieldtype": "Section Break",
+   "label": "التفاصيل"
+  },
+  {
+   "fieldname": "party_type",
+   "fieldtype": "Select",
+   "label": "نوع الطرف",
+   "options": "\nعميل\nمورد\nموظف"
+  },
+  {
+   "depends_on": "party_type",
+   "fieldname": "party",
+   "fieldtype": "Dynamic Link",
+   "label": "الطرف",
+   "options": "party_type"
+  },
+  {
+   "fieldname": "party_name",
+   "fieldtype": "Data",
+   "label": "اسم الطرف",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_details",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "البيان",
+   "reqd": 1
+  },
+  {
+   "fieldname": "reference_no",
+   "fieldtype": "Data",
+   "label": "رقم المرجع"
+  },
+  {
+   "depends_on": "eval:['إيداع نقدي', 'سحب نقدي'].includes(doc.transaction_type)",
+   "fieldname": "section_break_cashbox",
+   "fieldtype": "Section Break",
+   "label": "ربط الخزينة"
+  },
+  {
+   "depends_on": "eval:doc.transaction_type == 'إيداع نقدي'",
+   "fieldname": "from_cashbox",
+   "fieldtype": "Link",
+   "label": "من خزينة",
+   "options": "Cashbox"
+  },
+  {
+   "depends_on": "eval:doc.transaction_type == 'سحب نقدي'",
+   "fieldname": "to_cashbox",
+   "fieldtype": "Link",
+   "label": "إلى خزينة",
+   "options": "Cashbox"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_accounting",
+   "fieldtype": "Section Break",
+   "label": "الربط المحاسبي"
+  },
+  {
+   "fieldname": "journal_entry",
+   "fieldtype": "Link",
+   "label": "القيد المحاسبي",
+   "options": "Journal Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "payment_entry",
+   "fieldtype": "Link",
+   "label": "قيد الدفع",
+   "options": "Payment Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_accounting",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "balance_before",
+   "fieldtype": "Currency",
+   "label": "الرصيد قبل",
+   "read_only": 1
+  },
+  {
+   "fieldname": "balance_after",
+   "fieldtype": "Currency",
+   "label": "الرصيد بعد",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_status",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "الحالة",
+   "options": "Draft\nSubmitted\nCancelled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "ملاحظات"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "معدل من",
+   "no_copy": 1,
+   "options": "Bank Transaction Entry",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-01-27 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Smartplan Medical",
+ "name": "Bank Transaction Entry",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts User",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "description",
+ "track_changes": 1
+}

@@ -1,0 +1,396 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-01-27 11:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "warehouse_dispatch",
+  "customer",
+  "customer_name",
+  "column_break_1",
+  "posting_date",
+  "posting_time",
+  "delivery_representative",
+  "vehicle",
+  "section_break_items",
+  "items",
+  "section_break_collection",
+  "payment_type",
+  "expected_amount",
+  "column_break_collection",
+  "collected_amount",
+  "variance_amount",
+  "collection_status",
+  "section_break_payment_details",
+  "cash_amount",
+  "cheque_amount",
+  "column_break_payment",
+  "bank_transfer_amount",
+  "credit_amount",
+  "section_break_cheque",
+  "cheque_no",
+  "cheque_date",
+  "column_break_cheque",
+  "bank_name",
+  "cheque_status",
+  "section_break_status",
+  "status",
+  "delivered_at",
+  "column_break_status",
+  "collected_by",
+  "collection_time",
+  "section_break_erp",
+  "payment_entry",
+  "sales_invoice",
+  "column_break_erp",
+  "delivery_note",
+  "section_break_notes",
+  "customer_signature",
+  "delivery_notes",
+  "column_break_notes",
+  "representative_notes",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "default": "DC-.YYYY.-.#####",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "\u0633\u0644\u0633\u0644\u0629 \u0627\u0644\u062a\u0631\u0642\u064a\u0645",
+   "options": "DC-.YYYY.-.#####",
+   "reqd": 1
+  },
+  {
+   "fieldname": "warehouse_dispatch",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "\u0625\u0632\u0646 \u0627\u0644\u0635\u0631\u0641",
+   "options": "Warehouse Dispatch",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "warehouse_dispatch.customer",
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "\u0627\u0644\u0639\u0645\u064a\u0644",
+   "options": "Pharma Customer",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fetch_from": "customer.legal_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "\u0627\u0633\u0645 \u0627\u0644\u0639\u0645\u064a\u0644",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "\u062a\u0627\u0631\u064a\u062e \u0627\u0644\u062a\u0648\u0635\u064a\u0644",
+   "reqd": 1
+  },
+  {
+   "default": "Now",
+   "fieldname": "posting_time",
+   "fieldtype": "Time",
+   "label": "\u0648\u0642\u062a \u0627\u0644\u062a\u0648\u0635\u064a\u0644",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "warehouse_dispatch.delivery_representative",
+   "fieldname": "delivery_representative",
+   "fieldtype": "Link",
+   "label": "\u0627\u0644\u0645\u0646\u062f\u0648\u0628",
+   "options": "Delivery Representative",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "delivery_representative.linked_vehicle",
+   "fieldname": "vehicle",
+   "fieldtype": "Link",
+   "label": "\u0627\u0644\u0633\u064a\u0627\u0631\u0629",
+   "options": "Delivery Vehicle",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_items",
+   "fieldtype": "Section Break",
+   "label": "\u0627\u0644\u0623\u0635\u0646\u0627\u0641"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "\u0627\u0644\u0623\u0635\u0646\u0627\u0641",
+   "options": "Delivery Collection Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_collection",
+   "fieldtype": "Section Break",
+   "label": "\u0627\u0644\u062a\u062d\u0635\u064a\u0644"
+  },
+  {
+   "fieldname": "payment_type",
+   "fieldtype": "Select",
+   "label": "\u0646\u0648\u0639 \u0627\u0644\u062f\u0641\u0639",
+   "options": "Cash\nCheque\nBank Transfer\nCredit\nMixed",
+   "reqd": 1
+  },
+  {
+   "fieldname": "expected_amount",
+   "fieldtype": "Currency",
+   "label": "\u0627\u0644\u0645\u0628\u0644\u063a \u0627\u0644\u0645\u062a\u0648\u0642\u0639",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_collection",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "collected_amount",
+   "fieldtype": "Currency",
+   "label": "\u0627\u0644\u0645\u0628\u0644\u063a \u0627\u0644\u0645\u062d\u0635\u0644",
+   "reqd": 1
+  },
+  {
+   "fieldname": "variance_amount",
+   "fieldtype": "Currency",
+   "label": "\u0641\u0631\u0642 \u0627\u0644\u062a\u062d\u0635\u064a\u0644",
+   "read_only": 1
+  },
+  {
+   "default": "Pending",
+   "fieldname": "collection_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "\u062d\u0627\u0644\u0629 \u0627\u0644\u062a\u062d\u0635\u064a\u0644",
+   "options": "Pending\nFully Collected\nPartially Collected\nOver Collected\nNot Collected",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.payment_type==\"Mixed\"",
+   "fieldname": "section_break_payment_details",
+   "fieldtype": "Section Break",
+   "label": "\u062a\u0641\u0627\u0635\u064a\u0644 \u0627\u0644\u062f\u0641\u0639"
+  },
+  {
+   "default": "0",
+   "fieldname": "cash_amount",
+   "fieldtype": "Currency",
+   "label": "\u0646\u0642\u062f\u064a"
+  },
+  {
+   "default": "0",
+   "fieldname": "cheque_amount",
+   "fieldtype": "Currency",
+   "label": "\u0634\u064a\u0643"
+  },
+  {
+   "fieldname": "column_break_payment",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "bank_transfer_amount",
+   "fieldtype": "Currency",
+   "label": "\u062a\u062d\u0648\u064a\u0644 \u0628\u0646\u0643\u064a"
+  },
+  {
+   "default": "0",
+   "fieldname": "credit_amount",
+   "fieldtype": "Currency",
+   "label": "\u0622\u062c\u0644"
+  },
+  {
+   "depends_on": "eval:doc.payment_type==\"Cheque\" || doc.cheque_amount > 0",
+   "fieldname": "section_break_cheque",
+   "fieldtype": "Section Break",
+   "label": "\u0628\u064a\u0627\u0646\u0627\u062a \u0627\u0644\u0634\u064a\u0643"
+  },
+  {
+   "fieldname": "cheque_no",
+   "fieldtype": "Data",
+   "label": "\u0631\u0642\u0645 \u0627\u0644\u0634\u064a\u0643"
+  },
+  {
+   "fieldname": "cheque_date",
+   "fieldtype": "Date",
+   "label": "\u062a\u0627\u0631\u064a\u062e \u0627\u0644\u0634\u064a\u0643"
+  },
+  {
+   "fieldname": "column_break_cheque",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "bank_name",
+   "fieldtype": "Data",
+   "label": "\u0627\u0633\u0645 \u0627\u0644\u0628\u0646\u0643"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "cheque_status",
+   "fieldtype": "Select",
+   "label": "\u062d\u0627\u0644\u0629 \u0627\u0644\u0634\u064a\u0643",
+   "options": "Pending\nCleared\nBounced"
+  },
+  {
+   "fieldname": "section_break_status",
+   "fieldtype": "Section Break",
+   "label": "\u062d\u0627\u0644\u0629 \u0627\u0644\u062a\u0648\u0635\u064a\u0644"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "\u0627\u0644\u062d\u0627\u0644\u0629",
+   "options": "Draft\nIn Transit\nDelivered\nReturned\nCancelled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "delivered_at",
+   "fieldtype": "Datetime",
+   "label": "\u062a\u0645 \u0627\u0644\u062a\u0648\u0635\u064a\u0644 \u0641\u064a",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_status",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "collected_by",
+   "fieldtype": "Link",
+   "label": "\u062a\u0645 \u0627\u0644\u062a\u062d\u0635\u064a\u0644 \u0628\u0648\u0627\u0633\u0637\u0629",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "collection_time",
+   "fieldtype": "Datetime",
+   "label": "\u0648\u0642\u062a \u0627\u0644\u062a\u062d\u0635\u064a\u0644",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_erp",
+   "fieldtype": "Section Break",
+   "label": "\u0631\u0628\u0637 ERP"
+  },
+  {
+   "fieldname": "payment_entry",
+   "fieldtype": "Link",
+   "label": "\u0642\u064a\u062f \u0627\u0644\u062f\u0641\u0639",
+   "options": "Payment Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sales_invoice",
+   "fieldtype": "Link",
+   "label": "\u0641\u0627\u062a\u0648\u0631\u0629 \u0627\u0644\u0628\u064a\u0639",
+   "options": "Sales Invoice",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_erp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "warehouse_dispatch.delivery_note",
+   "fieldname": "delivery_note",
+   "fieldtype": "Link",
+   "label": "\u0625\u0632\u0646 \u0627\u0644\u062a\u0633\u0644\u064a\u0645",
+   "options": "Delivery Note",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_notes",
+   "fieldtype": "Section Break",
+   "label": "\u0645\u0644\u0627\u062d\u0638\u0627\u062a"
+  },
+  {
+   "fieldname": "customer_signature",
+   "fieldtype": "Attach Image",
+   "label": "\u062a\u0648\u0642\u064a\u0639 \u0627\u0644\u0639\u0645\u064a\u0644"
+  },
+  {
+   "fieldname": "delivery_notes",
+   "fieldtype": "Small Text",
+   "label": "\u0645\u0644\u0627\u062d\u0638\u0627\u062a \u0627\u0644\u062a\u0648\u0635\u064a\u0644"
+  },
+  {
+   "fieldname": "column_break_notes",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "representative_notes",
+   "fieldtype": "Small Text",
+   "label": "\u0645\u0644\u0627\u062d\u0638\u0627\u062a \u0627\u0644\u0645\u0646\u062f\u0648\u0628"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Delivery Collection",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-01-27 11:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Smartplan Medical",
+ "name": "Delivery Collection",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales User",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Representative",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1,
+ "track_seen": 1,
+ "track_views": 1
+}

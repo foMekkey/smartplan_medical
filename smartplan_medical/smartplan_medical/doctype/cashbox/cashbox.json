@@ -1,0 +1,204 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:cashbox_name",
+ "creation": "2026-01-27 12:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "cashbox_name",
+  "cashbox_type",
+  "column_break_1",
+  "custodian",
+  "custodian_name",
+  "is_active",
+  "section_break_accounting",
+  "erp_account",
+  "company",
+  "column_break_accounting",
+  "currency",
+  "opening_balance",
+  "section_break_limits",
+  "max_balance",
+  "min_balance",
+  "column_break_limits",
+  "daily_limit",
+  "requires_approval_above",
+  "section_break_current",
+  "current_balance",
+  "last_transaction_date"
+ ],
+ "fields": [
+  {
+   "fieldname": "cashbox_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "اسم الخزينة",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "cashbox_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "نوع الخزينة",
+   "options": "رئيسية\nفرعية\nمندوب",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "custodian",
+   "fieldtype": "Link",
+   "label": "أمين الخزينة",
+   "options": "User"
+  },
+  {
+   "fetch_from": "custodian.full_name",
+   "fieldname": "custodian_name",
+   "fieldtype": "Data",
+   "label": "اسم أمين الخزينة",
+   "read_only": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "نشط"
+  },
+  {
+   "fieldname": "section_break_accounting",
+   "fieldtype": "Section Break",
+   "label": "الربط المحاسبي"
+  },
+  {
+   "fieldname": "erp_account",
+   "fieldtype": "Link",
+   "label": "الحساب المحاسبي",
+   "options": "Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "الشركة",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_accounting",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "EGP",
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "العملة",
+   "options": "Currency"
+  },
+  {
+   "default": "0",
+   "fieldname": "opening_balance",
+   "fieldtype": "Currency",
+   "label": "الرصيد الافتتاحي"
+  },
+  {
+   "fieldname": "section_break_limits",
+   "fieldtype": "Section Break",
+   "label": "حدود الخزينة"
+  },
+  {
+   "default": "100000",
+   "fieldname": "max_balance",
+   "fieldtype": "Currency",
+   "label": "الحد الأقصى للرصيد"
+  },
+  {
+   "default": "0",
+   "fieldname": "min_balance",
+   "fieldtype": "Currency",
+   "label": "الحد الأدنى للرصيد"
+  },
+  {
+   "fieldname": "column_break_limits",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "50000",
+   "fieldname": "daily_limit",
+   "fieldtype": "Currency",
+   "label": "الحد اليومي للصرف"
+  },
+  {
+   "default": "10000",
+   "fieldname": "requires_approval_above",
+   "fieldtype": "Currency",
+   "label": "يتطلب موافقة فوق"
+  },
+  {
+   "fieldname": "section_break_current",
+   "fieldtype": "Section Break",
+   "label": "الرصيد الحالي"
+  },
+  {
+   "default": "0",
+   "fieldname": "current_balance",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "الرصيد الحالي",
+   "read_only": 1
+  },
+  {
+   "fieldname": "last_transaction_date",
+   "fieldtype": "Datetime",
+   "label": "آخر حركة",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-01-27 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Smartplan Medical",
+ "name": "Cashbox",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Accounts User"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

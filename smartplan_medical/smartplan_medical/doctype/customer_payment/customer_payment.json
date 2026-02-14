@@ -1,0 +1,266 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "naming_series:",
+ "creation": "2026-01-27 12:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "customer",
+  "customer_name",
+  "column_break_1",
+  "posting_date",
+  "payment_type",
+  "section_break_payment",
+  "mode_of_payment",
+  "paid_amount",
+  "column_break_payment",
+  "reference_no",
+  "reference_date",
+  "section_break_allocation",
+  "allocate_payment",
+  "payment_references",
+  "total_allocated",
+  "unallocated_amount",
+  "section_break_bank",
+  "bank_account",
+  "cheque_no",
+  "cheque_date",
+  "section_break_accounting",
+  "erp_customer",
+  "payment_entry",
+  "column_break_accounting",
+  "remarks",
+  "section_break_status",
+  "status",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "التسلسل",
+   "options": "CP-.YYYY.-",
+   "reqd": 1
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "العميل",
+   "options": "Pharma Customer",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "customer.legal_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "اسم العميل",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "تاريخ التحصيل",
+   "reqd": 1
+  },
+  {
+   "default": "Receive",
+   "fieldname": "payment_type",
+   "fieldtype": "Select",
+   "label": "نوع العملية",
+   "options": "Receive\nReturn",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_payment",
+   "fieldtype": "Section Break",
+   "label": "تفاصيل الدفع"
+  },
+  {
+   "fieldname": "mode_of_payment",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "طريقة الدفع",
+   "options": "نقدي\nشيك\nتحويل بنكي",
+   "reqd": 1
+  },
+  {
+   "fieldname": "paid_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "المبلغ المدفوع",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_payment",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.mode_of_payment != 'نقدي'",
+   "fieldname": "reference_no",
+   "fieldtype": "Data",
+   "label": "رقم المرجع"
+  },
+  {
+   "depends_on": "eval:doc.mode_of_payment != 'نقدي'",
+   "fieldname": "reference_date",
+   "fieldtype": "Date",
+   "label": "تاريخ المرجع"
+  },
+  {
+   "fieldname": "section_break_allocation",
+   "fieldtype": "Section Break",
+   "label": "توزيع المبلغ على الفواتير"
+  },
+  {
+   "default": "1",
+   "fieldname": "allocate_payment",
+   "fieldtype": "Check",
+   "label": "توزيع تلقائي على الفواتير"
+  },
+  {
+   "fieldname": "payment_references",
+   "fieldtype": "Table",
+   "label": "الفواتير",
+   "options": "Customer Payment Reference"
+  },
+  {
+   "fieldname": "total_allocated",
+   "fieldtype": "Currency",
+   "label": "إجمالي الموزع",
+   "read_only": 1
+  },
+  {
+   "fieldname": "unallocated_amount",
+   "fieldtype": "Currency",
+   "label": "المبلغ غير الموزع",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "eval:doc.mode_of_payment == 'شيك'",
+   "fieldname": "section_break_bank",
+   "fieldtype": "Section Break",
+   "label": "بيانات الشيك"
+  },
+  {
+   "fieldname": "bank_account",
+   "fieldtype": "Link",
+   "label": "حساب البنك",
+   "options": "Bank Account"
+  },
+  {
+   "fieldname": "cheque_no",
+   "fieldtype": "Data",
+   "label": "رقم الشيك"
+  },
+  {
+   "fieldname": "cheque_date",
+   "fieldtype": "Date",
+   "label": "تاريخ الشيك"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_accounting",
+   "fieldtype": "Section Break",
+   "label": "الربط المحاسبي"
+  },
+  {
+   "fieldname": "erp_customer",
+   "fieldtype": "Link",
+   "label": "عميل ERPNext",
+   "options": "Customer",
+   "read_only": 1
+  },
+  {
+   "fieldname": "payment_entry",
+   "fieldtype": "Link",
+   "label": "قيد التحصيل",
+   "options": "Payment Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_accounting",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "ملاحظات"
+  },
+  {
+   "fieldname": "section_break_status",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "الحالة",
+   "options": "Draft\nSubmitted\nCancelled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "معدل من",
+   "no_copy": 1,
+   "options": "Customer Payment",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-01-27 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Smartplan Medical",
+ "name": "Customer Payment",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts User",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "customer_name",
+ "track_changes": 1
+}
