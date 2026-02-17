@@ -343,6 +343,12 @@ def create_property_setters():
         validate_fields_for_doctype=False
     )
 
+    # Make Set Target Warehouse required on Purchase Order
+    make_property_setter(
+        "Purchase Order", "set_warehouse", "reqd", 1, "Check",
+        validate_fields_for_doctype=False
+    )
+
     # Make delivery_date NOT required on Sales Order Item
     make_property_setter(
         "Sales Order Item", "delivery_date", "reqd", 0, "Check",
