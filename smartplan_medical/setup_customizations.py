@@ -36,6 +36,17 @@ def create_sales_order_custom_fields():
                 "read_only": 1,
             },
             {
+                "fieldname": "custom_customer_classification",
+                "fieldtype": "Link",
+                "label": "تصنيف العميل (Classification)",
+                "options": "Customer Classification",
+                "insert_after": "custom_customer_balance",
+                "read_only": 1,
+                "fetch_from": "customer.custom_classification",
+                "fetch_if_empty": 1,
+                "bold": 1,
+            },
+            {
                 "fieldname": "custom_sales_person",
                 "fieldtype": "Link",
                 "label": "Sales Person",

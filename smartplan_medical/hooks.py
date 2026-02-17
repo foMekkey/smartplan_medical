@@ -139,6 +139,9 @@ doc_events = {
         "before_save": "smartplan_medical.purchase_order_events.before_save",
         "before_insert": "smartplan_medical.purchase_order_events.before_insert",
         "on_submit": "smartplan_medical.purchase_order_events.on_submit",
+    },
+    "Customer": {
+        "after_save": "smartplan_medical.customer_events.after_save",
     }
 }
 
