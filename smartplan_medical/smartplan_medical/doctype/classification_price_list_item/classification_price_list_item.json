@@ -8,7 +8,6 @@
         "item_name",
         "batch_no",
         "expiry_date",
-        "column_break_1",
         "standard_rate",
         "purchase_discount",
         "selling_discount",
@@ -16,6 +15,7 @@
     ],
     "fields": [
         {
+            "columns": 2,
             "fieldname": "item_code",
             "fieldtype": "Link",
             "in_list_view": 1,
@@ -24,66 +24,69 @@
             "reqd": 1
         },
         {
+            "columns": 2,
             "fetch_from": "item_code.item_name",
             "fieldname": "item_name",
             "fieldtype": "Data",
             "in_list_view": 1,
-            "label": "اسم الصنف (Item Name)",
+            "label": "اسم الصنف",
             "read_only": 1
         },
         {
+            "columns": 1,
             "fieldname": "batch_no",
             "fieldtype": "Link",
             "in_list_view": 1,
-            "label": "رقم الباتش (Batch)",
+            "label": "الباتش",
             "options": "Batch"
         },
         {
+            "columns": 1,
             "fetch_from": "batch_no.expiry_date",
             "fieldname": "expiry_date",
             "fieldtype": "Date",
             "in_list_view": 1,
-            "label": "تاريخ الانتهاء (Expiry)",
+            "label": "الانتهاء",
             "read_only": 1
         },
         {
-            "fieldname": "column_break_1",
-            "fieldtype": "Column Break"
-        },
-        {
+            "columns": 1,
             "fieldname": "standard_rate",
             "fieldtype": "Currency",
             "in_list_view": 1,
-            "label": "سعر الشراء (Purchase Rate)",
+            "label": "سعر الشراء",
             "read_only": 1
         },
         {
+            "columns": 1,
             "fieldname": "purchase_discount",
             "fieldtype": "Percent",
             "in_list_view": 1,
-            "label": "خصم الشراء % (Purchase Disc.)",
+            "label": "خصم شراء%",
             "read_only": 1
         },
         {
+            "columns": 1,
             "default": "0",
             "fieldname": "selling_discount",
             "fieldtype": "Percent",
             "in_list_view": 1,
-            "label": "خصم البيع % (Selling Disc.)",
+            "label": "خصم بيع%",
             "reqd": 1
         },
         {
+            "columns": 1,
             "fieldname": "discounted_rate",
             "fieldtype": "Currency",
             "in_list_view": 1,
-            "label": "سعر البيع (Selling Rate)",
+            "label": "سعر البيع",
             "read_only": 1
         }
     ],
     "index_web_pages_for_search": 0,
     "istable": 1,
     "links": [],
-    "modified": "2026-02-17 23:12:00",
+    "modified": "2026-02-17 23:32:00",
     "modified_by": "Administrator",
     "module": "Smartplan Medical",
     "name": "Classification Price List Item",
