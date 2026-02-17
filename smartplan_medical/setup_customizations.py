@@ -20,6 +20,7 @@ def after_migrate():
     create_property_setters()
     create_client_scripts()
     populate_egypt_regions()
+    populate_customer_classifications()
     frappe.db.commit()
 
 
@@ -137,6 +138,15 @@ def create_customer_custom_fields():
                 "insert_after": "custom_column_break_region",
                 "translatable": 0,
                 "reqd": 1,
+            },
+            {
+                "fieldname": "custom_classification",
+                "fieldtype": "Link",
+                "label": "تصنيف العميل (Classification)",
+                "options": "Customer Classification",
+                "insert_after": "custom_commercial_registration",
+                "in_list_view": 1,
+                "in_standard_filter": 1,
             },
         ],
     }
@@ -407,6 +417,20 @@ def populate_egypt_regions():
 
     from smartplan_medical.populate_egypt_regions import populate
     populate()
+
+
+def populate_customer_classifications():
+    """Populate default customer classifications if none exist."""
+    if not frappe.db.exists("DocType", "Customer Classification"):
+        return
+    if frappe.db.count("Customer Classification") > 0:
+        return
+
+    for name in ["Class A", "Class B", "Class C"]:
+        doc = frappe.new_doc("Customer Classification")
+        doc.classification_name = name
+        doc.insert(ignore_permissions=True)
+    frappe.db.commit()
 
 
 def create_client_scripts():
