@@ -403,6 +403,17 @@ def create_property_setters():
             validate_fields_for_doctype=False
         )
 
+    # ---- Customer Quick Entry: show classification + region fields ----
+    customer_quick_fields = [
+        "custom_governorate", "custom_city", "custom_commercial_registration",
+        "custom_classification",
+    ]
+    for fn in customer_quick_fields:
+        make_property_setter(
+            "Customer", fn, "allow_in_quick_entry", 1, "Check",
+            validate_fields_for_doctype=False
+        )
+
 
 def populate_egypt_regions():
     """Populate Egyptian governorates and cities if the DocTypes exist."""

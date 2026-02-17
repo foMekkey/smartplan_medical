@@ -1,0 +1,87 @@
+{
+    "actions": [],
+    "creation": "2026-02-17 22:54:00",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "item_code",
+        "item_name",
+        "batch_no",
+        "column_break_1",
+        "expiry_date",
+        "standard_rate",
+        "discount_percentage",
+        "discounted_rate"
+    ],
+    "fields": [
+        {
+            "fieldname": "item_code",
+            "fieldtype": "Link",
+            "in_list_view": 1,
+            "label": "Item Code",
+            "options": "Item",
+            "reqd": 1
+        },
+        {
+            "fetch_from": "item_code.item_name",
+            "fieldname": "item_name",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Item Name",
+            "read_only": 1
+        },
+        {
+            "fieldname": "batch_no",
+            "fieldtype": "Link",
+            "in_list_view": 1,
+            "label": "Batch No",
+            "options": "Batch"
+        },
+        {
+            "fieldname": "column_break_1",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fetch_from": "batch_no.expiry_date",
+            "fieldname": "expiry_date",
+            "fieldtype": "Date",
+            "in_list_view": 1,
+            "label": "Expiry Date",
+            "read_only": 1
+        },
+        {
+            "fieldname": "standard_rate",
+            "fieldtype": "Currency",
+            "in_list_view": 1,
+            "label": "Standard Rate",
+            "reqd": 1
+        },
+        {
+            "default": "0",
+            "fieldname": "discount_percentage",
+            "fieldtype": "Percent",
+            "in_list_view": 1,
+            "label": "Discount %",
+            "reqd": 1
+        },
+        {
+            "fieldname": "discounted_rate",
+            "fieldtype": "Currency",
+            "in_list_view": 1,
+            "label": "Discounted Rate",
+            "read_only": 1
+        }
+    ],
+    "index_web_pages_for_search": 0,
+    "istable": 1,
+    "links": [],
+    "modified": "2026-02-17 22:54:00",
+    "modified_by": "Administrator",
+    "module": "Smartplan Medical",
+    "name": "Classification Price List Item",
+    "owner": "Administrator",
+    "permissions": [],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "track_changes": 0
+}

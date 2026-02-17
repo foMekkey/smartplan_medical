@@ -83,7 +83,7 @@ frappe.ui.form.on("Sales Order", {
         load_customer_balance(frm);
         show_customer_invoices_summary(frm);
 
-        // Auto-set sales person from customer
+        // Auto-set sales person from customer + fetch classification pricing
         if (frm.doc.customer) {
             frappe.call({
                 method: 'frappe.client.get',
@@ -103,6 +103,12 @@ frappe.ui.form.on("Sales Order", {
                             message: 'العميل ليس له مندوب مرتبط',
                             indicator: 'orange'
                         }, 3);
+                    }
+
+                    // Fetch classification pricing
+                    let classification = r.message && r.message.custom_classification;
+                    if (classification) {
+                        fetch_and_apply_classification_pricing(frm, classification);
                     }
                 }
             });
@@ -988,6 +994,11 @@ frappe.ui.form.on("Sales Order Item", {
         let row = locals[cdt][cdn];
         if (!row.item_code) return;
         show_stock_popup(frm, cdt, cdn);
+
+        // Auto-apply classification pricing discount if available
+        setTimeout(() => {
+            apply_classification_discount_to_item(frm, cdt, cdn);
+        }, 500);
     },
 
     // Add reopen button when item row form renders
@@ -1932,3 +1943,77 @@ function show_auto_cancel_timer(frm) {
         }
     });
 }
+
+// ==========================================
+// Classification Pricing Auto-Apply
+// ==========================================
+
+function fetch_and_apply_classification_pricing(frm, classification) {
+    /**
+     * Fetch active Classification Price List for the given classification
+     * and apply discounts to existing SO items.
+     */
+    frappe.call({
+        method: "smartplan_medical.classification_pricing_api.get_classification_pricing",
+        args: { classification: classification },
+        callback(r) {
+            if (r.message && r.message.length > 0) {
+                // Store pricing data on the form for use when new items are added
+                frm._classification_pricing = r.message;
+
+                frappe.show_alert({
+                    message: __("تم تحميل تسعير تصنيف العميل: {0} ({1} صنف)", [classification, r.message.length]),
+                    indicator: "blue",
+                }, 5);
+
+                // Apply to existing items
+                if (frm.doc.items && frm.doc.items.length > 0) {
+                    frm.doc.items.forEach(function (item) {
+                        if (item.item_code) {
+                            apply_classification_discount_to_item(frm, item.doctype, item.name);
+                        }
+                    });
+                }
+            } else {
+                frm._classification_pricing = null;
+                frappe.show_alert({
+                    message: __("لا توجد قائمة تسعير فعالة لتصنيف: {0}", [classification]),
+                    indicator: "orange",
+                }, 4);
+            }
+        },
+    });
+}
+
+function apply_classification_discount_to_item(frm, cdt, cdn) {
+    /**
+     * Apply classification pricing discount to a single item row.
+     * Matches by item_code (and optionally batch_no).
+     */
+    if (!frm._classification_pricing) return;
+
+    let row = locals[cdt][cdn];
+    if (!row || !row.item_code) return;
+
+    let pricing = frm._classification_pricing;
+
+    // Try exact match (item_code + batch_no) first, then item_code only
+    let match = null;
+    if (row.custom_batch_no) {
+        match = pricing.find(
+            (p) => p.item_code === row.item_code && p.batch_no === row.custom_batch_no
+        );
+    }
+    if (!match) {
+        match = pricing.find((p) => p.item_code === row.item_code);
+    }
+
+    if (match && match.discount_percentage) {
+        frappe.model.set_value(cdt, cdn, "custom_discount_", match.discount_percentage);
+        frappe.show_alert({
+            message: __("خصم {0}% تم تطبيقه على {1}", [match.discount_percentage, row.item_code]),
+            indicator: "green",
+        }, 3);
+    }
+}
+
