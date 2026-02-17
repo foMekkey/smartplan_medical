@@ -12,6 +12,7 @@ def after_migrate():
     """Called after bench migrate — ensures all customizations exist."""
     create_sales_order_custom_fields()
     create_customer_custom_fields()
+    create_supplier_custom_fields()
     create_selling_settings_fields()
     create_stock_reservation_fields()
     create_property_setters()
@@ -134,6 +135,82 @@ def create_customer_custom_fields():
                 "insert_after": "custom_column_break_region",
                 "translatable": 0,
                 "reqd": 1,
+            },
+        ],
+    }
+
+    create_custom_fields(fields, update=True)
+
+
+def create_supplier_custom_fields():
+    """Create custom fields for Supplier — region, commercial registration, tax card, etc."""
+    fields = {
+        "Supplier": [
+            {
+                "fieldname": "custom_section_supplier_info",
+                "fieldtype": "Section Break",
+                "label": "بيانات المورد / Supplier Info",
+                "insert_after": "supplier_group",
+                "collapsible": 0,
+            },
+            {
+                "fieldname": "custom_governorate",
+                "fieldtype": "Link",
+                "label": "المحافظة",
+                "options": "Governorate",
+                "insert_after": "custom_section_supplier_info",
+                "in_list_view": 1,
+                "in_standard_filter": 1,
+                "reqd": 1,
+            },
+            {
+                "fieldname": "custom_city",
+                "fieldtype": "Link",
+                "label": "المدينة/المركز",
+                "options": "City",
+                "insert_after": "custom_governorate",
+                "in_list_view": 1,
+                "in_standard_filter": 1,
+                "reqd": 1,
+            },
+            {
+                "fieldname": "custom_area",
+                "fieldtype": "Data",
+                "label": "المنطقة",
+                "insert_after": "custom_city",
+            },
+            {
+                "fieldname": "custom_column_break_supplier",
+                "fieldtype": "Column Break",
+                "insert_after": "custom_area",
+            },
+            {
+                "fieldname": "custom_commercial_registration",
+                "fieldtype": "Data",
+                "label": "رقم السجل التجاري",
+                "insert_after": "custom_column_break_supplier",
+                "translatable": 0,
+            },
+            {
+                "fieldname": "custom_tax_card",
+                "fieldtype": "Data",
+                "label": "رقم البطاقة الضريبية",
+                "insert_after": "custom_commercial_registration",
+                "translatable": 0,
+            },
+            {
+                "fieldname": "custom_mobile",
+                "fieldtype": "Data",
+                "label": "رقم الجوال",
+                "options": "Phone",
+                "insert_after": "custom_tax_card",
+            },
+            {
+                "fieldname": "custom_operating_license",
+                "fieldtype": "Data",
+                "label": "رقم رخصة التشغيل",
+                "insert_after": "custom_mobile",
+                "translatable": 0,
             },
         ],
     }
@@ -269,20 +346,60 @@ frappe.ui.form.on("Customer", {
 });
 """.strip()
 
-    script_name = "SPS - Customer Region Filter"
+    _upsert_client_script("SPS - Customer Region Filter", "Customer", customer_filter_script)
 
+    # Supplier region filter script (same pattern as Customer)
+    supplier_filter_script = """
+frappe.ui.form.on("Supplier", {
+    setup(frm) {
+        frm.set_query("custom_city", function () {
+            if (frm.doc.custom_governorate) {
+                return {
+                    filters: {
+                        governorate: frm.doc.custom_governorate
+                    }
+                };
+            }
+            return {};
+        });
+    },
+
+    refresh(frm) {
+        frm.set_query("custom_city", function () {
+            if (frm.doc.custom_governorate) {
+                return {
+                    filters: {
+                        governorate: frm.doc.custom_governorate
+                    }
+                };
+            }
+            return {};
+        });
+    },
+
+    custom_governorate(frm) {
+        frm.set_value("custom_city", "");
+    }
+});
+""".strip()
+
+    _upsert_client_script("SPS - Supplier Region Filter", "Supplier", supplier_filter_script)
+
+
+def _upsert_client_script(script_name, doctype, script_content):
+    """Create or update a Client Script."""
     if frappe.db.exists("Client Script", script_name):
         doc = frappe.get_doc("Client Script", script_name)
-        doc.script = customer_filter_script
+        doc.script = script_content
         doc.enabled = 1
         doc.save(ignore_permissions=True)
     else:
         doc = frappe.get_doc({
             "doctype": "Client Script",
             "name": script_name,
-            "dt": "Customer",
+            "dt": doctype,
             "view": "Form",
             "enabled": 1,
-            "script": customer_filter_script,
+            "script": script_content,
         })
         doc.insert(ignore_permissions=True)

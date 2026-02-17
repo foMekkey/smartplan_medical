@@ -91,6 +91,15 @@ def get_item_stock_info(item_code, set_warehouse=None):
         total_actual += actual
         total_reserved += reserved
 
+    # Calculate per-batch reservations from draft SO batch allocations
+    batch_reserved_map = {}  # batch_no (str) -> total reserved
+    for wh_data in reservation_map.values():
+        for r in wh_data:
+            for ba in r.get("batch_allocations", []):
+                bn = str(ba.get("batch_no", ""))
+                if bn:
+                    batch_reserved_map[bn] = batch_reserved_map.get(bn, 0) + flt(ba.get("qty", 0))
+
     # Get batch details for this item
     batches = frappe.db.sql(
         """
@@ -110,9 +119,13 @@ def get_item_stock_info(item_code, set_warehouse=None):
 
     batch_list = []
     for b in batches:
+        total_qty = flt(b.qty)
+        reserved = flt(batch_reserved_map.get(b.batch_no, 0))
         batch_list.append({
             "batch_no": b.batch_no,
-            "qty": flt(b.qty),
+            "qty": total_qty,
+            "reserved": reserved,
+            "available": total_qty - reserved,
             "expiry_date": str(b.expiry_date) if b.expiry_date else "",
             "manufacturing_date": str(b.manufacturing_date) if b.manufacturing_date else "",
         })
