@@ -14,6 +14,7 @@ def after_migrate():
     create_customer_custom_fields()
     create_supplier_custom_fields()
     create_purchase_order_custom_fields()
+    create_batch_custom_fields()
     create_selling_settings_fields()
     create_stock_reservation_fields()
     create_property_setters()
@@ -298,6 +299,24 @@ def create_selling_settings_fields():
     create_custom_fields(fields, update=True)
 
 
+def create_batch_custom_fields():
+    """Create custom fields for Batch — target warehouse."""
+    fields = {
+        "Batch": [
+            {
+                "fieldname": "custom_target_warehouse",
+                "fieldtype": "Link",
+                "label": "المخزن المستهدف (Target Warehouse)",
+                "options": "Warehouse",
+                "insert_after": "supplier",
+                "reqd": 1,
+                "in_list_view": 1,
+            },
+        ],
+    }
+    create_custom_fields(fields, update=True)
+
+
 def create_stock_reservation_fields():
     """Add sales_order field to Stock Reservation DocType."""
     fields = {
@@ -356,6 +375,17 @@ def create_property_setters():
         "Purchase Order Item", "custom_discount_", "reqd", 1, "Check",
         validate_fields_for_doctype=False
     )
+
+    # ---- Batch Quick Entry: show all relevant fields ----
+    batch_quick_fields = [
+        "batch_id", "item", "manufacturing_date", "expiry_date",
+        "supplier", "description", "custom_target_warehouse",
+    ]
+    for fn in batch_quick_fields:
+        make_property_setter(
+            "Batch", fn, "allow_in_quick_entry", 1, "Check",
+            validate_fields_for_doctype=False
+        )
 
 
 def populate_egypt_regions():
