@@ -68,6 +68,9 @@ def _create_purchase_invoice(po_doc):
     pi.flags.ignore_mandatory = True
     pi.set_posting_time = 0
 
+    # Copy batch/serial from PO items
+    _copy_batch_serial(po_doc, pi)
+
     pi.insert(ignore_permissions=True, ignore_mandatory=True)
     pi.submit()
 
@@ -86,6 +89,9 @@ def _create_purchase_receipt(po_doc):
     pr.flags.ignore_permissions = True
     pr.flags.ignore_mandatory = True
 
+    # Copy batch/serial from PO items
+    _copy_batch_serial(po_doc, pr)
+
     pr.insert(ignore_permissions=True, ignore_mandatory=True)
     # NOTE: Purchase Receipt stays as DRAFT — not submitted
 
@@ -94,3 +100,23 @@ def _create_purchase_receipt(po_doc):
         alert=True,
         indicator="blue",
     )
+
+
+def _copy_batch_serial(po_doc, target_doc):
+    """Copy batch_no and serial_no from PO Items to target document items."""
+    # Build mapping: (item_code, po_detail) -> {batch_no, serial_no}
+    po_item_map = {}
+    for row in po_doc.items:
+        po_item_map[row.name] = {
+            "batch_no": row.get("custom_batch_no") or "",
+            "serial_no": row.get("custom_serial_no") or "",
+        }
+
+    for item in target_doc.items:
+        po_detail = item.get("purchase_order_item") or item.get("po_detail")
+        if po_detail and po_detail in po_item_map:
+            info = po_item_map[po_detail]
+            if info["batch_no"]:
+                item.batch_no = info["batch_no"]
+            if info["serial_no"]:
+                item.serial_no = info["serial_no"]

@@ -255,6 +255,31 @@ def create_purchase_order_custom_fields():
                 "label": "Discount %",
                 "insert_after": "custom_price_before_discount",
             },
+            {
+                "fieldname": "custom_section_batch_serial",
+                "fieldtype": "Section Break",
+                "label": "Batch & Serial / الباتش والسيريال",
+                "insert_after": "custom_discount_",
+                "collapsible": 1,
+            },
+            {
+                "fieldname": "custom_batch_no",
+                "fieldtype": "Link",
+                "label": "رقم الباتش (Batch No)",
+                "options": "Batch",
+                "insert_after": "custom_section_batch_serial",
+            },
+            {
+                "fieldname": "custom_column_break_batch",
+                "fieldtype": "Column Break",
+                "insert_after": "custom_batch_no",
+            },
+            {
+                "fieldname": "custom_serial_no",
+                "fieldtype": "Small Text",
+                "label": "السيريال (Serial No)",
+                "insert_after": "custom_column_break_batch",
+            },
         ],
     }
 
