@@ -13,6 +13,7 @@ def after_migrate():
     create_sales_order_custom_fields()
     create_customer_custom_fields()
     create_supplier_custom_fields()
+    create_purchase_order_custom_fields()
     create_selling_settings_fields()
     create_stock_reservation_fields()
     create_property_setters()
@@ -218,6 +219,48 @@ def create_supplier_custom_fields():
     create_custom_fields(fields, update=True)
 
 
+def create_purchase_order_custom_fields():
+    """Create custom fields for Purchase Order — discount, same as Sales Order."""
+    fields = {
+        "Purchase Order": [
+            {
+                "fieldname": "custom_total_before_discount",
+                "fieldtype": "Currency",
+                "label": "الإجمالي قبل الخصم",
+                "insert_after": "total",
+                "read_only": 1,
+                "bold": 1,
+            },
+            {
+                "fieldname": "custom_total_discount_amount",
+                "fieldtype": "Currency",
+                "label": "Total Discount Amount",
+                "insert_after": "custom_total_before_discount",
+                "read_only": 1,
+            },
+        ],
+        "Purchase Order Item": [
+            {
+                "fieldname": "custom_price_before_discount",
+                "fieldtype": "Currency",
+                "label": "السعر قبل الخصم",
+                "insert_after": "rate",
+                "read_only": 1,
+                "bold": 1,
+                "in_list_view": 1,
+            },
+            {
+                "fieldname": "custom_discount_",
+                "fieldtype": "Percent",
+                "label": "Discount %",
+                "insert_after": "custom_price_before_discount",
+            },
+        ],
+    }
+
+    create_custom_fields(fields, update=True)
+
+
 def create_selling_settings_fields():
     """Add auto-cancel timeout setting to Selling Settings."""
     fields = {
@@ -291,6 +334,12 @@ def create_property_setters():
     # Make Discount % required on Sales Order Item
     make_property_setter(
         "Sales Order Item", "custom_discount_", "reqd", 1, "Check",
+        validate_fields_for_doctype=False
+    )
+
+    # Make Discount % required on Purchase Order Item
+    make_property_setter(
+        "Purchase Order Item", "custom_discount_", "reqd", 1, "Check",
         validate_fields_for_doctype=False
     )
 

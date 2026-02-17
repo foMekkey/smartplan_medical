@@ -33,7 +33,8 @@ app_license = "MIT"
 doctype_js = {
     "Sales Order": "public/js/sales_order_custom.js",
     "Customer": "public/js/customer_custom.js",
-    "Supplier": "public/js/supplier_custom.js"
+    "Supplier": "public/js/supplier_custom.js",
+    "Purchase Order": "public/js/purchase_order_custom.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -133,6 +134,11 @@ doc_events = {
         "on_submit": "smartplan_medical.sales_order_events.on_submit",
         "on_cancel": "smartplan_medical.sales_order_events.after_cancel",
         "before_insert": "smartplan_medical.sales_order_events.before_insert",
+    },
+    "Purchase Order": {
+        "before_save": "smartplan_medical.purchase_order_events.before_save",
+        "before_insert": "smartplan_medical.purchase_order_events.before_insert",
+        "on_submit": "smartplan_medical.purchase_order_events.on_submit",
     }
 }
 
