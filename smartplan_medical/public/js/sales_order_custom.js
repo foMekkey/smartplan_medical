@@ -2008,10 +2008,10 @@ function apply_classification_discount_to_item(frm, cdt, cdn) {
         match = pricing.find((p) => p.item_code === row.item_code);
     }
 
-    if (match && match.discount_percentage) {
-        frappe.model.set_value(cdt, cdn, "custom_discount_", match.discount_percentage);
+    if (match && match.selling_discount) {
+        frappe.model.set_value(cdt, cdn, "custom_discount_", match.selling_discount);
         frappe.show_alert({
-            message: __("خصم {0}% تم تطبيقه على {1}", [match.discount_percentage, row.item_code]),
+            message: __("خصم {0}% تم تطبيقه على {1}", [match.selling_discount, row.item_code]),
             indicator: "green",
         }, 3);
     }

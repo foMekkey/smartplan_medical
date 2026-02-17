@@ -5,11 +5,11 @@ from frappe.utils import flt
 
 class ClassificationPriceList(Document):
     def validate(self):
-        """Calculate discounted rates for all items."""
+        """Calculate discounted selling rates for all items."""
         for item in self.items:
-            if item.standard_rate and item.discount_percentage:
+            if item.standard_rate and item.selling_discount:
                 item.discounted_rate = flt(item.standard_rate) * (
-                    1 - flt(item.discount_percentage) / 100
+                    1 - flt(item.selling_discount) / 100
                 )
             else:
                 item.discounted_rate = flt(item.standard_rate)
