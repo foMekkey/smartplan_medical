@@ -50,6 +50,39 @@ def get_columns():
             "width": 90,
         },
         {
+            "fieldname": "warehouse",
+            "label": _("المخزن"),
+            "fieldtype": "Link",
+            "options": "Warehouse",
+            "width": 140,
+        },
+        {
+            "fieldname": "available_qty",
+            "label": _("الكمية المتاحة"),
+            "fieldtype": "Float",
+            "width": 100,
+        },
+        {
+            "fieldname": "reserved_qty",
+            "label": _("الكمية المحجوزة"),
+            "fieldtype": "Float",
+            "width": 100,
+        },
+        {
+            "fieldname": "reserved_by",
+            "label": _("محجوزة لـ"),
+            "fieldtype": "Link",
+            "options": "Customer",
+            "width": 140,
+        },
+        {
+            "fieldname": "reserved_so",
+            "label": _("أمر البيع"),
+            "fieldtype": "Link",
+            "options": "Sales Order",
+            "width": 130,
+        },
+        {
             "fieldname": "purchase_date",
             "label": _("تاريخ الشراء"),
             "fieldtype": "Date",
@@ -189,11 +222,18 @@ def get_data(filters):
     if not selling_map:
         selling_map = _get_all_selling_map()
 
+    # Get stock data (batch-level qty per warehouse)
+    stock_map = _get_batch_stock_map(all_items)
+    reserved_map = _get_reserved_qty_map(all_items)
+
     # Build report data
     current_date = getdate(today())
     result = []
 
     for item in all_items:
+        batch_key = (item.item_code, item.batch_no or "")
+        stock_info = stock_map.get(batch_key, {})
+
         row = {
             "item_code": item.item_code,
             "item_name": item.item_name,
@@ -203,6 +243,11 @@ def get_data(filters):
             "purchase_rate": flt(item.purchase_rate),
             "purchase_discount": flt(item.purchase_discount),
             "net_purchase_rate": flt(item.net_purchase_rate),
+            "warehouse": stock_info.get("warehouse", ""),
+            "available_qty": flt(stock_info.get("actual_qty", 0)),
+            "reserved_qty": flt(reserved_map.get(batch_key, {}).get("qty", 0)),
+            "reserved_by": reserved_map.get(batch_key, {}).get("customer", ""),
+            "reserved_so": reserved_map.get(batch_key, {}).get("sales_order", ""),
         }
 
         # Calculate days to expiry
@@ -341,6 +386,77 @@ def _get_all_selling_map():
             key = (item.item_code, item.batch_no or "")
             if key not in result:
                 result[key] = item
+    return result
+
+
+def _get_batch_stock_map(all_items):
+    """Get actual qty per item+batch from Stock Ledger Entry (latest balance)."""
+    if not all_items:
+        return {}
+
+    item_codes = list(set(i.item_code for i in all_items))
+
+    # Get batch-level stock from SLE
+    sle_data = frappe.db.sql("""
+        SELECT
+            sle.item_code,
+            sle.batch_no,
+            sle.warehouse,
+            SUM(sle.actual_qty) as actual_qty
+        FROM `tabStock Ledger Entry` sle
+        WHERE sle.item_code IN %(item_codes)s
+            AND sle.is_cancelled = 0
+        GROUP BY sle.item_code, sle.batch_no, sle.warehouse
+        HAVING SUM(sle.actual_qty) > 0
+    """, {"item_codes": item_codes}, as_dict=True)
+
+    result = {}
+    for row in sle_data:
+        key = (row.item_code, row.batch_no or "")
+        # Keep the warehouse with the highest qty
+        if key not in result or flt(row.actual_qty) > flt(result[key].get("actual_qty", 0)):
+            result[key] = {
+                "warehouse": row.warehouse,
+                "actual_qty": flt(row.actual_qty),
+            }
+    return result
+
+
+def _get_reserved_qty_map(all_items):
+    """Get reserved qty from submitted Sales Orders (not yet delivered)."""
+    if not all_items:
+        return {}
+
+    item_codes = list(set(i.item_code for i in all_items))
+
+    reserved_data = frappe.db.sql("""
+        SELECT
+            soi.item_code,
+            soi.custom_batch_no as batch_no,
+            SUM(soi.qty - soi.delivered_qty) as reserved_qty,
+            so.customer,
+            so.name as sales_order
+        FROM `tabSales Order Item` soi
+        INNER JOIN `tabSales Order` so ON so.name = soi.parent
+        WHERE so.docstatus = 1
+            AND so.status NOT IN ('Completed', 'Cancelled', 'Closed')
+            AND soi.item_code IN %(item_codes)s
+            AND (soi.qty - soi.delivered_qty) > 0
+        GROUP BY soi.item_code, soi.custom_batch_no, so.name
+        ORDER BY reserved_qty DESC
+    """, {"item_codes": item_codes}, as_dict=True)
+
+    result = {}
+    for row in reserved_data:
+        key = (row.item_code, row.batch_no or "")
+        if key not in result:
+            result[key] = {
+                "qty": flt(row.reserved_qty),
+                "customer": row.customer,
+                "sales_order": row.sales_order,
+            }
+        else:
+            result[key]["qty"] += flt(row.reserved_qty)
     return result
 
 
