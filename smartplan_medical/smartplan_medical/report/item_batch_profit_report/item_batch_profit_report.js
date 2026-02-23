@@ -34,10 +34,9 @@ frappe.query_reports["Item Batch Profit Report"] = {
         },
         {
             fieldname: "dispatch_priority",
-            label: __("أولوية الصرف"),
-            fieldtype: "Select",
-            options: "\n90 يوم\n180 يوم\n365 يوم",
-            default: "",
+            label: __("أولوية الصرف (أيام)"),
+            fieldtype: "Int",
+            default: 0,
         },
     ],
 

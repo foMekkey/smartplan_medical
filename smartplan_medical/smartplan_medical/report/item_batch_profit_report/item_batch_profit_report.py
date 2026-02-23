@@ -266,9 +266,9 @@ def get_data(filters):
             continue
 
         # Filter by dispatch priority (expiry within N days)
-        dispatch_priority = filters.get("dispatch_priority")
-        if dispatch_priority:
-            days_limit = int(dispatch_priority.replace(" يوم", ""))
+        days_limit = filters.get("dispatch_priority")
+        if days_limit:
+            days_limit = int(days_limit)
             if row["days_to_expiry"] is None or row["days_to_expiry"] > days_limit:
                 continue
 
