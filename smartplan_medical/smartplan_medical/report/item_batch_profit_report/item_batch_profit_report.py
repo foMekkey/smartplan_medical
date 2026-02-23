@@ -427,13 +427,15 @@ def _get_reserved_qty_map(all_items):
     if not all_items:
         return {}
 
+    import json
+
     item_codes = list(set(i.item_code for i in all_items))
 
     reserved_data = frappe.db.sql("""
         SELECT
             soi.item_code,
-            soi.custom_batch_no as batch_no,
-            SUM(soi.qty - soi.delivered_qty) as reserved_qty,
+            soi.custom_batch_allocations,
+            (soi.qty - soi.delivered_qty) as pending_qty,
             so.customer,
             so.name as sales_order
         FROM `tabSales Order Item` soi
@@ -442,21 +444,41 @@ def _get_reserved_qty_map(all_items):
             AND so.status NOT IN ('Completed', 'Cancelled', 'Closed')
             AND soi.item_code IN %(item_codes)s
             AND (soi.qty - soi.delivered_qty) > 0
-        GROUP BY soi.item_code, soi.custom_batch_no, so.name
-        ORDER BY reserved_qty DESC
     """, {"item_codes": item_codes}, as_dict=True)
 
     result = {}
     for row in reserved_data:
-        key = (row.item_code, row.batch_no or "")
-        if key not in result:
-            result[key] = {
-                "qty": flt(row.reserved_qty),
-                "customer": row.customer,
-                "sales_order": row.sales_order,
-            }
+        # Parse batch allocations JSON if available
+        batch_allocs = []
+        if row.custom_batch_allocations:
+            try:
+                batch_allocs = json.loads(row.custom_batch_allocations)
+            except (json.JSONDecodeError, TypeError):
+                pass
+
+        if batch_allocs:
+            for alloc in batch_allocs:
+                key = (row.item_code, alloc.get("batch_no", ""))
+                if key not in result:
+                    result[key] = {
+                        "qty": flt(alloc.get("qty", 0)),
+                        "customer": row.customer,
+                        "sales_order": row.sales_order,
+                    }
+                else:
+                    result[key]["qty"] += flt(alloc.get("qty", 0))
         else:
-            result[key]["qty"] += flt(row.reserved_qty)
+            # No batch allocation — use item-level
+            key = (row.item_code, "")
+            if key not in result:
+                result[key] = {
+                    "qty": flt(row.pending_qty),
+                    "customer": row.customer,
+                    "sales_order": row.sales_order,
+                }
+            else:
+                result[key]["qty"] += flt(row.pending_qty)
+
     return result
 
 
