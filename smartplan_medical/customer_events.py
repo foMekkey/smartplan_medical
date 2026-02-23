@@ -13,7 +13,13 @@ def after_save(doc, method):
         # If no classification, clear the price list only if it was auto-set
         return
 
-    pl_name = f"قائمة أسعار - {classification}"
+    pl_name = f"قائمة أسعار بيع - {classification}"
+
+    # Fallback: also check old naming convention
+    if not frappe.db.exists("Price List", pl_name):
+        pl_name_old = f"قائمة أسعار - {classification}"
+        if frappe.db.exists("Price List", pl_name_old):
+            pl_name = pl_name_old
 
     if frappe.db.exists("Price List", pl_name):
         if doc.default_price_list != pl_name:
