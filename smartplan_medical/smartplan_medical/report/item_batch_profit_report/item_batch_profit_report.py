@@ -265,6 +265,13 @@ def get_data(filters):
         if filters.get("show_loss_only") and not is_loss:
             continue
 
+        # Filter by dispatch priority (expiry within N days)
+        dispatch_priority = filters.get("dispatch_priority")
+        if dispatch_priority:
+            days_limit = int(dispatch_priority.replace(" يوم", ""))
+            if row["days_to_expiry"] is None or row["days_to_expiry"] > days_limit:
+                continue
+
         result.append(row)
 
     # Sort: losses first, then by expiry date (earliest first)
