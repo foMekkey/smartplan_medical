@@ -131,8 +131,8 @@ doc_events = {
         "before_validate": "smartplan_medical.sales_order_events.before_validate",
         "before_save": "smartplan_medical.sales_order_events.before_save",
         "after_save": "smartplan_medical.sales_order_events.after_save",
-        "on_submit": "smartplan_medical.sales_order_events.on_submit",
-        "on_cancel": "smartplan_medical.sales_order_events.after_cancel",
+        "on_submit": ["smartplan_medical.sales_order_events.on_submit", "smartplan_medical.realtime_events.on_stock_change"],
+        "on_cancel": ["smartplan_medical.sales_order_events.after_cancel", "smartplan_medical.realtime_events.on_stock_change"],
         "before_insert": "smartplan_medical.sales_order_events.before_insert",
     },
     "Purchase Order": {
@@ -142,7 +142,27 @@ doc_events = {
     },
     "Customer": {
         "after_save": "smartplan_medical.customer_events.after_save",
-    }
+    },
+    "Purchase Invoice": {
+        "on_submit": "smartplan_medical.realtime_events.on_stock_change",
+        "on_cancel": "smartplan_medical.realtime_events.on_stock_change",
+    },
+    "Sales Invoice": {
+        "on_submit": "smartplan_medical.realtime_events.on_stock_change",
+        "on_cancel": "smartplan_medical.realtime_events.on_stock_change",
+    },
+    "Stock Entry": {
+        "on_submit": "smartplan_medical.realtime_events.on_stock_change",
+        "on_cancel": "smartplan_medical.realtime_events.on_stock_change",
+    },
+    "Delivery Note": {
+        "on_submit": "smartplan_medical.realtime_events.on_stock_change",
+        "on_cancel": "smartplan_medical.realtime_events.on_stock_change",
+    },
+    "Purchase Receipt": {
+        "on_submit": "smartplan_medical.realtime_events.on_stock_change",
+        "on_cancel": "smartplan_medical.realtime_events.on_stock_change",
+    },
 }
 
 # Testing
