@@ -119,7 +119,8 @@ def get_columns():
 
 
 def get_data(filters):
-    conditions = get_conditions(filters)
+    pi_conditions = get_conditions(filters, parent_alias="pi", item_alias="pii")
+    pr_conditions = get_conditions(filters, parent_alias="pr", item_alias="pri")
 
     # Get purchase data — items with batches from Purchase Invoices
     purchase_data = frappe.db.sql("""
@@ -139,7 +140,7 @@ def get_data(filters):
         WHERE pi.docstatus = 1
             {conditions}
         ORDER BY pii.item_code, b.expiry_date ASC
-    """.format(conditions=conditions), {
+    """.format(conditions=pi_conditions), {
         "from_date": filters.get("from_date"),
         "to_date": filters.get("to_date"),
         "item_code": filters.get("item_code"),
@@ -163,7 +164,7 @@ def get_data(filters):
         WHERE pr.docstatus = 1
             {conditions}
         ORDER BY pri.item_code, b.expiry_date ASC
-    """.format(conditions=conditions), {
+    """.format(conditions=pr_conditions), {
         "from_date": filters.get("from_date"),
         "to_date": filters.get("to_date"),
         "item_code": filters.get("item_code"),
@@ -275,14 +276,14 @@ def get_data(filters):
     return result
 
 
-def get_conditions(filters):
+def get_conditions(filters, parent_alias="pi", item_alias="pii"):
     conditions = []
     if filters.get("from_date"):
-        conditions.append("AND pi.posting_date >= %(from_date)s")
+        conditions.append(f"AND {parent_alias}.posting_date >= %(from_date)s")
     if filters.get("to_date"):
-        conditions.append("AND pi.posting_date <= %(to_date)s")
+        conditions.append(f"AND {parent_alias}.posting_date <= %(to_date)s")
     if filters.get("item_code"):
-        conditions.append("AND pii.item_code = %(item_code)s")
+        conditions.append(f"AND {item_alias}.item_code = %(item_code)s")
     return " ".join(conditions)
 
 
