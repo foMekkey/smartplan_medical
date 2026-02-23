@@ -83,6 +83,30 @@ def get_columns():
             "width": 130,
         },
         {
+            "fieldname": "received_qty",
+            "label": _("تم استلامه"),
+            "fieldtype": "Float",
+            "width": 90,
+        },
+        {
+            "fieldname": "pending_receipt_qty",
+            "label": _("بانتظار الاستلام"),
+            "fieldtype": "Float",
+            "width": 100,
+        },
+        {
+            "fieldname": "delivered_qty",
+            "label": _("تم صرفه"),
+            "fieldtype": "Float",
+            "width": 90,
+        },
+        {
+            "fieldname": "pending_delivery_qty",
+            "label": _("بانتظار الصرف"),
+            "fieldtype": "Float",
+            "width": 100,
+        },
+        {
             "fieldname": "purchase_date",
             "label": _("تاريخ الشراء"),
             "fieldtype": "Date",
@@ -225,6 +249,7 @@ def get_data(filters):
     # Get stock data (batch-level qty per warehouse)
     stock_map = _get_batch_stock_map(all_items)
     reserved_map = _get_reserved_qty_map(all_items)
+    receipt_map = _get_receipt_delivery_map(all_items)
 
     # Build report data
     current_date = getdate(today())
@@ -233,6 +258,7 @@ def get_data(filters):
     for item in all_items:
         batch_key = (item.item_code, item.batch_no or "")
         stock_info = stock_map.get(batch_key, {})
+        rd_info = receipt_map.get(batch_key, {})
 
         row = {
             "item_code": item.item_code,
@@ -248,6 +274,10 @@ def get_data(filters):
             "reserved_qty": flt(reserved_map.get(batch_key, {}).get("qty", 0)),
             "reserved_by": reserved_map.get(batch_key, {}).get("customer", ""),
             "reserved_so": reserved_map.get(batch_key, {}).get("sales_order", ""),
+            "received_qty": flt(rd_info.get("received_qty", 0)),
+            "pending_receipt_qty": flt(rd_info.get("pending_receipt_qty", 0)),
+            "delivered_qty": flt(rd_info.get("delivered_qty", 0)),
+            "pending_delivery_qty": flt(rd_info.get("pending_delivery_qty", 0)),
         }
 
         # Calculate days to expiry
@@ -419,6 +449,96 @@ def _get_batch_stock_map(all_items):
                 "warehouse": row.warehouse,
                 "actual_qty": flt(row.actual_qty),
             }
+    return result
+
+
+def _get_receipt_delivery_map(all_items):
+    """Get received/pending receipt and delivered/pending delivery per item+batch."""
+    if not all_items:
+        return {}
+
+    item_codes = list(set(i.item_code for i in all_items))
+    result = {}
+
+    # --- Purchase side: received qty from Purchase Receipts ---
+    pr_data = frappe.db.sql("""
+        SELECT
+            pri.item_code,
+            pri.batch_no,
+            SUM(pri.qty) as received_qty
+        FROM `tabPurchase Receipt Item` pri
+        INNER JOIN `tabPurchase Receipt` pr ON pr.name = pri.parent
+        WHERE pr.docstatus = 1
+            AND pri.item_code IN %(item_codes)s
+        GROUP BY pri.item_code, pri.batch_no
+    """, {"item_codes": item_codes}, as_dict=True)
+
+    for row in pr_data:
+        key = (row.item_code, row.batch_no or "")
+        if key not in result:
+            result[key] = {}
+        result[key]["received_qty"] = flt(row.received_qty)
+
+    # --- Purchase side: ordered but not received from Purchase Orders ---
+    po_data = frappe.db.sql("""
+        SELECT
+            poi.item_code,
+            poi.custom_batch_no as batch_no,
+            SUM(poi.qty - poi.received_qty) as pending_receipt
+        FROM `tabPurchase Order Item` poi
+        INNER JOIN `tabPurchase Order` po ON po.name = poi.parent
+        WHERE po.docstatus = 1
+            AND po.status NOT IN ('Completed', 'Cancelled', 'Closed')
+            AND poi.item_code IN %(item_codes)s
+            AND (poi.qty - poi.received_qty) > 0
+        GROUP BY poi.item_code, poi.custom_batch_no
+    """, {"item_codes": item_codes}, as_dict=True)
+
+    for row in po_data:
+        key = (row.item_code, row.batch_no or "")
+        if key not in result:
+            result[key] = {}
+        result[key]["pending_receipt_qty"] = flt(row.pending_receipt)
+
+    # --- Sales side: delivered qty from Delivery Notes ---
+    dn_data = frappe.db.sql("""
+        SELECT
+            dni.item_code,
+            dni.batch_no,
+            SUM(dni.qty) as delivered_qty
+        FROM `tabDelivery Note Item` dni
+        INNER JOIN `tabDelivery Note` dn ON dn.name = dni.parent
+        WHERE dn.docstatus = 1
+            AND dni.item_code IN %(item_codes)s
+        GROUP BY dni.item_code, dni.batch_no
+    """, {"item_codes": item_codes}, as_dict=True)
+
+    for row in dn_data:
+        key = (row.item_code, row.batch_no or "")
+        if key not in result:
+            result[key] = {}
+        result[key]["delivered_qty"] = flt(row.delivered_qty)
+
+    # --- Sales side: sold but not delivered from Sales Orders ---
+    so_data = frappe.db.sql("""
+        SELECT
+            soi.item_code,
+            SUM(soi.qty - soi.delivered_qty) as pending_delivery
+        FROM `tabSales Order Item` soi
+        INNER JOIN `tabSales Order` so ON so.name = soi.parent
+        WHERE so.docstatus = 1
+            AND so.status NOT IN ('Completed', 'Cancelled', 'Closed')
+            AND soi.item_code IN %(item_codes)s
+            AND (soi.qty - soi.delivered_qty) > 0
+        GROUP BY soi.item_code
+    """, {"item_codes": item_codes}, as_dict=True)
+
+    for row in so_data:
+        key = (row.item_code, "")
+        if key not in result:
+            result[key] = {}
+        result[key]["pending_delivery_qty"] = flt(row.pending_delivery)
+
     return result
 
 
