@@ -111,12 +111,12 @@ doc_events = {
         "validate": "smartplan_medical.smartplan_medical.utils.validate_tele_sales_order"
     },
     "Sales Order": {
-        "before_validate": "smartplan_medical.smartplan_medical.sales_order_events.before_validate",
-        "before_save": "smartplan_medical.smartplan_medical.sales_order_events.before_save",
-        "after_save": "smartplan_medical.smartplan_medical.sales_order_events.after_save",
-        "on_submit": "smartplan_medical.smartplan_medical.sales_order_events.on_submit",
-        "after_cancel": "smartplan_medical.smartplan_medical.sales_order_events.after_cancel",
-        "before_insert": "smartplan_medical.smartplan_medical.sales_order_events.before_insert"
+        "before_validate": "smartplan_medical.sales_order_events.before_validate",
+        "before_save": "smartplan_medical.sales_order_events.before_save",
+        "after_save": "smartplan_medical.sales_order_events.after_save",
+        "on_submit": "smartplan_medical.sales_order_events.on_submit",
+        "after_cancel": "smartplan_medical.sales_order_events.after_cancel",
+        "before_insert": "smartplan_medical.sales_order_events.before_insert"
     }
 }
 
