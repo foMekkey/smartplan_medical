@@ -155,6 +155,11 @@ doc_events = {
 # ──────────────────────────────────────────────
 
 scheduler_events = {
+    "cron": {
+        "*/15 * * * *": [
+            "smartplan_medical.auto_cancel_orders.auto_cancel_expired_orders"
+        ]
+    },
     "daily": [
         "smartplan_medical.smartplan_medical.tasks.check_expiring_batches",
         "smartplan_medical.smartplan_medical.tasks.escalate_pending_approvals"
