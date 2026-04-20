@@ -58,7 +58,8 @@ override_doctype_class = {}
 
 doctype_js = {
     "Sales Order": "public/js/sales_order_custom.js",
-    "Purchase Order": "public/js/purchase_order_custom.js"
+    "Purchase Order": "public/js/purchase_order_custom.js",
+    "Customer": "public/js/customer_custom.js"
 }
 # Inject PWA <head> content via website_context
 update_website_context = "smartplan_medical.api.update_website_context"
@@ -123,6 +124,29 @@ doc_events = {
         "before_save": "smartplan_medical.purchase_order_events.before_save",
         "before_insert": "smartplan_medical.purchase_order_events.before_insert",
         "on_submit": "smartplan_medical.purchase_order_events.on_submit"
+    },
+    "Customer": {
+        "after_save": "smartplan_medical.customer_events.after_save"
+    },
+    "Purchase Invoice": {
+        "on_submit": "smartplan_medical.realtime_events.on_stock_change",
+        "on_cancel": "smartplan_medical.realtime_events.on_stock_change"
+    },
+    "Sales Invoice": {
+        "on_submit": "smartplan_medical.realtime_events.on_stock_change",
+        "on_cancel": "smartplan_medical.realtime_events.on_stock_change"
+    },
+    "Stock Entry": {
+        "on_submit": "smartplan_medical.realtime_events.on_stock_change",
+        "on_cancel": "smartplan_medical.realtime_events.on_stock_change"
+    },
+    "Delivery Note": {
+        "on_submit": "smartplan_medical.realtime_events.on_stock_change",
+        "on_cancel": "smartplan_medical.realtime_events.on_stock_change"
+    },
+    "Purchase Receipt": {
+        "on_submit": "smartplan_medical.realtime_events.on_stock_change",
+        "on_cancel": "smartplan_medical.realtime_events.on_stock_change"
     }
 }
 
