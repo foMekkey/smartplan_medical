@@ -1,0 +1,251 @@
+// ═══════════════════════════════════════════════════════════════
+// SmartPlan Medical — Micro-Animations
+// ═══════════════════════════════════════════════════════════════
+
+// ─── INSTALL BANNER ──────────────────────────
+#sp-install-banner {
+    position: fixed;
+    bottom: -100px;
+    left: $sp-space-4;
+    right: $sp-space-4;
+    z-index: $sp-z-install-banner;
+    background: $sp-navy-light;
+    border: 1px solid $sp-border;
+    border-radius: $sp-radius-lg;
+    box-shadow: $sp-shadow-xl;
+    padding: $sp-space-4;
+    transition: $sp-transition;
+    opacity: 0;
+
+    &.sp-install-visible {
+        bottom: calc(80px + #{$sp-safe-bottom});
+        opacity: 1;
+    }
+
+    .sp-install-content {
+        display: flex;
+        align-items: center;
+        gap: $sp-space-3;
+    }
+
+    .sp-install-icon img {
+        border-radius: $sp-radius;
+        box-shadow: $sp-shadow-sm;
+    }
+
+    .sp-install-text {
+        flex: 1;
+        min-width: 0;
+
+        strong {
+            display: block;
+            color: $sp-text-primary;
+            font-size: $sp-font-size-base;
+        }
+
+        span {
+            font-size: $sp-font-size-sm;
+            color: $sp-text-muted;
+        }
+    }
+
+    .sp-install-actions {
+        display: flex;
+        align-items: center;
+        gap: $sp-space-2;
+    }
+
+    .sp-install-btn {
+        background: linear-gradient(135deg, $sp-accent, darken($sp-accent, 10%));
+        border: none;
+        color: $sp-text-inverse;
+        padding: 8px 20px;
+        border-radius: $sp-radius-full;
+        font-weight: 600;
+        font-size: $sp-font-size-sm;
+        cursor: pointer;
+        transition: $sp-transition;
+
+        &:hover {
+            box-shadow: $sp-shadow-glow;
+        }
+    }
+
+    .sp-install-dismiss {
+        background: transparent;
+        border: none;
+        color: $sp-text-muted;
+        font-size: 18px;
+        cursor: pointer;
+        padding: 4px 8px;
+
+        &:hover {
+            color: $sp-text-primary;
+        }
+    }
+}
+
+// ─── OFFLINE INDICATOR ───────────────────────
+#sp-offline-indicator {
+    position: fixed;
+    top: calc(8px + #{$sp-safe-top});
+    left: 50%;
+    transform: translateX(-50%) translateY(-50px);
+    z-index: $sp-z-offline;
+    opacity: 0;
+    transition: $sp-transition;
+
+    &.sp-offline-visible {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+
+    .sp-offline-content {
+        display: flex;
+        align-items: center;
+        gap: $sp-space-2;
+        background: rgba($sp-warning, 0.15);
+        border: 1px solid rgba($sp-warning, 0.3);
+        color: $sp-warning;
+        padding: 6px 16px;
+        border-radius: $sp-radius-full;
+        font-size: $sp-font-size-sm;
+        font-weight: 600;
+        backdrop-filter: blur(10px);
+
+        svg {
+            width: 14px;
+            height: 14px;
+        }
+    }
+}
+
+// ─── PULL TO REFRESH ─────────────────────────
+#sp-pull-refresh {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: $sp-z-toast;
+    display: flex;
+    justify-content: center;
+    transform: translateY(-60px);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    pointer-events: none;
+
+    .sp-pull-refresh-content {
+        display: flex;
+        align-items: center;
+        gap: $sp-space-2;
+        padding: $sp-space-2 $sp-space-4;
+        background: $sp-navy-lighter;
+        border: 1px solid $sp-border;
+        border-radius: $sp-radius-full;
+        box-shadow: $sp-shadow-md;
+
+        .sp-pull-spinner {
+            width: 20px;
+            height: 20px;
+
+            svg {
+                width: 20px;
+                height: 20px;
+                color: $sp-accent;
+                transition: transform 0.3s ease;
+            }
+        }
+
+        .sp-pull-text {
+            font-size: $sp-font-size-sm;
+            font-weight: 500;
+            color: $sp-text-secondary;
+        }
+    }
+
+    &.sp-pull-ready {
+        .sp-pull-spinner svg {
+            color: $sp-success;
+        }
+
+        .sp-pull-text {
+            color: $sp-success;
+        }
+    }
+
+    &.sp-pull-refreshing {
+        .sp-pull-spinner svg {
+            animation: sp-spin 1s linear infinite;
+        }
+    }
+}
+
+@keyframes sp-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+// ─── PAGE TRANSITION ─────────────────────────
+.smartplan-pwa {
+    .page-container {
+        animation: sp-page-enter 0.3s ease-out;
+    }
+}
+
+@keyframes sp-page-enter {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// ─── SKELETON LOADING ────────────────────────
+.smartplan-pwa {
+    .loading-state, .workspace-skeleton {
+        .placeholder, .skeleton-element {
+            background: linear-gradient(
+                90deg,
+                $sp-surface 25%,
+                $sp-surface-hover 50%,
+                $sp-surface 75%
+            );
+            background-size: 200% 100%;
+            animation: sp-shimmer 1.5s ease-in-out infinite;
+            border-radius: $sp-radius-sm;
+        }
+    }
+}
+
+@keyframes sp-shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+// ─── HOVER GLOW EFFECT ──────────────────────
+.smartplan-pwa {
+    .widget:hover,
+    .frappe-card:hover {
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            opacity: 0;
+            background: radial-gradient(
+                600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba($sp-accent, 0.06),
+                transparent 40%
+            );
+            animation: sp-glow-in 0.3s ease forwards;
+            pointer-events: none;
+        }
+    }
+}
+
+@keyframes sp-glow-in {
+    to { opacity: 1; }
+}

@@ -1,0 +1,109 @@
+// ═══════════════════════════════════════════════════════════════
+// SmartPlan Medical — Design System Variables
+// Modern premium palette with glassmorphism foundation
+// ═══════════════════════════════════════════════════════════════
+
+// ─── BRAND PALETTE ───────────────────────────
+$sp-navy:              #0D1B2A;
+$sp-navy-light:        #1B2838;
+$sp-navy-lighter:      #243447;
+$sp-navy-mid:          #2E4057;
+$sp-accent:            #00BFA6;
+$sp-accent-hover:      #00E5C3;
+$sp-accent-glow:       rgba(0, 191, 166, 0.25);
+$sp-accent-pale:       rgba(0, 191, 166, 0.08);
+$sp-danger:            #FF4757;
+$sp-warning:           #FECA57;
+$sp-success:           #00D68F;
+$sp-info:              #3B82F6;
+
+// ─── TEXT COLORS ─────────────────────────────
+$sp-text-primary:      #E8EDF3;
+$sp-text-secondary:    #8899AA;
+$sp-text-muted:        #5A6D80;
+$sp-text-inverse:      #0D1B2A;
+$sp-text-accent:       $sp-accent;
+
+// ─── SURFACES ────────────────────────────────
+$sp-surface:           rgba(255, 255, 255, 0.04);
+$sp-surface-hover:     rgba(255, 255, 255, 0.07);
+$sp-surface-active:    rgba(255, 255, 255, 0.10);
+$sp-glass:             rgba(255, 255, 255, 0.06);
+$sp-glass-heavy:       rgba(255, 255, 255, 0.10);
+$sp-glass-border:      rgba(255, 255, 255, 0.08);
+$sp-glass-blur:        16px;
+
+// ─── BORDERS ─────────────────────────────────
+$sp-border:            rgba(255, 255, 255, 0.08);
+$sp-border-hover:      rgba(255, 255, 255, 0.15);
+$sp-border-accent:     rgba(0, 191, 166, 0.3);
+
+// ─── SHADOWS ─────────────────────────────────
+$sp-shadow-sm:         0 2px 8px rgba(0, 0, 0, 0.15);
+$sp-shadow-md:         0 4px 16px rgba(0, 0, 0, 0.2);
+$sp-shadow-lg:         0 8px 32px rgba(0, 0, 0, 0.3);
+$sp-shadow-xl:         0 16px 48px rgba(0, 0, 0, 0.4);
+$sp-shadow-glow:       0 0 20px $sp-accent-glow;
+
+// ─── TYPOGRAPHY ──────────────────────────────
+$sp-font-family:       'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$sp-font-mono:         'JetBrains Mono', 'Fira Code', monospace;
+$sp-font-size-xs:      0.7rem;
+$sp-font-size-sm:      0.8rem;
+$sp-font-size-base:    0.875rem;
+$sp-font-size-md:      1rem;
+$sp-font-size-lg:      1.125rem;
+$sp-font-size-xl:      1.375rem;
+$sp-font-size-2xl:     1.75rem;
+$sp-font-size-3xl:     2.25rem;
+$sp-line-height:       1.6;
+$sp-letter-spacing:    -0.01em;
+
+// ─── RADIUS ──────────────────────────────────
+$sp-radius-xs:         4px;
+$sp-radius-sm:         8px;
+$sp-radius:            12px;
+$sp-radius-lg:         16px;
+$sp-radius-xl:         20px;
+$sp-radius-2xl:        24px;
+$sp-radius-full:       9999px;
+
+// ─── SPACING ─────────────────────────────────
+$sp-space-1:           4px;
+$sp-space-2:           8px;
+$sp-space-3:           12px;
+$sp-space-4:           16px;
+$sp-space-5:           20px;
+$sp-space-6:           24px;
+$sp-space-8:           32px;
+$sp-space-10:          40px;
+$sp-space-12:          48px;
+
+// ─── TRANSITIONS ─────────────────────────────
+$sp-transition-fast:   150ms cubic-bezier(0.4, 0, 0.2, 1);
+$sp-transition:        300ms cubic-bezier(0.4, 0, 0.2, 1);
+$sp-transition-slow:   500ms cubic-bezier(0.4, 0, 0.2, 1);
+$sp-transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+// ─── BREAKPOINTS ─────────────────────────────
+$sp-mobile:            576px;
+$sp-tablet:            768px;
+$sp-desktop:           992px;
+$sp-wide:              1200px;
+
+// ─── Z-INDEX SCALE ───────────────────────────
+$sp-z-dropdown:        100;
+$sp-z-sticky:          200;
+$sp-z-modal-backdrop:  900;
+$sp-z-modal:           1000;
+$sp-z-fab:             800;
+$sp-z-bottom-nav:      850;
+$sp-z-toast:           1100;
+$sp-z-install-banner:  1200;
+$sp-z-offline:         1300;
+
+// ─── SAFE AREAS (for notched devices) ────────
+$sp-safe-top:          env(safe-area-inset-top, 0px);
+$sp-safe-bottom:       env(safe-area-inset-bottom, 0px);
+$sp-safe-left:         env(safe-area-inset-left, 0px);
+$sp-safe-right:        env(safe-area-inset-right, 0px);

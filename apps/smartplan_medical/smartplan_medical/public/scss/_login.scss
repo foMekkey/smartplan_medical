@@ -1,0 +1,204 @@
+// ═══════════════════════════════════════════════════════════════
+// SmartPlan Medical — Login Page Redesign
+// ═══════════════════════════════════════════════════════════════
+
+// Login page (served from web template, uses web_include_css)
+.page-card {
+    .smartplan-pwa &, body & {
+        background: $sp-glass !important;
+        backdrop-filter: blur(20px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+        border: 1px solid $sp-glass-border !important;
+        border-radius: $sp-radius-xl !important;
+        box-shadow: $sp-shadow-xl !important;
+        max-width: 420px;
+        margin: 0 auto;
+        padding: $sp-space-8 $sp-space-6 !important;
+    }
+}
+
+// Login specific overrides (separate CSS file for web context)
+.for-login {
+    background: linear-gradient(135deg, $sp-navy 0%, #0A1628 50%, darken($sp-navy, 5%) 100%) !important;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: $sp-font-family;
+
+    .page-card {
+        background: $sp-glass !important;
+        backdrop-filter: blur(24px) saturate(200%) !important;
+        -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: $sp-radius-xl !important;
+        box-shadow:
+            0 24px 80px rgba(0, 0, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+        padding: $sp-space-10 $sp-space-8 !important;
+        max-width: 440px;
+        width: 100%;
+        animation: sp-login-appear 0.6s ease-out;
+
+        .page-card-head {
+            text-align: center;
+            margin-bottom: $sp-space-8;
+
+            .title {
+                color: $sp-text-primary;
+                font-size: $sp-font-size-2xl;
+                font-weight: 700;
+                margin-bottom: $sp-space-2;
+            }
+
+            img {
+                max-width: 80px;
+                margin-bottom: $sp-space-4;
+                filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+            }
+        }
+
+        .form-group {
+            margin-bottom: $sp-space-5;
+
+            label {
+                color: $sp-text-secondary;
+                font-weight: 500;
+                font-size: $sp-font-size-sm;
+                margin-bottom: $sp-space-2;
+            }
+
+            input {
+                background: rgba(255, 255, 255, 0.06) !important;
+                border: 1px solid rgba(255, 255, 255, 0.12) !important;
+                color: $sp-text-primary !important;
+                border-radius: $sp-radius !important;
+                padding: 14px 16px !important;
+                font-size: 16px !important;
+                transition: $sp-transition;
+
+                &:focus {
+                    background: rgba(255, 255, 255, 0.09) !important;
+                    border-color: $sp-accent !important;
+                    box-shadow: 0 0 0 3px #{$sp-accent-glow} !important;
+                }
+
+                &::placeholder {
+                    color: $sp-text-muted;
+                }
+            }
+        }
+
+        .btn-primary, .btn-login, .btn-primary-dark {
+            width: 100%;
+            padding: 14px !important;
+            background: linear-gradient(135deg, $sp-accent, darken($sp-accent, 12%)) !important;
+            border: none !important;
+            color: $sp-text-inverse !important;
+            font-weight: 700 !important;
+            font-size: $sp-font-size-md !important;
+            border-radius: $sp-radius !important;
+            letter-spacing: 0.02em;
+            transition: $sp-transition;
+            box-shadow: 0 4px 16px rgba($sp-accent, 0.3);
+
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 24px rgba($sp-accent, 0.4);
+            }
+
+            &:active {
+                transform: translateY(0);
+            }
+        }
+
+        .login-options, .forgot-password-message {
+            text-align: center;
+            margin-top: $sp-space-4;
+
+            a {
+                color: $sp-accent;
+                font-weight: 500;
+                transition: $sp-transition;
+
+                &:hover {
+                    color: $sp-accent-hover;
+                }
+            }
+        }
+
+        // Social login buttons
+        .social-login {
+            margin-top: $sp-space-6;
+            display: flex;
+            flex-direction: column;
+            gap: $sp-space-3;
+
+            .btn-social {
+                background: $sp-surface;
+                border: 1px solid $sp-border;
+                color: $sp-text-secondary;
+                border-radius: $sp-radius;
+                padding: 12px;
+                font-weight: 500;
+                transition: $sp-transition;
+
+                &:hover {
+                    background: $sp-surface-hover;
+                    color: $sp-text-primary;
+                }
+            }
+        }
+    }
+
+    // Decorative gradient orbs
+    &::before, &::after {
+        content: '';
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(120px);
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    &::before {
+        width: 400px;
+        height: 400px;
+        background: rgba($sp-accent, 0.08);
+        top: -100px;
+        right: -100px;
+    }
+
+    &::after {
+        width: 350px;
+        height: 350px;
+        background: rgba(59, 130, 246, 0.06);
+        bottom: -80px;
+        left: -80px;
+    }
+}
+
+@keyframes sp-login-appear {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+// ─── MOBILE LOGIN ────────────────────────────
+@media (max-width: $sp-mobile) {
+    .for-login {
+        padding: $sp-space-4;
+        align-items: flex-start;
+        padding-top: 15vh;
+
+        .page-card {
+            padding: $sp-space-6 $sp-space-5 !important;
+            border-radius: $sp-radius-lg !important;
+        }
+    }
+}

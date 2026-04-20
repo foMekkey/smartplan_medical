@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="80" fill="#0D1B2A"/>
+  <g transform="translate(256, 256)">
+    <!-- Stylized S + Medical Cross -->
+    <path d="M-60,-120 C-60,-120 -100,-80 -100,-40 C-100,0 -60,20 0,20 C60,20 100,40 100,80 C100,120 60,160 0,160"
+          stroke="#00BFA6" stroke-width="40" stroke-linecap="round" fill="none"/>
+    <line x1="0" y1="-160" x2="0" y2="-80" stroke="#00BFA6" stroke-width="28" stroke-linecap="round"/>
+    <circle cx="80" cy="-100" r="12" fill="rgba(0,191,166,0.3)"/>
+    <circle cx="-80" cy="100" r="8" fill="rgba(0,191,166,0.2)"/>
+  </g>
+</svg>

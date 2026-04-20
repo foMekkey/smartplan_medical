@@ -1,0 +1,551 @@
+// ═══════════════════════════════════════════════════════════════
+// SmartPlan Medical — Complete ERPNext Theme Override
+// Dark premium medical theme with glassmorphism
+// ═══════════════════════════════════════════════════════════════
+
+// ─── ROOT / GLOBAL ───────────────────────────
+.smartplan-pwa {
+    --text-color: #{$sp-text-primary};
+    --text-muted: #{$sp-text-secondary};
+    --text-light: #{$sp-text-muted};
+    --heading-color: #{$sp-text-primary};
+    --bg-color: #{$sp-navy};
+    --fg-color: #{$sp-navy-light};
+    --card-bg: #{$sp-navy-light};
+    --control-bg: #{$sp-navy-lighter};
+    --control-bg-on-gray: #{$sp-navy-mid};
+    --border-color: #{$sp-border};
+    --dark-border-color: #{$sp-border};
+    --primary: #{$sp-accent};
+    --primary-color: #{$sp-accent};
+
+    font-family: $sp-font-family;
+    background: $sp-navy;
+    color: $sp-text-primary;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: $sp-letter-spacing;
+}
+
+// ─── BODY ────────────────────────────────────
+body {
+    .smartplan-pwa & {
+        background: linear-gradient(135deg, $sp-navy 0%, darken($sp-navy, 3%) 100%);
+        color: $sp-text-primary;
+        font-family: $sp-font-family;
+    }
+}
+
+// ─── NAVBAR ──────────────────────────────────
+.smartplan-pwa {
+    .navbar {
+        background: rgba($sp-navy, 0.85) !important;
+        backdrop-filter: blur($sp-glass-blur) saturate(180%);
+        -webkit-backdrop-filter: blur($sp-glass-blur) saturate(180%);
+        border-bottom: 1px solid $sp-border;
+        box-shadow: $sp-shadow-sm;
+        padding-top: $sp-safe-top;
+
+        .navbar-brand {
+            img {
+                filter: brightness(1.1);
+            }
+        }
+
+        .search-bar {
+            .form-control {
+                background: $sp-surface;
+                border: 1px solid $sp-border;
+                color: $sp-text-primary;
+                border-radius: $sp-radius;
+                transition: $sp-transition;
+
+                &:focus {
+                    background: $sp-surface-hover;
+                    border-color: $sp-accent;
+                    box-shadow: 0 0 0 2px $sp-accent-glow;
+                }
+
+                &::placeholder {
+                    color: $sp-text-muted;
+                }
+            }
+        }
+
+        .nav-link, .navbar-nav .nav-link {
+            color: $sp-text-secondary !important;
+            transition: $sp-transition;
+
+            &:hover, &.active {
+                color: $sp-text-primary !important;
+            }
+        }
+
+        .dropdown-menu {
+            background: $sp-navy-light;
+            border: 1px solid $sp-border;
+            border-radius: $sp-radius;
+            box-shadow: $sp-shadow-lg;
+            backdrop-filter: blur(20px);
+
+            .dropdown-item {
+                color: $sp-text-secondary;
+                border-radius: $sp-radius-sm;
+                margin: 2px 6px;
+                padding: 8px 12px;
+                transition: $sp-transition-fast;
+
+                &:hover {
+                    background: $sp-surface-hover;
+                    color: $sp-text-primary;
+                }
+            }
+
+            .dropdown-divider {
+                border-color: $sp-border;
+            }
+        }
+    }
+}
+
+// ─── SIDEBAR ─────────────────────────────────
+.smartplan-pwa {
+    .desk-sidebar, .sidebar-menu {
+        background: $sp-navy-light;
+        border-right: 1px solid $sp-border;
+
+        .sidebar-label, .desk-sidebar-item .label {
+            color: $sp-text-muted;
+            font-size: $sp-font-size-xs;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 600;
+        }
+
+        .sidebar-menu a, .desk-sidebar-item a {
+            color: $sp-text-secondary;
+            border-radius: $sp-radius-sm;
+            padding: 8px 12px;
+            margin: 2px 8px;
+            transition: $sp-transition-fast;
+
+            &:hover {
+                background: $sp-surface-hover;
+                color: $sp-text-primary;
+            }
+
+            &.active, &.selected {
+                background: $sp-accent-pale;
+                color: $sp-accent;
+                font-weight: 500;
+            }
+        }
+    }
+
+    .layout-side-section {
+        background: $sp-navy-light;
+        border-right: 1px solid $sp-border;
+    }
+}
+
+// ─── PAGE / CONTENT AREA ─────────────────────
+.smartplan-pwa {
+    .page-container, .container.page-body {
+        background: transparent;
+    }
+
+    .page-head {
+        background: rgba($sp-navy, 0.9);
+        backdrop-filter: blur($sp-glass-blur);
+        border-bottom: 1px solid $sp-border;
+
+        .page-title .title-text {
+            color: $sp-text-primary;
+            font-weight: 600;
+        }
+
+        .page-actions .btn-primary-dark, .page-actions .btn-primary {
+            background: linear-gradient(135deg, $sp-accent, darken($sp-accent, 8%));
+            border: none;
+            color: $sp-text-inverse;
+            font-weight: 600;
+            border-radius: $sp-radius-sm;
+            transition: $sp-transition;
+            box-shadow: $sp-shadow-sm;
+
+            &:hover {
+                background: linear-gradient(135deg, $sp-accent-hover, $sp-accent);
+                box-shadow: $sp-shadow-glow;
+                transform: translateY(-1px);
+            }
+        }
+    }
+
+    .main-section {
+        background: $sp-navy;
+    }
+
+    .page-content {
+        background: $sp-navy;
+    }
+}
+
+// ─── CARDS & SECTIONS ────────────────────────
+.smartplan-pwa {
+    .widget, .number-widget-box, .shortcut-widget-box, .onboarding-widget-box {
+        background: $sp-glass;
+        border: 1px solid $sp-glass-border;
+        border-radius: $sp-radius;
+        backdrop-filter: blur(8px);
+        transition: $sp-transition;
+
+        &:hover {
+            background: $sp-glass-heavy;
+            border-color: $sp-border-hover;
+            box-shadow: $sp-shadow-md;
+        }
+    }
+
+    .section-head {
+        color: $sp-text-primary;
+        font-weight: 600;
+        border-bottom-color: $sp-border;
+    }
+
+    .form-section, .form-dashboard-section {
+        background: $sp-glass;
+        border: 1px solid $sp-glass-border;
+        border-radius: $sp-radius;
+        margin-bottom: $sp-space-4;
+    }
+
+    .frappe-card, .card {
+        background: $sp-navy-light;
+        border: 1px solid $sp-glass-border;
+        border-radius: $sp-radius;
+        box-shadow: $sp-shadow-sm;
+    }
+
+    .frappe-control .help-box {
+        color: $sp-text-muted;
+    }
+}
+
+// ─── FORM CONTROLS ───────────────────────────
+.smartplan-pwa {
+    .frappe-control {
+        .form-control, input, select, textarea {
+            background: $sp-navy-lighter;
+            border: 1px solid $sp-border;
+            color: $sp-text-primary;
+            border-radius: $sp-radius-sm;
+            transition: $sp-transition;
+
+            &:focus {
+                background: $sp-navy-mid;
+                border-color: $sp-accent;
+                box-shadow: 0 0 0 3px $sp-accent-glow;
+                outline: none;
+            }
+
+            &::placeholder {
+                color: $sp-text-muted;
+            }
+
+            &[disabled], &[readonly] {
+                background: rgba($sp-navy-lighter, 0.5);
+                opacity: 0.7;
+            }
+        }
+
+        .control-label, .clearfix label {
+            color: $sp-text-secondary;
+            font-weight: 500;
+            font-size: $sp-font-size-sm;
+        }
+
+        // Link field
+        .link-field .btn-open {
+            color: $sp-accent;
+        }
+
+        // Select field
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238899AA' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 32px;
+        }
+    }
+
+    // Buttons
+    .btn {
+        border-radius: $sp-radius-sm;
+        font-weight: 500;
+        transition: $sp-transition;
+        letter-spacing: 0;
+
+        &.btn-primary {
+            background: linear-gradient(135deg, $sp-accent, darken($sp-accent, 10%));
+            border: none;
+            color: $sp-text-inverse;
+
+            &:hover {
+                background: linear-gradient(135deg, $sp-accent-hover, $sp-accent);
+                transform: translateY(-1px);
+                box-shadow: $sp-shadow-glow;
+            }
+        }
+
+        &.btn-default, &.btn-secondary {
+            background: $sp-surface;
+            border: 1px solid $sp-border;
+            color: $sp-text-secondary;
+
+            &:hover {
+                background: $sp-surface-hover;
+                border-color: $sp-border-hover;
+                color: $sp-text-primary;
+            }
+        }
+
+        &.btn-danger {
+            background: linear-gradient(135deg, $sp-danger, darken($sp-danger, 10%));
+            border: none;
+        }
+    }
+}
+
+// ─── TABLES / GRIDS ──────────────────────────
+.smartplan-pwa {
+    .frappe-list, .report-wrapper {
+        .result {
+            background: transparent;
+        }
+
+        .list-row {
+            background: $sp-glass;
+            border: 1px solid $sp-glass-border;
+            border-radius: $sp-radius-sm;
+            margin-bottom: $sp-space-2;
+            transition: $sp-transition;
+
+            &:hover {
+                background: $sp-glass-heavy;
+                border-color: $sp-border-hover;
+            }
+
+            .level-left {
+                color: $sp-text-primary;
+            }
+
+            .level-right .list-row-activity {
+                color: $sp-text-muted;
+            }
+        }
+
+        .list-row-head {
+            background: $sp-navy-lighter;
+            border-radius: $sp-radius-sm;
+            color: $sp-text-secondary;
+            font-weight: 600;
+            font-size: $sp-font-size-sm;
+        }
+    }
+
+    // Data tables inside forms
+    .frappe-control[data-fieldtype="Table"] {
+        .form-grid {
+            border: 1px solid $sp-border;
+            border-radius: $sp-radius;
+            overflow: hidden;
+
+            .grid-heading-row {
+                background: $sp-navy-lighter;
+                border-bottom: 1px solid $sp-border;
+            }
+
+            .rows .row {
+                border-bottom: 1px solid $sp-border;
+                background: $sp-navy-light;
+
+                &:hover {
+                    background: $sp-surface-hover;
+                }
+            }
+
+            .grid-footer {
+                background: $sp-navy-lighter;
+                border-top: 1px solid $sp-border;
+            }
+        }
+    }
+}
+
+// ─── INDICATORS / STATUS ─────────────────────
+.smartplan-pwa {
+    .indicator-pill {
+        border-radius: $sp-radius-full;
+        font-weight: 500;
+        font-size: $sp-font-size-xs;
+    }
+
+    .indicator-pill.green, .indicator-pill[data-indicator="green"] {
+        background: rgba($sp-success, 0.12);
+        color: $sp-success;
+    }
+
+    .indicator-pill.red, .indicator-pill[data-indicator="red"] {
+        background: rgba($sp-danger, 0.12);
+        color: $sp-danger;
+    }
+
+    .indicator-pill.blue, .indicator-pill[data-indicator="blue"] {
+        background: rgba($sp-info, 0.12);
+        color: $sp-info;
+    }
+
+    .indicator-pill.orange, .indicator-pill[data-indicator="orange"] {
+        background: rgba($sp-warning, 0.15);
+        color: $sp-warning;
+    }
+}
+
+// ─── WORKSPACE ───────────────────────────────
+.smartplan-pwa {
+    .workspace-container {
+        background: $sp-navy;
+
+        .workspace-sidebar {
+            background: $sp-navy-light;
+            border-right: 1px solid $sp-border;
+        }
+
+        .codex-editor {
+            background: transparent;
+        }
+    }
+
+    .desk-page .page-main-head {
+        background: transparent;
+    }
+}
+
+// ─── SCROLLBAR ───────────────────────────────
+.smartplan-pwa {
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: $sp-navy-lighter transparent;
+    }
+
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: $sp-navy-lighter;
+        border-radius: 3px;
+
+        &:hover {
+            background: $sp-navy-mid;
+        }
+    }
+}
+
+// ─── ALERTS / TOASTS ─────────────────────────
+.smartplan-pwa {
+    .desk-alert, .alert {
+        background: $sp-glass;
+        border: 1px solid $sp-glass-border;
+        border-radius: $sp-radius;
+        backdrop-filter: blur(10px);
+        color: $sp-text-primary;
+    }
+
+    .msgprint, .modal-content {
+        .modal-header {
+            border-bottom-color: $sp-border;
+        }
+
+        .modal-footer {
+            border-top-color: $sp-border;
+        }
+    }
+}
+
+// ─── BREADCRUMBS ─────────────────────────────
+.smartplan-pwa {
+    .breadcrumb-container {
+        .breadcrumb {
+            background: transparent;
+
+            .breadcrumb-item {
+                a {
+                    color: $sp-text-muted;
+
+                    &:hover {
+                        color: $sp-accent;
+                    }
+                }
+
+                &.active {
+                    color: $sp-text-primary;
+                }
+
+                + .breadcrumb-item::before {
+                    color: $sp-text-muted;
+                }
+            }
+        }
+    }
+}
+
+// ─── CHECKBOX / LIKE BUTTON ──────────────────
+.smartplan-pwa {
+    .checkbox .disp-area {
+        border-color: $sp-border;
+    }
+
+    .like-active-item .like-action, .like-active .like-action {
+        color: $sp-danger;
+    }
+}
+
+// ─── TIMELINE ────────────────────────────────
+.smartplan-pwa {
+    .timeline-item {
+        border-left-color: $sp-border;
+
+        .timeline-badge {
+            background: $sp-navy-lighter;
+        }
+
+        .timeline-content {
+            color: $sp-text-secondary;
+        }
+    }
+
+    .comment-box {
+        background: $sp-navy-lighter;
+        border: 1px solid $sp-border;
+        border-radius: $sp-radius;
+    }
+}
+
+// ─── TOOLTIP ─────────────────────────────────
+.smartplan-pwa {
+    .tooltip .tooltip-inner {
+        background: $sp-navy-lighter;
+        color: $sp-text-primary;
+        border: 1px solid $sp-border;
+        border-radius: $sp-radius-sm;
+        box-shadow: $sp-shadow-md;
+        font-size: $sp-font-size-sm;
+    }
+}

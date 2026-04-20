@@ -1,0 +1,115 @@
+// ═══════════════════════════════════════════════════════════════
+// SmartPlan Medical — List Views (Card-based on mobile)
+// ═══════════════════════════════════════════════════════════════
+
+.sp-mobile {
+    .frappe-list {
+        .result {
+            .list-row {
+                background: $sp-glass;
+                border: 1px solid $sp-glass-border;
+                border-radius: $sp-radius;
+                margin-bottom: $sp-space-2;
+                padding: $sp-space-3;
+                transition: $sp-transition;
+
+                &:hover {
+                    background: $sp-glass-heavy;
+                    transform: translateY(-1px);
+                    box-shadow: $sp-shadow-sm;
+                }
+
+                &:active {
+                    transform: scale(0.98);
+                }
+
+                // Hide columns that don't fit
+                .list-row-col {
+                    &.hidden-xs {
+                        display: none;
+                    }
+                }
+
+                .level {
+                    flex-wrap: wrap;
+                    gap: $sp-space-2;
+                }
+
+                .level-left {
+                    flex: 1;
+                    min-width: 0;
+
+                    .list-row--col {
+                        .ellipsis {
+                            font-weight: 500;
+                            font-size: $sp-font-size-base;
+                        }
+                    }
+                }
+
+                .level-right {
+                    flex-shrink: 0;
+
+                    .list-row-activity {
+                        font-size: $sp-font-size-xs;
+                        color: $sp-text-muted;
+                    }
+                }
+
+                // Status indicator
+                .indicator-pill {
+                    font-size: $sp-font-size-xs;
+                    padding: 2px 8px;
+                }
+            }
+
+            // List header on mobile
+            .list-row-head {
+                display: none; // Hide column headers on mobile cards
+            }
+        }
+
+        // Filters on mobile
+        .tag-filters-area {
+            overflow-x: auto;
+            flex-wrap: nowrap;
+            padding: $sp-space-2 0;
+            -webkit-overflow-scrolling: touch;
+
+            .btn {
+                white-space: nowrap;
+                flex-shrink: 0;
+                font-size: $sp-font-size-sm;
+            }
+        }
+
+        // Sort & filter bar
+        .sort-selector, .filter-selector {
+            .btn {
+                font-size: $sp-font-size-sm;
+                padding: 6px 10px;
+            }
+        }
+    }
+
+    // Report view on mobile
+    .report-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+
+        .dt-scrollable {
+            overflow-x: auto;
+        }
+    }
+}
+
+// ─── LIST CARD STYLE (mutation observer adds this class)
+.sp-list-card {
+    .sp-mobile & {
+        border-radius: $sp-radius;
+        background: $sp-glass;
+        border: 1px solid $sp-glass-border;
+        margin-bottom: $sp-space-2;
+        overflow: hidden;
+    }
+}

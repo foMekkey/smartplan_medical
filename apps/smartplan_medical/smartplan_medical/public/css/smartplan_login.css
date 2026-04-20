@@ -1,0 +1,186 @@
+/**
+ * SmartPlan Medical — Login Page CSS (Web Context)
+ * This is loaded via web_include_css for the login page
+ * which doesn't have access to the Desk SCSS bundle.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --sp-navy: #0D1B2A;
+    --sp-navy-light: #1B2838;
+    --sp-accent: #00BFA6;
+    --sp-accent-hover: #00E5C3;
+    --sp-text-primary: #E8EDF3;
+    --sp-text-secondary: #8899AA;
+    --sp-text-muted: #5A6D80;
+    --sp-border: rgba(255, 255, 255, 0.08);
+    --sp-glass: rgba(255, 255, 255, 0.06);
+}
+
+/* Login page full override */
+.for-login {
+    background: linear-gradient(135deg, var(--sp-navy) 0%, #0A1628 50%, #081420 100%) !important;
+    min-height: 100vh;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.for-login::before,
+.for-login::after {
+    content: '';
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.for-login::before {
+    width: 400px;
+    height: 400px;
+    background: rgba(0, 191, 166, 0.07);
+    top: -100px;
+    right: -100px;
+}
+
+.for-login::after {
+    width: 350px;
+    height: 350px;
+    background: rgba(59, 130, 246, 0.05);
+    bottom: -80px;
+    left: -80px;
+}
+
+.for-login .navbar {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.for-login .page-card {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(24px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 20px !important;
+    box-shadow:
+        0 24px 80px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    padding: 40px 32px !important;
+    max-width: 440px;
+    margin: 60px auto !important;
+    position: relative;
+    z-index: 1;
+    animation: loginAppear 0.6s ease-out;
+}
+
+.for-login .page-card .page-card-head {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.for-login .page-card .page-card-head .title {
+    color: var(--sp-text-primary) !important;
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.for-login .page-card .page-card-head img {
+    max-width: 72px;
+    margin-bottom: 16px;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+}
+
+.for-login .page-card label {
+    color: var(--sp-text-secondary) !important;
+    font-weight: 500;
+    font-size: 0.85rem;
+}
+
+.for-login .page-card input[type="text"],
+.for-login .page-card input[type="email"],
+.for-login .page-card input[type="password"],
+.for-login .page-card .form-control {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    color: var(--sp-text-primary) !important;
+    border-radius: 12px !important;
+    padding: 14px 16px !important;
+    font-size: 16px !important;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 48px;
+}
+
+.for-login .page-card input:focus,
+.for-login .page-card .form-control:focus {
+    background: rgba(255, 255, 255, 0.09) !important;
+    border-color: var(--sp-accent) !important;
+    box-shadow: 0 0 0 3px rgba(0, 191, 166, 0.25) !important;
+    outline: none !important;
+}
+
+.for-login .page-card input::placeholder {
+    color: var(--sp-text-muted) !important;
+}
+
+.for-login .page-card .btn-primary,
+.for-login .page-card .btn-login,
+.for-login .page-card .btn-primary-dark {
+    width: 100%;
+    padding: 14px !important;
+    background: linear-gradient(135deg, #00BFA6, #00A58E) !important;
+    border: none !important;
+    color: #0D1B2A !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    border-radius: 12px !important;
+    letter-spacing: 0.02em;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 16px rgba(0, 191, 166, 0.3);
+    cursor: pointer;
+}
+
+.for-login .page-card .btn-primary:hover,
+.for-login .page-card .btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 191, 166, 0.4);
+}
+
+.for-login .page-card a {
+    color: var(--sp-accent) !important;
+    font-weight: 500;
+}
+
+.for-login .page-card a:hover {
+    color: var(--sp-accent-hover) !important;
+}
+
+.for-login .page-card p,
+.for-login .page-card .text-muted {
+    color: var(--sp-text-secondary) !important;
+}
+
+/* Footer on login */
+.for-login footer,
+.for-login .web-footer {
+    background: transparent !important;
+    border: none !important;
+    color: var(--sp-text-muted) !important;
+}
+
+/* Mobile adjustments */
+@media (max-width: 576px) {
+    .for-login .page-card {
+        margin: 24px 16px !important;
+        padding: 28px 20px !important;
+        border-radius: 16px !important;
+    }
+}
+
+@keyframes loginAppear {
+    from { opacity: 0; transform: translateY(30px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}

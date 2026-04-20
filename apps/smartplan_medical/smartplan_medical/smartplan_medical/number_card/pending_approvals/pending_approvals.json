@@ -1,0 +1,22 @@
+{
+ "aggregate_function_based_on": "",
+ "creation": "2026-01-27 12:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "document_type": "Pharma Approval Request",
+ "dynamic_filters_json": "[]",
+ "filters_json": "[[\"Pharma Approval Request\",\"status\",\"=\",\"Pending\",false]]",
+ "function": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "label": "موافقات معلقة",
+ "modified": "2026-01-27 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Smartplan Medical",
+ "name": "Pending Approvals",
+ "owner": "Administrator",
+ "show_percentage_stats": 0,
+ "stats_time_interval": "Daily",
+ "type": "Document Type"
+}

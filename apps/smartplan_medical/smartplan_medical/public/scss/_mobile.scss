@@ -1,0 +1,274 @@
+// ═══════════════════════════════════════════════════════════════
+// SmartPlan Medical — Mobile-First Layouts
+// Touch-optimized UI for phones & tablets
+// ═══════════════════════════════════════════════════════════════
+
+// ─── MOBILE BASE ─────────────────────────────
+.sp-mobile {
+    // Increase all tap targets
+    .btn, a.btn, button {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    // Full-width form controls
+    .frappe-control {
+        .form-control, input, select, textarea {
+            min-height: 44px;
+            font-size: 16px !important; // Prevents iOS zoom
+            border-radius: $sp-radius;
+        }
+    }
+
+    // Hide desktop sidebar
+    .col-lg-2.layout-side-section,
+    .desk-sidebar {
+        display: none !important;
+    }
+
+    // Full-width main content
+    .col-lg-10.layout-main-section-wrapper,
+    .layout-main-section-wrapper,
+    .col-lg-10 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+        padding: 0 $sp-space-3 !important;
+    }
+
+    // Safe area padding for body
+    body {
+        padding-top: $sp-safe-top;
+        padding-bottom: calc(#{$sp-safe-bottom} + 72px); // Bottom nav height + safe area
+    }
+
+    // Compact navbar
+    .navbar {
+        padding: 4px 8px;
+        padding-top: calc(4px + #{$sp-safe-top});
+
+        .container {
+            padding: 0 8px;
+        }
+
+        .navbar-brand {
+            margin-right: 8px;
+
+            img {
+                max-height: 28px;
+            }
+        }
+
+        // Hide less important nav items on mobile
+        .navbar-nav .nav-item.d-none-mobile,
+        .navbar-nav .hide-mobile {
+            display: none !important;
+        }
+    }
+
+    // Page container
+    .page-container, .container.page-body {
+        padding: 0;
+    }
+
+    .page-head {
+        padding: $sp-space-3;
+
+        .page-title {
+            .title-text {
+                font-size: $sp-font-size-lg;
+            }
+        }
+
+        .page-actions {
+            .btn-group, .actions-btn-group {
+                .btn {
+                    padding: 6px 12px;
+                    font-size: $sp-font-size-sm;
+                }
+            }
+        }
+    }
+
+    // Form layout
+    .form-layout {
+        padding: $sp-space-2;
+    }
+
+    .form-section, .form-dashboard-section {
+        padding: $sp-space-3;
+        margin-bottom: $sp-space-3;
+    }
+
+    .form-column {
+        padding: 0 $sp-space-2;
+    }
+
+    // Make all form columns full width on mobile
+    .section-body .form-column {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+
+    // Workspace
+    .workspace-container {
+        .workspace-sidebar {
+            position: fixed;
+            left: -280px;
+            top: 0;
+            bottom: 0;
+            width: 280px;
+            z-index: #{$sp-z-modal};
+            transition: $sp-transition;
+            box-shadow: none;
+
+            &.sp-sidebar-open {
+                left: 0;
+                box-shadow: $sp-shadow-xl;
+            }
+        }
+
+        .workspace-main-section {
+            margin-left: 0 !important;
+            width: 100% !important;
+        }
+    }
+}
+
+// ─── BOTTOM NAV BAR ──────────────────────────
+.sp-has-bottom-nav {
+    padding-bottom: calc(72px + #{$sp-safe-bottom}) !important;
+}
+
+.sp-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: calc(64px + #{$sp-safe-bottom});
+    padding-bottom: $sp-safe-bottom;
+    background: rgba($sp-navy, 0.92);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-top: 1px solid $sp-border;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    z-index: $sp-z-bottom-nav;
+    box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.15);
+
+    .sp-nav-tab {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        height: 56px;
+        border: none;
+        background: transparent;
+        color: $sp-text-muted;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        -webkit-tap-highlight-color: transparent;
+        transition: color $sp-transition-fast;
+
+        &:active {
+            transform: scale(0.92);
+        }
+
+        &.sp-nav-active {
+            color: $sp-accent;
+
+            .sp-nav-tab-icon svg {
+                stroke-width: 2.5;
+            }
+
+            .sp-nav-tab-label {
+                font-weight: 600;
+            }
+
+            &::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 24px;
+                height: 3px;
+                background: $sp-accent;
+                border-radius: 0 0 3px 3px;
+            }
+        }
+
+        .sp-nav-tab-icon {
+            position: relative;
+            width: 24px;
+            height: 24px;
+            margin-bottom: 2px;
+
+            svg {
+                width: 22px;
+                height: 22px;
+            }
+        }
+
+        .sp-nav-tab-label {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        .sp-nav-badge {
+            position: absolute;
+            top: -4px;
+            right: -8px;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            background: $sp-danger;
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sp-nav-ripple {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba($sp-accent, 0.15) 0%, transparent 70%);
+            transform: scale(0);
+            opacity: 0;
+
+            &.sp-ripple-active {
+                animation: sp-ripple 0.6s ease-out;
+            }
+        }
+    }
+}
+
+@keyframes sp-ripple {
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: scale(2.5); opacity: 0; }
+}
+
+// ─── TABLET (768px - 992px) ──────────────────
+@media (min-width: $sp-tablet) and (max-width: $sp-desktop) {
+    .sp-mobile {
+        .section-body .form-column {
+            flex: 0 0 50% !important;
+            max-width: 50% !important;
+        }
+    }
+}
+
+// ─── STANDALONE (installed PWA) ──────────────
+.sp-pwa-standalone {
+    // Slightly more padding at top for status bar
+    .navbar {
+        padding-top: calc(8px + #{$sp-safe-top});
+    }
+}

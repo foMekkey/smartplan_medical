@@ -1,0 +1,122 @@
+// ═══════════════════════════════════════════════════════════════
+// SmartPlan Medical — Dialogs & Modals (iOS-style)
+// ═══════════════════════════════════════════════════════════════
+
+.smartplan-pwa {
+    // ─── DESKTOP MODALS ──────────────────────
+    .modal {
+        .modal-backdrop {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-dialog {
+            .modal-content {
+                background: $sp-navy-light;
+                border: 1px solid $sp-border;
+                border-radius: $sp-radius-lg;
+                box-shadow: $sp-shadow-xl;
+                overflow: hidden;
+
+                .modal-header {
+                    background: $sp-navy-lighter;
+                    border-bottom: 1px solid $sp-border;
+                    padding: $sp-space-4 $sp-space-5;
+
+                    .modal-title {
+                        color: $sp-text-primary;
+                        font-weight: 600;
+                        font-size: $sp-font-size-lg;
+                    }
+
+                    .close, .btn-close {
+                        color: $sp-text-muted;
+                        opacity: 0.8;
+                        transition: $sp-transition;
+
+                        &:hover {
+                            color: $sp-text-primary;
+                            opacity: 1;
+                        }
+                    }
+                }
+
+                .modal-body {
+                    padding: $sp-space-5;
+                    color: $sp-text-secondary;
+
+                    .msgprint {
+                        color: $sp-text-secondary;
+                        font-size: $sp-font-size-base;
+                        line-height: $sp-line-height;
+                    }
+                }
+
+                .modal-footer {
+                    background: $sp-navy-lighter;
+                    border-top: 1px solid $sp-border;
+                    padding: $sp-space-3 $sp-space-5;
+
+                    .btn {
+                        min-width: 80px;
+                    }
+                }
+            }
+        }
+    }
+
+    // ─── MOBILE BOTTOM SHEET MODALS ──────────
+    .sp-mobile-dialog {
+        .modal-dialog {
+            margin: 0;
+            max-width: 100%;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            transform: translateY(0);
+            animation: sp-slide-up 0.3s $sp-transition-spring;
+
+            .modal-content {
+                border-radius: $sp-radius-xl $sp-radius-xl 0 0;
+                max-height: 85vh;
+                overflow-y: auto;
+
+                // Drag handle
+                &::before {
+                    content: '';
+                    display: block;
+                    width: 40px;
+                    height: 4px;
+                    background: $sp-text-muted;
+                    border-radius: 2px;
+                    margin: $sp-space-2 auto $sp-space-1;
+                    opacity: 0.4;
+                }
+
+                .modal-header {
+                    border-radius: $sp-radius-xl $sp-radius-xl 0 0;
+                }
+            }
+        }
+    }
+
+    @keyframes sp-slide-up {
+        from {
+            transform: translateY(100%);
+            opacity: 0.5;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    // ─── FRAPPE MSGPRINT ─────────────────────
+    .msgprint-dialog {
+        .modal-content {
+            background: $sp-navy-light;
+            border: 1px solid $sp-border;
+        }
+    }
+}

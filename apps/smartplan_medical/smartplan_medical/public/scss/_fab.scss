@@ -1,0 +1,112 @@
+// ═══════════════════════════════════════════════════════════════
+// SmartPlan Medical — Floating Action Button (FAB)
+// ═══════════════════════════════════════════════════════════════
+
+.sp-fab-container {
+    position: fixed;
+    bottom: calc(80px + #{$sp-safe-bottom}); // Above bottom nav
+    right: $sp-space-4;
+    z-index: $sp-z-fab;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: $sp-space-3;
+}
+
+.sp-fab-main {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, $sp-accent, darken($sp-accent, 12%));
+    border: none;
+    color: $sp-text-inverse;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba($sp-accent, 0.35), $sp-shadow-md;
+    transition: $sp-transition;
+    -webkit-tap-highlight-color: transparent;
+
+    &:hover {
+        transform: scale(1.08);
+        box-shadow: 0 6px 24px rgba($sp-accent, 0.45);
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+
+    svg {
+        transition: transform $sp-transition;
+    }
+
+    .sp-fab-open & {
+        background: linear-gradient(135deg, $sp-danger, darken($sp-danger, 10%));
+        box-shadow: 0 4px 16px rgba($sp-danger, 0.35);
+
+        svg {
+            transform: rotate(45deg);
+        }
+    }
+}
+
+.sp-fab-actions {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: $sp-space-2;
+    animation: sp-fab-appear 0.3s $sp-transition-spring;
+}
+
+.sp-fab-action {
+    display: flex;
+    align-items: center;
+    gap: $sp-space-2;
+    padding: $sp-space-2 $sp-space-4;
+    background: $sp-navy-light;
+    border: 1px solid $sp-border;
+    border-radius: $sp-radius-full;
+    color: $sp-text-primary;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: $sp-font-size-sm;
+    font-weight: 500;
+    box-shadow: $sp-shadow-md;
+    transition: $sp-transition;
+    -webkit-tap-highlight-color: transparent;
+
+    &:hover {
+        background: $sp-surface-hover;
+        border-color: $sp-border-hover;
+        transform: translateX(-4px);
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+
+    &.sp-fab-submit {
+        background: linear-gradient(135deg, $sp-accent, darken($sp-accent, 10%));
+        border-color: transparent;
+        color: $sp-text-inverse;
+
+        &:hover {
+            box-shadow: $sp-shadow-glow;
+        }
+    }
+
+    svg {
+        flex-shrink: 0;
+    }
+}
+
+@keyframes sp-fab-appear {
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
