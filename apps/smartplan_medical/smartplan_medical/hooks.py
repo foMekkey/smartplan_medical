@@ -57,7 +57,8 @@ extend_bootinfo = "smartplan_medical.api.extend_bootinfo"
 override_doctype_class = {}
 
 doctype_js = {
-    "Sales Order": "public/js/sales_order_custom.js"
+    "Sales Order": "public/js/sales_order_custom.js",
+    "Purchase Order": "public/js/purchase_order_custom.js"
 }
 # Inject PWA <head> content via website_context
 update_website_context = "smartplan_medical.api.update_website_context"
@@ -117,6 +118,11 @@ doc_events = {
         "on_submit": "smartplan_medical.sales_order_events.on_submit",
         "after_cancel": "smartplan_medical.sales_order_events.after_cancel",
         "before_insert": "smartplan_medical.sales_order_events.before_insert"
+    },
+    "Purchase Order": {
+        "before_save": "smartplan_medical.purchase_order_events.before_save",
+        "before_insert": "smartplan_medical.purchase_order_events.before_insert",
+        "on_submit": "smartplan_medical.purchase_order_events.on_submit"
     }
 }
 
