@@ -74,7 +74,7 @@
       }
       if (action === "profile") {
         if (typeof frappe !== "undefined") {
-          frappe.set_route("user-settings");
+          frappe.set_route("app/user");
         }
         return;
       }
@@ -539,4 +539,4 @@
     Forms: form_enhancer_default
   };
 })();
-//# sourceMappingURL=mobile_ux.bundle.HAO274XR.js.map
+//# sourceMappingURL=mobile_ux.bundle.EZVNERI5.js.map

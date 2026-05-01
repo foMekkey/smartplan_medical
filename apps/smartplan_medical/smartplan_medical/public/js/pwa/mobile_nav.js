@@ -88,7 +88,7 @@ const SmartPlanNav = {
 
         if (action === 'profile') {
             if (typeof frappe !== 'undefined') {
-                frappe.set_route('user-settings');
+                frappe.set_route('app/user');
             }
             return;
         }
