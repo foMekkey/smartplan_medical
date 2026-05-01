@@ -1,13 +1,14 @@
 /**
  * SmartPlan Medical — Mobile Bottom Navigation
- * Clean, working bottom tab bar using only verified Frappe routes.
+ * Premium bottom tab bar with modules popup, alerts, and profile.
  */
 
 const SmartPlanNav = {
     container: null,
+    modulesOpen: false,
     tabs: [
         { id: 'home', icon: 'home', label: 'Home', route: '' },
-        { id: 'modules', icon: 'grid', label: 'Modules', action: 'toggle-sidebar' },
+        { id: 'modules', icon: 'grid', label: 'Modules', action: 'modules' },
         { id: 'search', icon: 'search', label: 'Search', action: 'search' },
         { id: 'notifications', icon: 'bell', label: 'Alerts', action: 'notifications' },
         { id: 'profile', icon: 'user', label: 'Me', action: 'profile' },
@@ -18,7 +19,6 @@ const SmartPlanNav = {
         this.render();
         this.updateActiveTab();
 
-        // Listen for route changes
         if (typeof frappe !== 'undefined' && frappe.router) {
             frappe.router.on('change', () => this.updateActiveTab());
         }
@@ -45,12 +45,10 @@ const SmartPlanNav = {
         document.body.appendChild(this.container);
         document.body.style.paddingBottom = '68px';
 
-        // Bind clicks
         this.container.querySelectorAll('.sp-nav-tab').forEach(tab => {
             tab.addEventListener('click', (e) => this.handleTabClick(e, tab));
         });
 
-        // Update notification count
         this.updateNotificationBadge();
         if (typeof frappe !== 'undefined' && frappe.realtime) {
             frappe.realtime.on('notification', () => this.updateNotificationBadge());
@@ -62,14 +60,13 @@ const SmartPlanNav = {
         const route = tab.dataset.route;
 
         if (action === 'search') {
-            // Use the Frappe Control+K / Awesome Bar
             if (typeof frappe !== 'undefined') {
+                // Try Frappe's awesome bar
                 let searchBar = document.querySelector('.search-bar input[type="text"]');
                 if (searchBar) {
                     searchBar.focus();
                     searchBar.click();
                 } else {
-                    // Try the navbar search
                     let navSearch = document.querySelector('#navbar-search');
                     if (navSearch) navSearch.click();
                 }
@@ -77,70 +74,160 @@ const SmartPlanNav = {
             return;
         }
 
-        if (action === 'toggle-sidebar') {
-            const html = document.documentElement;
-            const isOpen = html.classList.contains('sp-sidebar-open');
-
-            if (isOpen) {
-                html.classList.remove('sp-sidebar-open');
-                const overlay = document.querySelector('.sp-sidebar-overlay');
-                if (overlay) overlay.remove();
-            } else {
-                html.classList.add('sp-sidebar-open');
-                // Create overlay
-                if (!document.querySelector('.sp-sidebar-overlay')) {
-                    const overlay = document.createElement('div');
-                    overlay.className = 'sp-sidebar-overlay';
-                    overlay.addEventListener('click', () => {
-                        html.classList.remove('sp-sidebar-open');
-                        overlay.remove();
-                    });
-                    document.body.appendChild(overlay);
-                }
-            }
+        if (action === 'modules') {
+            this.openModulesPopup();
             return;
         }
 
         if (action === 'notifications') {
-            // Open the notification dropdown instead of navigating
             if (typeof frappe !== 'undefined') {
-                let bellBtn = document.querySelector('.notifications-icon, .navbar-icon[data-original-title="Notifications"], a.nav-link[title="Notifications"], .dropdown-notifications .dropdown-toggle');
-                if (bellBtn) {
-                    bellBtn.click();
-                } else {
-                    // Fallback: open notification log list
-                    frappe.set_route('List', 'Notification Log');
-                }
+                frappe.set_route('List', 'Notification Log');
             }
             return;
         }
 
         if (action === 'profile') {
             if (typeof frappe !== 'undefined') {
-                // Open the user dropdown menu
-                let userMenu = document.querySelector('.navbar-icon-text.avatar, .avatar.avatar-medium, #navbar-user, .dropdown-user .dropdown-toggle');
-                if (userMenu) {
-                    userMenu.click();
-                } else {
-                    frappe.set_route('');
-                }
+                frappe.set_route('user-settings');
             }
             return;
         }
 
-        // Route navigation
         if (typeof frappe !== 'undefined') {
             frappe.set_route(route);
         }
     },
 
+    /* ═══════════════════════════════════════
+       MODULES POPUP — Dark fullscreen modal
+       ═══════════════════════════════════════ */
+    openModulesPopup() {
+        if (document.getElementById('sp-modules-popup')) {
+            this.closeModulesPopup();
+            return;
+        }
+
+        const popup = document.createElement('div');
+        popup.id = 'sp-modules-popup';
+        popup.innerHTML = `
+            <div class="sp-mod-header">
+                <div>
+                    <h2>${__('Modules')}</h2>
+                    <span class="sp-mod-sub">SPS ERP · Smart Health System</span>
+                </div>
+                <button class="sp-mod-close" id="sp-mod-close">✕</button>
+            </div>
+            <div class="sp-mod-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="sp-mod-filter" placeholder="${__('Search modules...')}">
+            </div>
+            <div class="sp-mod-grid" id="sp-mod-grid">
+                <div class="sp-mod-loading">${__('Loading...')}</div>
+            </div>
+        `;
+
+        document.body.appendChild(popup);
+        requestAnimationFrame(() => popup.classList.add('sp-mod-visible'));
+
+        document.getElementById('sp-mod-close').addEventListener('click', () => this.closeModulesPopup());
+
+        // Load workspaces
+        this.loadWorkspaces();
+
+        // Search filter
+        document.getElementById('sp-mod-filter').addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase();
+            document.querySelectorAll('.sp-mod-item').forEach(item => {
+                const name = item.dataset.name.toLowerCase();
+                item.style.display = name.includes(q) ? '' : 'none';
+            });
+        });
+    },
+
+    closeModulesPopup() {
+        const popup = document.getElementById('sp-modules-popup');
+        if (popup) {
+            popup.classList.remove('sp-mod-visible');
+            setTimeout(() => popup.remove(), 300);
+        }
+    },
+
+    async loadWorkspaces() {
+        const grid = document.getElementById('sp-mod-grid');
+        if (!grid || typeof frappe === 'undefined') return;
+
+        try {
+            const workspaces = frappe.boot.allowed_workspaces || [];
+            if (!workspaces.length) {
+                grid.innerHTML = `<div class="sp-mod-loading">${__('No modules found')}</div>`;
+                return;
+            }
+
+            const colors = [
+                '#E91E63', '#9C27B0', '#673AB7', '#3F51B5',
+                '#2196F3', '#009688', '#4CAF50', '#FF9800',
+                '#FF5722', '#795548', '#607D8B', '#00BCD4',
+                '#8BC34A', '#FFC107', '#F44336', '#3DDC84',
+            ];
+
+            const icons = {
+                'home': '🏠', 'dashboard': '📊', 'settings': '⚙️',
+                'hr': '👥', 'accounting': '💰', 'stock': '📦',
+                'selling': '🛒', 'buying': '🛍️', 'manufacturing': '🏭',
+                'projects': '📋', 'crm': '🤝', 'support': '🎧',
+                'healthcare': '🏥', 'website': '🌐', 'assets': '🏢',
+                'quality': '✅', 'education': '🎓', 'pos': '💳',
+                'pharmacy': '💊', 'lab': '🔬', 'blood': '🩸',
+                'emergency': '🚑', 'surgery': '⚕️', 'radiology': '📡',
+                'nutrition': '🥗', 'insurance': '🛡️', 'admission': '🛏️',
+                'warehouse': '🏪', 'inventory': '📝', 'reports': '📈',
+                'finance': '💵', 'ledger': '📒',
+            };
+
+            grid.innerHTML = workspaces.map((ws, i) => {
+                const name = ws.name || ws.title || ws;
+                const title = ws.title || name;
+                const color = colors[i % colors.length];
+                // Try to match an icon
+                let emoji = '📁';
+                const lower = (title + ' ' + name).toLowerCase();
+                for (const [key, val] of Object.entries(icons)) {
+                    if (lower.includes(key)) { emoji = val; break; }
+                }
+
+                return `
+                    <a class="sp-mod-item" data-name="${title}" href="/app/${encodeURIComponent(name.toLowerCase().replace(/ /g, '-'))}">
+                        <div class="sp-mod-icon" style="background:${color}">
+                            <span>${emoji}</span>
+                        </div>
+                        <span class="sp-mod-name">${title}</span>
+                    </a>
+                `;
+            }).join('');
+
+            // Click handler
+            grid.querySelectorAll('.sp-mod-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const name = item.dataset.name;
+                    this.closeModulesPopup();
+                    if (typeof frappe !== 'undefined') {
+                        frappe.set_route(item.getAttribute('href').replace('/app/', ''));
+                    }
+                });
+            });
+
+        } catch (err) {
+            console.error('[PWA] Failed to load workspaces:', err);
+            grid.innerHTML = `<div class="sp-mod-loading">${__('Failed to load')}</div>`;
+        }
+    },
+
     updateActiveTab() {
         if (!this.container) return;
-        const path = window.location.pathname + window.location.hash;
         this.container.querySelectorAll('.sp-nav-tab').forEach(tab => {
             tab.classList.remove('sp-nav-active');
         });
-        // Default to home
         const homeTab = this.container.querySelector('[data-tab="home"]');
         if (homeTab) homeTab.classList.add('sp-nav-active');
     },

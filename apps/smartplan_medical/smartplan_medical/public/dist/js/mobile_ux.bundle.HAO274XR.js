@@ -2,9 +2,10 @@
   // ../smartplan_medical/smartplan_medical/public/js/pwa/mobile_nav.js
   var SmartPlanNav = {
     container: null,
+    modulesOpen: false,
     tabs: [
       { id: "home", icon: "home", label: "Home", route: "" },
-      { id: "modules", icon: "grid", label: "Modules", action: "toggle-sidebar" },
+      { id: "modules", icon: "grid", label: "Modules", action: "modules" },
       { id: "search", icon: "search", label: "Search", action: "search" },
       { id: "notifications", icon: "bell", label: "Alerts", action: "notifications" },
       { id: "profile", icon: "user", label: "Me", action: "profile" }
@@ -61,47 +62,19 @@
         }
         return;
       }
-      if (action === "toggle-sidebar") {
-        const html = document.documentElement;
-        const isOpen = html.classList.contains("sp-sidebar-open");
-        if (isOpen) {
-          html.classList.remove("sp-sidebar-open");
-          const overlay = document.querySelector(".sp-sidebar-overlay");
-          if (overlay)
-            overlay.remove();
-        } else {
-          html.classList.add("sp-sidebar-open");
-          if (!document.querySelector(".sp-sidebar-overlay")) {
-            const overlay = document.createElement("div");
-            overlay.className = "sp-sidebar-overlay";
-            overlay.addEventListener("click", () => {
-              html.classList.remove("sp-sidebar-open");
-              overlay.remove();
-            });
-            document.body.appendChild(overlay);
-          }
-        }
+      if (action === "modules") {
+        this.openModulesPopup();
         return;
       }
       if (action === "notifications") {
         if (typeof frappe !== "undefined") {
-          let bellBtn = document.querySelector('.notifications-icon, .navbar-icon[data-original-title="Notifications"], a.nav-link[title="Notifications"], .dropdown-notifications .dropdown-toggle');
-          if (bellBtn) {
-            bellBtn.click();
-          } else {
-            frappe.set_route("List", "Notification Log");
-          }
+          frappe.set_route("List", "Notification Log");
         }
         return;
       }
       if (action === "profile") {
         if (typeof frappe !== "undefined") {
-          let userMenu = document.querySelector(".navbar-icon-text.avatar, .avatar.avatar-medium, #navbar-user, .dropdown-user .dropdown-toggle");
-          if (userMenu) {
-            userMenu.click();
-          } else {
-            frappe.set_route("");
-          }
+          frappe.set_route("user-settings");
         }
         return;
       }
@@ -109,10 +82,149 @@
         frappe.set_route(route);
       }
     },
+    openModulesPopup() {
+      if (document.getElementById("sp-modules-popup")) {
+        this.closeModulesPopup();
+        return;
+      }
+      const popup = document.createElement("div");
+      popup.id = "sp-modules-popup";
+      popup.innerHTML = `
+            <div class="sp-mod-header">
+                <div>
+                    <h2>${__("Modules")}</h2>
+                    <span class="sp-mod-sub">SPS ERP \xB7 Smart Health System</span>
+                </div>
+                <button class="sp-mod-close" id="sp-mod-close">\u2715</button>
+            </div>
+            <div class="sp-mod-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="sp-mod-filter" placeholder="${__("Search modules...")}">
+            </div>
+            <div class="sp-mod-grid" id="sp-mod-grid">
+                <div class="sp-mod-loading">${__("Loading...")}</div>
+            </div>
+        `;
+      document.body.appendChild(popup);
+      requestAnimationFrame(() => popup.classList.add("sp-mod-visible"));
+      document.getElementById("sp-mod-close").addEventListener("click", () => this.closeModulesPopup());
+      this.loadWorkspaces();
+      document.getElementById("sp-mod-filter").addEventListener("input", (e) => {
+        const q = e.target.value.toLowerCase();
+        document.querySelectorAll(".sp-mod-item").forEach((item) => {
+          const name = item.dataset.name.toLowerCase();
+          item.style.display = name.includes(q) ? "" : "none";
+        });
+      });
+    },
+    closeModulesPopup() {
+      const popup = document.getElementById("sp-modules-popup");
+      if (popup) {
+        popup.classList.remove("sp-mod-visible");
+        setTimeout(() => popup.remove(), 300);
+      }
+    },
+    async loadWorkspaces() {
+      const grid = document.getElementById("sp-mod-grid");
+      if (!grid || typeof frappe === "undefined")
+        return;
+      try {
+        const workspaces = frappe.boot.allowed_workspaces || [];
+        if (!workspaces.length) {
+          grid.innerHTML = `<div class="sp-mod-loading">${__("No modules found")}</div>`;
+          return;
+        }
+        const colors = [
+          "#E91E63",
+          "#9C27B0",
+          "#673AB7",
+          "#3F51B5",
+          "#2196F3",
+          "#009688",
+          "#4CAF50",
+          "#FF9800",
+          "#FF5722",
+          "#795548",
+          "#607D8B",
+          "#00BCD4",
+          "#8BC34A",
+          "#FFC107",
+          "#F44336",
+          "#3DDC84"
+        ];
+        const icons = {
+          "home": "\u{1F3E0}",
+          "dashboard": "\u{1F4CA}",
+          "settings": "\u2699\uFE0F",
+          "hr": "\u{1F465}",
+          "accounting": "\u{1F4B0}",
+          "stock": "\u{1F4E6}",
+          "selling": "\u{1F6D2}",
+          "buying": "\u{1F6CD}\uFE0F",
+          "manufacturing": "\u{1F3ED}",
+          "projects": "\u{1F4CB}",
+          "crm": "\u{1F91D}",
+          "support": "\u{1F3A7}",
+          "healthcare": "\u{1F3E5}",
+          "website": "\u{1F310}",
+          "assets": "\u{1F3E2}",
+          "quality": "\u2705",
+          "education": "\u{1F393}",
+          "pos": "\u{1F4B3}",
+          "pharmacy": "\u{1F48A}",
+          "lab": "\u{1F52C}",
+          "blood": "\u{1FA78}",
+          "emergency": "\u{1F691}",
+          "surgery": "\u2695\uFE0F",
+          "radiology": "\u{1F4E1}",
+          "nutrition": "\u{1F957}",
+          "insurance": "\u{1F6E1}\uFE0F",
+          "admission": "\u{1F6CF}\uFE0F",
+          "warehouse": "\u{1F3EA}",
+          "inventory": "\u{1F4DD}",
+          "reports": "\u{1F4C8}",
+          "finance": "\u{1F4B5}",
+          "ledger": "\u{1F4D2}"
+        };
+        grid.innerHTML = workspaces.map((ws, i) => {
+          const name = ws.name || ws.title || ws;
+          const title = ws.title || name;
+          const color = colors[i % colors.length];
+          let emoji = "\u{1F4C1}";
+          const lower = (title + " " + name).toLowerCase();
+          for (const [key, val] of Object.entries(icons)) {
+            if (lower.includes(key)) {
+              emoji = val;
+              break;
+            }
+          }
+          return `
+                    <a class="sp-mod-item" data-name="${title}" href="/app/${encodeURIComponent(name.toLowerCase().replace(/ /g, "-"))}">
+                        <div class="sp-mod-icon" style="background:${color}">
+                            <span>${emoji}</span>
+                        </div>
+                        <span class="sp-mod-name">${title}</span>
+                    </a>
+                `;
+        }).join("");
+        grid.querySelectorAll(".sp-mod-item").forEach((item) => {
+          item.addEventListener("click", (e) => {
+            e.preventDefault();
+            const name = item.dataset.name;
+            this.closeModulesPopup();
+            if (typeof frappe !== "undefined") {
+              frappe.set_route(item.getAttribute("href").replace("/app/", ""));
+            }
+          });
+        });
+      } catch (err) {
+        console.error("[PWA] Failed to load workspaces:", err);
+        grid.innerHTML = `<div class="sp-mod-loading">${__("Failed to load")}</div>`;
+      }
+    },
     updateActiveTab() {
       if (!this.container)
         return;
-      const path = window.location.pathname + window.location.hash;
       this.container.querySelectorAll(".sp-nav-tab").forEach((tab) => {
         tab.classList.remove("sp-nav-active");
       });
@@ -427,4 +539,4 @@
     Forms: form_enhancer_default
   };
 })();
-//# sourceMappingURL=mobile_ux.bundle.R6NOCUDL.js.map
+//# sourceMappingURL=mobile_ux.bundle.HAO274XR.js.map

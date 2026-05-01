@@ -1,6 +1,6 @@
 @charset "UTF-8";
 
-/* ../../../../../tmp/tmp-4017686-Vd3Qi3oG6A8C/smartplan_medical/smartplan_medical/public/scss/smartplan_pwa.bundle.css */
+/* ../../../../../tmp/tmp-4018890-c8CZtCavsvlN/smartplan_medical/smartplan_medical/public/scss/smartplan_pwa.bundle.css */
 html.sp-mobile {
   height: 100%;
   overflow: hidden;
@@ -16,7 +16,7 @@ html.sp-mobile body {
   -webkit-overflow-scrolling: touch;
 }
 html.sp-mobile .navbar {
-  background: linear-gradient(135deg, #0D1B2A 0%, #1B3A5C 50%, #0D1B2A 100%) !important;
+  background: linear-gradient(-135deg, #0D1B2A 0%, #1B3A5C 50%, #0D1B2A 100%) !important;
   height: 52px !important;
   min-height: 52px !important;
   max-height: 52px !important;
@@ -24,9 +24,41 @@ html.sp-mobile .navbar {
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.35) !important;
   padding: 0 10px !important;
 }
-html.sp-mobile .navbar * {
+html.sp-mobile .navbar .container,
+html.sp-mobile .navbar .navbar-collapse,
+html.sp-mobile .navbar .nav-link,
+html.sp-mobile .navbar .navbar-nav > li > a,
+html.sp-mobile .navbar .navbar-brand,
+html.sp-mobile .navbar .navbar-home,
+html.sp-mobile .navbar .navbar-icon-text,
+html.sp-mobile .navbar .notifications-icon,
+html.sp-mobile .navbar .search-bar .search-icon {
   color: #fff !important;
   fill: #fff !important;
+}
+html.sp-mobile .navbar .navbar-icon svg,
+html.sp-mobile .navbar .notifications-icon svg {
+  stroke: #fff !important;
+  color: #fff !important;
+  opacity: 0.85;
+}
+html.sp-mobile .navbar .dropdown-menu,
+html.sp-mobile .navbar .dropdown-menu * {
+  color: #1e293b !important;
+  fill: #1e293b !important;
+}
+html.sp-mobile .navbar .dropdown-menu {
+  background: #fff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15) !important;
+}
+html.sp-mobile .navbar .dropdown-menu .dropdown-item {
+  color: #1e293b !important;
+  padding: 10px 16px !important;
+}
+html.sp-mobile .navbar .dropdown-menu .dropdown-item:hover {
+  background: #f1f5f9 !important;
 }
 html.sp-mobile .navbar .navbar-brand img,
 html.sp-mobile .navbar .navbar-home img {
@@ -61,14 +93,14 @@ html.sp-mobile .desk-sidebar {
   display: none !important;
   position: fixed !important;
   top: 52px !important;
-  left: 0 !important;
+  right: 0 !important;
   bottom: 60px !important;
   width: 280px !important;
   z-index: 1060 !important;
   background: #fff !important;
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.2) !important;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.2) !important;
   overflow-y: auto !important;
-  transform: translateX(-100%);
+  transform: translateX(100%);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 html.sp-mobile.sp-sidebar-open .desk-sidebar,
@@ -145,11 +177,11 @@ html.sp-mobile .widget.shortcut-widget-box::before {
   content: "";
   position: absolute;
   top: 0;
-  left: 0;
+  right: 0;
   bottom: 0;
   width: 3px;
-  background: linear-gradient(180deg, #2979FF, #00D4AA);
-  border-radius: 0 2px 2px 0;
+  background: linear-gradient(-180deg, #2979FF, #00D4AA);
+  border-radius: 2px 0 0 2px;
 }
 html.sp-mobile .widget.shortcut-widget-box:active {
   transform: scale(0.98) !important;
@@ -308,7 +340,7 @@ html.sp-mobile .btn:active {
 }
 html.sp-mobile .btn-primary,
 html.sp-mobile .btn-primary-dark {
-  background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%) !important;
+  background: linear-gradient(-135deg, #1e3a5f 0%, #2563eb 100%) !important;
   border: none !important;
   color: #fff !important;
   box-shadow: 0 2px 8px rgba(30, 58, 95, 0.3) !important;
@@ -398,8 +430,8 @@ html.sp-mobile .sp-bottom-nav {
   display: flex !important;
   position: fixed;
   bottom: 0;
-  left: 0;
   right: 0;
+  left: 0;
   height: calc(56px + env(safe-area-inset-bottom, 0px));
   padding-bottom: env(safe-area-inset-bottom, 0px);
   background: #ffffff;
@@ -435,11 +467,11 @@ html.sp-mobile .sp-bottom-nav {
   content: "";
   position: absolute;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 50%;
+  transform: translateX(50%);
   width: 28px;
   height: 3px;
-  background: linear-gradient(90deg, #2979FF, #00D4AA);
+  background: linear-gradient(-90deg, #2979FF, #00D4AA);
   border-radius: 0 0 4px 4px;
 }
 .sp-nav-tab-icon {
@@ -460,7 +492,7 @@ html.sp-mobile .sp-bottom-nav {
 .sp-nav-badge {
   position: absolute;
   top: -5px;
-  right: -10px;
+  left: -10px;
   min-width: 16px;
   height: 16px;
   padding: 0 4px;
@@ -480,7 +512,7 @@ html.sp-mobile .sp-bottom-nav {
 html.sp-mobile .sp-fab-container {
   position: fixed;
   bottom: calc(68px + env(safe-area-inset-bottom, 0px));
-  right: 14px;
+  left: 14px;
   z-index: 1040;
   display: block;
 }
@@ -488,7 +520,7 @@ html.sp-mobile .sp-fab-container {
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #1e3a5f, #2563eb);
+  background: linear-gradient(-135deg, #1e3a5f, #2563eb);
   color: white;
   border: none;
   box-shadow: 0 4px 16px rgba(30, 58, 95, 0.35);
@@ -509,8 +541,8 @@ html.sp-mobile .sp-fab-container {
 #sp-install-banner {
   position: fixed;
   bottom: calc(64px + env(safe-area-inset-bottom, 0px));
-  left: 12px;
   right: 12px;
+  left: 12px;
   background: #fff;
   border: 1px solid #e2e8f0;
   border-radius: 14px;
@@ -561,7 +593,7 @@ html.sp-mobile .sp-fab-container {
   gap: 8px;
 }
 #sp-install-accept {
-  background: linear-gradient(135deg, #1e3a5f, #2563eb);
+  background: linear-gradient(-135deg, #1e3a5f, #2563eb);
   color: #fff;
   border: none;
   padding: 8px 18px;
@@ -581,8 +613,8 @@ html.sp-mobile .sp-fab-container {
 .sp-offline-bar {
   position: fixed;
   top: 0;
-  left: 0;
   right: 0;
+  left: 0;
   height: 28px;
   background: #fef3c7;
   color: #92400e;
@@ -594,4 +626,174 @@ html.sp-mobile .sp-fab-container {
   z-index: 9999;
   gap: 6px;
 }
-/*# sourceMappingURL=smartplan_pwa.bundle.GXJCG5PZ.css.map */
+#sp-modules-popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 11, 24, 0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 9000;
+  display: flex;
+  flex-direction: column;
+  padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 16px);
+  overflow-y: auto;
+  opacity: 0;
+  transform: scale(0.96);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+#sp-modules-popup.sp-mod-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+.sp-mod-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 4px 12px;
+  direction: ltr;
+}
+.sp-mod-header h2 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+}
+.sp-mod-sub {
+  font-size: 0.72rem;
+  color: #5A6B85;
+  display: block;
+  margin-top: 2px;
+}
+.sp-mod-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94A3C0;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.sp-mod-close:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+.sp-mod-search {
+  position: relative;
+  margin: 8px 0 20px;
+}
+.sp-mod-search svg {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: #5A6B85;
+  stroke: #5A6B85;
+}
+.sp-mod-search input {
+  width: 100%;
+  padding: 12px 16px 12px 44px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-family: "Cairo", sans-serif;
+  outline: none;
+}
+.sp-mod-search input::-moz-placeholder {
+  color: #5A6B85;
+}
+.sp-mod-search input::placeholder {
+  color: #5A6B85;
+}
+.sp-mod-search input:focus {
+  border-color: rgba(41, 121, 255, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+}
+.sp-mod-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding: 4px 0;
+}
+@media (max-width: 400px) {
+  .sp-mod-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.sp-mod-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 4px;
+  border-radius: 16px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.sp-mod-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+.sp-mod-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.sp-mod-name {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #94A3C0;
+  text-align: center;
+  line-height: 1.3;
+  max-width: 72px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.sp-mod-loading {
+  grid-column: 1/-1;
+  text-align: center;
+  color: #5A6B85;
+  padding: 40px 0;
+  font-size: 0.9rem;
+}
+html.sp-mobile .tooltip,
+html.sp-mobile .tooltip * {
+  color: #fff !important;
+}
+html.sp-mobile .tooltip .tooltip-inner {
+  background: #1e293b !important;
+  border-radius: 8px !important;
+  font-size: 12px !important;
+}
+html.sp-mobile .page-head .page-actions .btn svg,
+html.sp-mobile .page-head .page-actions .btn .icon {
+  color: #1e3a5f !important;
+  fill: #1e3a5f !important;
+  stroke: #1e3a5f !important;
+}
+html.sp-mobile .notifications-list,
+html.sp-mobile .notifications-list * {
+  color: #1e293b !important;
+}
+html.sp-mobile .notifications-list {
+  background: #fff !important;
+}
+/*# sourceMappingURL=smartplan_pwa.bundle.YUBKO2HX.css.map */

@@ -35,7 +35,49 @@ html.sp-mobile .navbar {
   padding: 0 10px !important;
 }
 
-html.sp-mobile .navbar * { color: #fff !important; fill: #fff !important; }
+/* Scope white color to direct navbar children only — NOT dropdowns */
+html.sp-mobile .navbar .container,
+html.sp-mobile .navbar .navbar-collapse,
+html.sp-mobile .navbar .nav-link,
+html.sp-mobile .navbar .navbar-nav > li > a,
+html.sp-mobile .navbar .navbar-brand,
+html.sp-mobile .navbar .navbar-home,
+html.sp-mobile .navbar .navbar-icon-text,
+html.sp-mobile .navbar .notifications-icon,
+html.sp-mobile .navbar .search-bar .search-icon {
+  color: #fff !important;
+  fill: #fff !important;
+}
+
+html.sp-mobile .navbar .navbar-icon svg,
+html.sp-mobile .navbar .notifications-icon svg {
+  stroke: #fff !important;
+  color: #fff !important;
+  opacity: 0.85;
+}
+
+/* Dropdown menus must keep normal dark text */
+html.sp-mobile .navbar .dropdown-menu,
+html.sp-mobile .navbar .dropdown-menu * {
+  color: #1e293b !important;
+  fill: #1e293b !important;
+}
+
+html.sp-mobile .navbar .dropdown-menu {
+  background: #fff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15) !important;
+}
+
+html.sp-mobile .navbar .dropdown-menu .dropdown-item {
+  color: #1e293b !important;
+  padding: 10px 16px !important;
+}
+
+html.sp-mobile .navbar .dropdown-menu .dropdown-item:hover {
+  background: #f1f5f9 !important;
+}
 
 /* Navbar logo — make it visible on dark bg */
 html.sp-mobile .navbar .navbar-brand img,
@@ -569,4 +611,153 @@ html.sp-mobile .sp-fab-container {
   display: flex; align-items: center; justify-content: center;
   font-size: 12px; font-weight: 600; z-index: 9999;
   gap: 6px;
+}
+
+/* ══════════════════════════════════════════════════════
+   MODULES POPUP — Dark fullscreen overlay
+   ══════════════════════════════════════════════════════ */
+#sp-modules-popup {
+  position: fixed; inset: 0;
+  background: rgba(5,11,24,0.97);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  z-index: 9000;
+  display: flex; flex-direction: column;
+  padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 16px);
+  overflow-y: auto;
+  opacity: 0; transform: scale(0.96);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+#sp-modules-popup.sp-mod-visible {
+  opacity: 1; transform: scale(1);
+}
+
+.sp-mod-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 4px 12px; direction: rtl;
+}
+
+.sp-mod-header h2 {
+  font-size: 1.4rem; font-weight: 800;
+  color: #fff; margin: 0;
+}
+
+.sp-mod-sub {
+  font-size: 0.72rem; color: #5A6B85;
+  display: block; margin-top: 2px;
+}
+
+.sp-mod-close {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #94A3C0; font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s;
+}
+
+.sp-mod-close:hover { background: rgba(255,255,255,0.15); color: #fff; }
+
+.sp-mod-search {
+  position: relative; margin: 8px 0 20px;
+}
+
+.sp-mod-search svg {
+  position: absolute; right: 14px; top: 50%;
+  transform: translateY(-50%);
+  width: 18px; height: 18px; color: #5A6B85;
+  stroke: #5A6B85;
+}
+
+.sp-mod-search input {
+  width: 100%; padding: 12px 44px 12px 16px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px; color: #fff;
+  font-size: 0.9rem; font-family: 'Cairo', sans-serif;
+  outline: none;
+}
+
+.sp-mod-search input::placeholder { color: #5A6B85; }
+
+.sp-mod-search input:focus {
+  border-color: rgba(41,121,255,0.3);
+  background: rgba(255,255,255,0.08);
+}
+
+.sp-mod-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px; padding: 4px 0;
+}
+
+@media (max-width: 400px) {
+  .sp-mod-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.sp-mod-item {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 8px;
+  padding: 12px 4px; border-radius: 16px;
+  text-decoration: none; cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sp-mod-item:hover {
+  background: rgba(255,255,255,0.06);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.sp-mod-icon {
+  width: 52px; height: 52px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.sp-mod-name {
+  font-size: 0.68rem; font-weight: 600;
+  color: #94A3C0; text-align: center;
+  line-height: 1.3; max-width: 72px;
+  overflow: hidden; text-overflow: ellipsis;
+  display: -webkit-box; -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.sp-mod-loading {
+  grid-column: 1 / -1; text-align: center;
+  color: #5A6B85; padding: 40px 0; font-size: 0.9rem;
+}
+
+/* ══════════════════════════════════════════════════════
+   FAB TOOLTIP FIX
+   ══════════════════════════════════════════════════════ */
+html.sp-mobile .tooltip,
+html.sp-mobile .tooltip * {
+  color: #fff !important;
+}
+
+html.sp-mobile .tooltip .tooltip-inner {
+  background: #1e293b !important;
+  border-radius: 8px !important;
+  font-size: 12px !important;
+}
+
+/* Page-head action buttons — ensure icons are visible */
+html.sp-mobile .page-head .page-actions .btn svg,
+html.sp-mobile .page-head .page-actions .btn .icon {
+  color: #1e3a5f !important;
+  fill: #1e3a5f !important;
+  stroke: #1e3a5f !important;
+}
+
+/* Notification panel fix */
+html.sp-mobile .notifications-list,
+html.sp-mobile .notifications-list * {
+  color: #1e293b !important;
+}
+
+html.sp-mobile .notifications-list {
+  background: #fff !important;
 }
