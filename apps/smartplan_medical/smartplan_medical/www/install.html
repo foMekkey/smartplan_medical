@@ -471,6 +471,15 @@ html,body{
 </div>
 
 <script>
+// If already installed (standalone PWA), skip install page → go to app
+(function(){
+    var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    if(isStandalone){
+        window.location.replace('/app');
+        return;
+    }
+})();
+
 // Stars
 (function(){
     var c=document.getElementById('stars');if(!c)return;
