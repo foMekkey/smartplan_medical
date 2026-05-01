@@ -1,6 +1,6 @@
 @charset "UTF-8";
 
-/* ../../../../../tmp/tmp-4012954-OhnWOU4gRYGW/smartplan_medical/smartplan_medical/public/scss/smartplan_pwa.bundle.css */
+/* ../../../../../tmp/tmp-4015638-GVE2uqK0Poia/smartplan_medical/smartplan_medical/public/scss/smartplan_pwa.bundle.css */
 html.sp-mobile {
   height: 100%;
   overflow: hidden;
@@ -17,7 +17,7 @@ html.sp-mobile body {
 }
 html.sp-mobile .navbar {
   background: #1e3a5f !important;
-  background: linear-gradient(-90deg, #0f2444 0%, #1e3a5f 100%) !important;
+  background: linear-gradient(90deg, #0f2444 0%, #1e3a5f 100%) !important;
   height: 52px !important;
   min-height: 52px !important;
   max-height: 52px !important;
@@ -235,7 +235,7 @@ html.sp-mobile .btn:active {
 }
 html.sp-mobile .btn-primary,
 html.sp-mobile .btn-primary-dark {
-  background: linear-gradient(-135deg, #1e3a5f 0%, #2563eb 100%) !important;
+  background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%) !important;
   border: none !important;
   color: #fff !important;
   box-shadow: 0 2px 8px rgba(30, 58, 95, 0.3) !important;
@@ -325,8 +325,8 @@ html.sp-mobile .sp-bottom-nav {
   display: flex !important;
   position: fixed;
   bottom: 0;
-  right: 0;
   left: 0;
+  right: 0;
   height: calc(56px + env(safe-area-inset-bottom, 0px));
   padding-bottom: env(safe-area-inset-bottom, 0px);
   background: #ffffff;
@@ -362,8 +362,8 @@ html.sp-mobile .sp-bottom-nav {
   content: "";
   position: absolute;
   top: 0;
-  right: 50%;
-  transform: translateX(50%);
+  left: 50%;
+  transform: translateX(-50%);
   width: 28px;
   height: 3px;
   background: #1e3a5f;
@@ -387,7 +387,7 @@ html.sp-mobile .sp-bottom-nav {
 .sp-nav-badge {
   position: absolute;
   top: -5px;
-  left: -10px;
+  right: -10px;
   min-width: 16px;
   height: 16px;
   padding: 0 4px;
@@ -407,7 +407,7 @@ html.sp-mobile .sp-bottom-nav {
 html.sp-mobile .sp-fab-container {
   position: fixed;
   bottom: calc(68px + env(safe-area-inset-bottom, 0px));
-  left: 14px;
+  right: 14px;
   z-index: 1040;
   display: block;
 }
@@ -415,7 +415,7 @@ html.sp-mobile .sp-fab-container {
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: linear-gradient(-135deg, #1e3a5f, #2563eb);
+  background: linear-gradient(135deg, #1e3a5f, #2563eb);
   color: white;
   border: none;
   box-shadow: 0 4px 16px rgba(30, 58, 95, 0.35);
@@ -436,8 +436,8 @@ html.sp-mobile .sp-fab-container {
 .sp-install-banner {
   position: fixed;
   bottom: calc(64px + env(safe-area-inset-bottom, 0px));
-  right: 12px;
   left: 12px;
+  right: 12px;
   background: #fff;
   border: 1px solid #e2e8f0;
   border-radius: 14px;
@@ -497,7 +497,7 @@ html.sp-mobile .sp-fab-container {
 .sp-install-close {
   position: absolute;
   top: 6px;
-  left: 8px;
+  right: 8px;
   background: none;
   border: none;
   color: #94a3b8;
@@ -508,8 +508,8 @@ html.sp-mobile .sp-fab-container {
 .sp-offline-bar {
   position: fixed;
   top: 0;
-  right: 0;
   left: 0;
+  right: 0;
   height: 28px;
   background: #fef3c7;
   color: #92400e;
@@ -521,4 +521,4 @@ html.sp-mobile .sp-fab-container {
   z-index: 9999;
   gap: 6px;
 }
-/*# sourceMappingURL=smartplan_pwa.bundle.Q4UWZ4JH.css.map */
+/*# sourceMappingURL=smartplan_pwa.bundle.LLKAETVX.css.map */

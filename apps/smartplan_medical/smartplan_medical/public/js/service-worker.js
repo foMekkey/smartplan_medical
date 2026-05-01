@@ -170,7 +170,7 @@ async function cacheFirst(request, cacheName) {
             return cached;
         }
         const networkResponse = await fetch(request);
-        if (networkResponse.ok) {
+        if (networkResponse.status === 200) {
             const cache = await caches.open(cacheName);
             cache.put(request, networkResponse.clone());
         }
@@ -194,7 +194,7 @@ async function networkFirstWithTimeout(request, cacheName, timeoutMs) {
 
         const response = await Promise.race([networkPromise, timeoutPromise]);
 
-        if (response.ok) {
+        if (response.status === 200) {
             const cache = await caches.open(cacheName);
             cache.put(request, response.clone());
         }
@@ -219,7 +219,7 @@ async function networkFirstWithTimeout(request, cacheName, timeoutMs) {
 async function networkFirstHTML(request) {
     try {
         const response = await fetch(request);
-        if (response.ok) {
+        if (response.status === 200) {
             const cache = await caches.open(DYNAMIC_CACHE);
             cache.put(request, response.clone());
         }
