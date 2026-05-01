@@ -2,500 +2,565 @@
 
 {% block page_content %}
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap');
 
-    :root {
-        --sp-navy: #0D1B2A;
-        --sp-navy-light: #1B2838;
-        --sp-navy-lighter: #243447;
-        --sp-accent: #00BFA6;
-        --sp-accent-hover: #00E5C3;
-        --sp-accent-glow: rgba(0, 191, 166, 0.25);
-        --sp-text-primary: #E8EDF3;
-        --sp-text-secondary: #8899AA;
-        --sp-text-muted: #5A6D80;
-        --sp-border: rgba(255, 255, 255, 0.08);
-        --sp-glass: rgba(255, 255, 255, 0.06);
-        --sp-danger: #FF4757;
-        --sp-success: #00D68F;
-    }
+:root {
+    --sp-navy: #0D1B2A;
+    --sp-navy-light: #1B2838;
+    --sp-navy-lighter: #243447;
+    --sp-blue: #1565C0;
+    --sp-blue-light: #2196F3;
+    --sp-accent: #00BFA6;
+    --sp-accent-hover: #00E5C3;
+    --sp-accent-glow: rgba(0, 191, 166, 0.3);
+    --sp-text: #E8EDF3;
+    --sp-text-sec: #8899AA;
+    --sp-text-muted: #5A6D80;
+    --sp-border: rgba(255, 255, 255, 0.08);
+    --sp-glass: rgba(255, 255, 255, 0.04);
+    --sp-glass-hover: rgba(255, 255, 255, 0.08);
+}
 
-    body, html {
-        margin: 0;
-        padding: 0;
-        background: linear-gradient(135deg, var(--sp-navy) 0%, #0A1628 50%, #081420 100%) !important;
-        color: var(--sp-text-primary);
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        -webkit-font-smoothing: antialiased;
-        min-height: 100vh;
-        overflow-x: hidden;
-    }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .navbar, .web-footer, footer, .page-header, .page-header-wrapper { display: none !important; }
-    .main-section { padding: 0 !important; background: transparent !important; }
-    .container.page-body { padding: 0 !important; max-width: 100% !important; }
-    .web-content { padding: 0 !important; }
+body, html {
+    margin: 0; padding: 0;
+    background: var(--sp-navy) !important;
+    color: var(--sp-text);
+    font-family: 'Cairo', 'Inter', -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    overflow-x: hidden;
+    direction: rtl;
+}
 
-    /* ─── DECORATIVE ORBS ────── */
-    .sp-orb {
-        position: fixed;
-        border-radius: 50%;
-        filter: blur(120px);
-        pointer-events: none;
-        z-index: 0;
-    }
-    .sp-orb-1 { width: 500px; height: 500px; background: rgba(0,191,166,0.07); top: -150px; right: -150px; }
-    .sp-orb-2 { width: 400px; height: 400px; background: rgba(59,130,246,0.05); bottom: -100px; left: -100px; }
-    .sp-orb-3 { width: 300px; height: 300px; background: rgba(139,92,246,0.04); top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.navbar, .web-footer, footer, .page-header, .page-header-wrapper { display: none !important; }
+.main-section { padding: 0 !important; background: transparent !important; }
+.container.page-body { padding: 0 !important; max-width: 100% !important; }
+.web-content { padding: 0 !important; }
 
-    /* ─── HERO ────── */
-    .sp-install-hero {
-        position: relative;
-        z-index: 1;
-        text-align: center;
-        padding: 80px 24px 40px;
-        max-width: 600px;
-        margin: 0 auto;
-    }
+/* ─── ANIMATED BG ────── */
+.sp-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
 
-    .sp-app-icon {
-        width: 100px;
-        height: 100px;
-        border-radius: 24px;
-        box-shadow: 0 16px 48px rgba(0,0,0,0.4);
-        margin-bottom: 28px;
-        animation: sp-float 4s ease-in-out infinite;
-    }
+.sp-bg-gradient {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #060E1A 0%, #0D1B2A 30%, #0F2744 60%, #0D1B2A 100%);
+}
 
-    @keyframes sp-float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-    }
+.sp-orb {
+    position: absolute; border-radius: 50%;
+    filter: blur(100px); pointer-events: none;
+    animation: sp-drift 20s ease-in-out infinite;
+}
+.sp-orb-1 { width: 600px; height: 600px; background: rgba(21,101,192,0.08); top: -200px; right: -150px; animation-duration: 25s; }
+.sp-orb-2 { width: 500px; height: 500px; background: rgba(0,191,166,0.06); bottom: -150px; left: -100px; animation-duration: 30s; animation-delay: -5s; }
+.sp-orb-3 { width: 350px; height: 350px; background: rgba(33,150,243,0.05); top: 40%; left: 30%; animation-duration: 22s; animation-delay: -10s; }
 
-    .sp-install-hero h1 {
-        font-size: 2.5rem;
-        font-weight: 800;
-        letter-spacing: -0.03em;
-        margin-bottom: 12px;
-        background: linear-gradient(135deg, var(--sp-text-primary) 0%, var(--sp-accent) 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
+@keyframes sp-drift {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(30px, -20px) scale(1.05); }
+    50% { transform: translate(-20px, 30px) scale(0.95); }
+    75% { transform: translate(15px, 15px) scale(1.02); }
+}
 
-    .sp-install-hero p {
-        font-size: 1.1rem;
-        color: var(--sp-text-secondary);
-        line-height: 1.7;
-        max-width: 480px;
-        margin: 0 auto;
-    }
+/* Grid pattern */
+.sp-grid {
+    position: absolute; inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+}
 
-    /* ─── PLATFORM CARDS ────── */
-    .sp-cards-container {
-        position: relative;
-        z-index: 1;
-        max-width: 700px;
-        margin: 0 auto;
-        padding: 0 24px 60px;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
+/* ─── CONTENT WRAPPER ────── */
+.sp-page {
+    position: relative; z-index: 1;
+    max-width: 680px; margin: 0 auto;
+    padding: 0 20px;
+}
 
-    .sp-platform-card {
-        background: var(--sp-glass);
-        backdrop-filter: blur(20px) saturate(180%);
-        -webkit-backdrop-filter: blur(20px) saturate(180%);
-        border: 1px solid var(--sp-border);
-        border-radius: 20px;
-        padding: 32px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-    }
+/* ─── HERO ────── */
+.sp-hero {
+    text-align: center;
+    padding: 70px 0 40px;
+    animation: sp-fadeUp 0.8s ease-out;
+}
 
-    .sp-platform-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        border-radius: 20px 20px 0 0;
-    }
+.sp-icon-wrap {
+    position: relative; display: inline-block;
+    margin-bottom: 28px;
+}
 
-    .sp-platform-card.sp-android::before { background: linear-gradient(90deg, #3DDC84, #00BFA6); }
-    .sp-platform-card.sp-ios::before { background: linear-gradient(90deg, #A8B4C5, #FFFFFF); }
+.sp-icon-wrap::before {
+    content: '';
+    position: absolute; inset: -12px;
+    border-radius: 32px;
+    background: radial-gradient(circle, rgba(0,191,166,0.15) 0%, transparent 70%);
+    animation: sp-glow-pulse 3s ease-in-out infinite;
+}
 
-    .sp-platform-card:hover {
-        border-color: rgba(255,255,255,0.15);
-        transform: translateY(-4px);
-        box-shadow: 0 16px 48px rgba(0,0,0,0.3);
-    }
+.sp-app-icon {
+    width: 96px; height: 96px;
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,191,166,0.1);
+    position: relative;
+    animation: sp-float 5s ease-in-out infinite;
+}
 
-    .sp-card-header {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        margin-bottom: 24px;
-    }
+@keyframes sp-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
 
-    .sp-platform-icon {
-        width: 52px;
-        height: 52px;
-        border-radius: 14px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
+@keyframes sp-glow-pulse {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
 
-    .sp-android .sp-platform-icon { background: rgba(61, 220, 132, 0.12); }
-    .sp-ios .sp-platform-icon { background: rgba(255, 255, 255, 0.08); }
+.sp-hero h1 {
+    font-size: 2.4rem; font-weight: 800;
+    letter-spacing: -0.02em; margin-bottom: 14px;
+    background: linear-gradient(135deg, #FFFFFF 0%, #A8D4FF 50%, var(--sp-accent) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.3;
+}
 
-    .sp-platform-icon svg { width: 28px; height: 28px; }
+.sp-hero p {
+    font-size: 1.05rem; color: var(--sp-text-sec);
+    line-height: 1.8; max-width: 500px; margin: 0 auto;
+}
 
-    .sp-card-header h2 {
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin: 0;
-        color: var(--sp-text-primary);
-    }
+/* ─── BADGE ────── */
+.sp-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--sp-glass); border: 1px solid var(--sp-border);
+    border-radius: 100px; padding: 8px 18px;
+    font-size: 0.82rem; color: var(--sp-accent);
+    font-weight: 600; margin-bottom: 20px;
+    backdrop-filter: blur(12px);
+}
 
-    .sp-card-header span {
-        font-size: 0.85rem;
-        color: var(--sp-text-muted);
-        display: block;
-        margin-top: 2px;
-    }
+.sp-badge-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--sp-accent);
+    animation: sp-blink 2s ease-in-out infinite;
+}
 
-    /* ─── STEPS ────── */
-    .sp-steps {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        counter-reset: step;
-    }
+@keyframes sp-blink {
+    0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
+}
 
-    .sp-steps li {
-        counter-increment: step;
-        display: flex;
-        align-items: flex-start;
-        gap: 16px;
-        padding: 14px 0;
-        border-bottom: 1px solid var(--sp-border);
-        font-size: 0.95rem;
-        line-height: 1.6;
-        color: var(--sp-text-secondary);
-    }
+/* ─── PLATFORM CARDS ────── */
+.sp-cards { display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; }
 
-    .sp-steps li:last-child { border-bottom: none; }
+.sp-card {
+    background: var(--sp-glass);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--sp-border);
+    border-radius: 20px; padding: 28px;
+    position: relative; overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: sp-fadeUp 0.6s ease-out backwards;
+}
 
-    .sp-steps li::before {
-        content: counter(step);
-        min-width: 32px;
-        height: 32px;
-        background: var(--sp-accent);
-        color: var(--sp-navy);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        font-size: 0.85rem;
-        flex-shrink: 0;
-        margin-top: 2px;
-    }
+.sp-card:nth-child(1) { animation-delay: 0.2s; }
+.sp-card:nth-child(2) { animation-delay: 0.35s; }
 
-    .sp-steps li strong { color: var(--sp-text-primary); }
+.sp-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+}
 
-    /* ─── DOWNLOAD BUTTON ────── */
-    .sp-download-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        width: 100%;
-        padding: 16px 32px;
-        margin-top: 24px;
-        background: linear-gradient(135deg, var(--sp-accent), #00A58E);
-        border: none;
-        border-radius: 14px;
-        color: var(--sp-navy);
-        font-weight: 700;
-        font-size: 1.05rem;
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 4px 20px rgba(0, 191, 166, 0.3);
-        text-decoration: none;
-        font-family: inherit;
-    }
+.sp-card.sp-android::before { background: linear-gradient(90deg, #3DDC84, #00BFA6); }
+.sp-card.sp-ios::before { background: linear-gradient(90deg, #A8B4C5, #FFFFFF); }
 
-    .sp-download-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 32px rgba(0, 191, 166, 0.4);
-        color: var(--sp-navy);
-        text-decoration: none;
-    }
+.sp-card:hover {
+    border-color: rgba(255,255,255,0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+}
 
-    .sp-download-btn:active { transform: translateY(0); }
+.sp-card-head {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 20px;
+}
 
-    .sp-download-btn svg { width: 22px; height: 22px; flex-shrink: 0; }
+.sp-platform-icon {
+    width: 48px; height: 48px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
 
-    .sp-download-btn.sp-btn-ios {
-        background: linear-gradient(135deg, #A8B4C5, #8899AA);
-        box-shadow: 0 4px 20px rgba(168, 180, 197, 0.2);
-    }
+.sp-android .sp-platform-icon { background: rgba(61,220,132,0.1); }
+.sp-ios .sp-platform-icon { background: rgba(255,255,255,0.06); }
+.sp-platform-icon svg { width: 26px; height: 26px; }
 
-    .sp-download-btn.sp-btn-ios:hover {
-        box-shadow: 0 8px 32px rgba(168, 180, 197, 0.3);
-    }
+.sp-card-head h2 { font-size: 1.3rem; font-weight: 700; margin: 0; color: #fff; }
+.sp-card-head span { font-size: 0.8rem; color: var(--sp-text-muted); display: block; margin-top: 2px; }
 
-    /* ─── FEATURES GRID ────── */
-    .sp-features {
-        position: relative;
-        z-index: 1;
-        max-width: 700px;
-        margin: 0 auto;
-        padding: 0 24px 40px;
-    }
+/* ─── STEPS ────── */
+.sp-steps { list-style: none; counter-reset: step; }
 
-    .sp-features h3 {
-        text-align: center;
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: var(--sp-text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        margin-bottom: 24px;
-    }
+.sp-steps li {
+    counter-increment: step;
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 0.9rem; line-height: 1.7;
+    color: var(--sp-text-sec);
+}
 
-    .sp-features-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-    }
+.sp-steps li:last-child { border-bottom: none; }
 
-    .sp-feature {
-        background: var(--sp-glass);
-        border: 1px solid var(--sp-border);
-        border-radius: 14px;
-        padding: 20px;
-        text-align: center;
-        transition: all 0.2s ease;
-    }
+.sp-steps li::before {
+    content: counter(step);
+    min-width: 30px; height: 30px;
+    background: linear-gradient(135deg, var(--sp-accent), #00A58E);
+    color: var(--sp-navy); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 0.8rem;
+    flex-shrink: 0; margin-top: 2px;
+}
 
-    .sp-feature:hover {
-        border-color: rgba(255,255,255,0.12);
-        background: rgba(255,255,255,0.08);
-    }
+.sp-steps li strong { color: #fff; }
 
-    .sp-feature-icon {
-        font-size: 1.8rem;
-        margin-bottom: 8px;
-    }
+/* ─── CTA BUTTON ────── */
+.sp-cta {
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px; width: 100%;
+    padding: 16px 28px; margin-top: 20px;
+    border: none; border-radius: 14px;
+    font-weight: 700; font-size: 1rem;
+    cursor: pointer; text-decoration: none;
+    font-family: 'Cairo', sans-serif;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative; overflow: hidden;
+}
 
-    .sp-feature-label {
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: var(--sp-text-primary);
-    }
+.sp-cta::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+}
 
-    .sp-feature-desc {
-        font-size: 0.75rem;
-        color: var(--sp-text-muted);
-        margin-top: 4px;
-    }
+.sp-cta:hover::after { transform: translateX(100%); }
 
-    /* ─── FOOTER ────── */
-    .sp-install-footer {
-        position: relative;
-        z-index: 1;
-        text-align: center;
-        padding: 20px 24px 40px;
-        font-size: 0.8rem;
-        color: var(--sp-text-muted);
-    }
+.sp-cta-android {
+    background: linear-gradient(135deg, var(--sp-accent), #00A58E);
+    color: var(--sp-navy);
+    box-shadow: 0 6px 24px rgba(0,191,166,0.3);
+}
 
-    .sp-install-footer a {
-        color: var(--sp-accent);
-        text-decoration: none;
-    }
+.sp-cta-android:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 36px rgba(0,191,166,0.4);
+    color: var(--sp-navy); text-decoration: none;
+}
 
-    /* ─── MOBILE ────── */
-    @media (max-width: 576px) {
-        .sp-install-hero {
-            padding: 60px 20px 30px;
-        }
+.sp-cta-ios {
+    background: linear-gradient(135deg, #667788, #556677);
+    color: #fff;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+}
 
-        .sp-install-hero h1 {
-            font-size: 1.8rem;
-        }
+.sp-cta-ios:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 36px rgba(0,0,0,0.3);
+    color: #fff; text-decoration: none;
+}
 
-        .sp-install-hero p {
-            font-size: 0.95rem;
-        }
+.sp-cta svg { width: 20px; height: 20px; flex-shrink: 0; }
 
-        .sp-platform-card {
-            padding: 24px;
-        }
+/* ─── FEATURES ────── */
+.sp-features {
+    margin-bottom: 40px;
+    animation: sp-fadeUp 0.6s ease-out 0.5s backwards;
+}
 
-        .sp-features-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-        }
+.sp-features h3 {
+    text-align: center; font-size: 0.85rem;
+    font-weight: 700; color: var(--sp-text-muted);
+    text-transform: uppercase; letter-spacing: 0.12em;
+    margin-bottom: 20px;
+}
 
-        .sp-feature {
-            padding: 14px;
-        }
-    }
+.sp-feat-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.sp-feat {
+    background: var(--sp-glass);
+    border: 1px solid var(--sp-border);
+    border-radius: 16px; padding: 20px;
+    text-align: center;
+    transition: all 0.25s ease;
+}
+
+.sp-feat:hover {
+    background: var(--sp-glass-hover);
+    border-color: rgba(255,255,255,0.12);
+    transform: translateY(-2px);
+}
+
+.sp-feat-emoji { font-size: 1.6rem; margin-bottom: 8px; display: block; }
+.sp-feat-name { font-size: 0.85rem; font-weight: 700; color: #fff; }
+.sp-feat-desc { font-size: 0.72rem; color: var(--sp-text-muted); margin-top: 4px; }
+
+/* ─── TRUST BAR ────── */
+.sp-trust {
+    text-align: center; padding: 30px 0;
+    border-top: 1px solid var(--sp-border);
+    margin-bottom: 20px;
+    animation: sp-fadeUp 0.6s ease-out 0.6s backwards;
+}
+
+.sp-trust-stats {
+    display: flex; justify-content: center; gap: 40px;
+    margin-bottom: 16px;
+}
+
+.sp-stat-val {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.6rem; font-weight: 800;
+    background: linear-gradient(135deg, var(--sp-accent), #2196F3);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; display: block;
+}
+
+.sp-stat-lbl { font-size: 0.72rem; color: var(--sp-text-muted); font-weight: 600; }
+
+/* ─── FOOTER ────── */
+.sp-footer {
+    text-align: center; padding: 20px 0 40px;
+    font-size: 0.78rem; color: var(--sp-text-muted);
+    animation: sp-fadeUp 0.6s ease-out 0.7s backwards;
+}
+
+.sp-footer a { color: var(--sp-accent); text-decoration: none; font-weight: 600; }
+.sp-footer a:hover { color: var(--sp-accent-hover); }
+
+.sp-powered {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 12px; opacity: 0.6;
+}
+
+.sp-powered img { width: 20px; height: 20px; border-radius: 5px; }
+
+/* ─── ANIMATIONS ────── */
+@keyframes sp-fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── MOBILE ────── */
+@media (max-width: 576px) {
+    .sp-hero { padding: 50px 0 30px; }
+    .sp-hero h1 { font-size: 1.7rem; }
+    .sp-hero p { font-size: 0.92rem; }
+    .sp-card { padding: 22px; }
+    .sp-feat-grid { gap: 8px; }
+    .sp-feat { padding: 16px 12px; }
+    .sp-trust-stats { gap: 24px; }
+}
 </style>
 
-<!-- Decorative orbs -->
-<div class="sp-orb sp-orb-1"></div>
-<div class="sp-orb sp-orb-2"></div>
-<div class="sp-orb sp-orb-3"></div>
-
-<!-- Hero Section -->
-<div class="sp-install-hero">
-    <img src="/assets/smartplan_medical/icons/icon-192x192.png" alt="{{ app_name }}" class="sp-app-icon">
-    <h1>{{ app_name }}</h1>
-    <p>حمّل التطبيق على جهازك واستمتع بتجربة سلسة وسريعة — نفس النظام بالكامل، بشكل تطبيق موبايل احترافي.</p>
+<!-- Animated Background -->
+<div class="sp-bg">
+    <div class="sp-bg-gradient"></div>
+    <div class="sp-grid"></div>
+    <div class="sp-orb sp-orb-1"></div>
+    <div class="sp-orb sp-orb-2"></div>
+    <div class="sp-orb sp-orb-3"></div>
 </div>
 
-<!-- Platform Cards -->
-<div class="sp-cards-container">
+<div class="sp-page">
 
-    <!-- ═══ ANDROID ═══ -->
-    <div class="sp-platform-card sp-android">
-        <div class="sp-card-header">
-            <div class="sp-platform-icon">
-                <svg viewBox="0 0 24 24" fill="#3DDC84">
-                    <path d="M17.523 2.078l1.437-2.483a.3.3 0 0 0-.108-.41.3.3 0 0 0-.41.108L17 1.825A7.16 7.16 0 0 0 12 0a7.16 7.16 0 0 0-5 1.825L5.558-.707a.3.3 0 0 0-.41-.108.3.3 0 0 0-.108.41l1.437 2.483A7.372 7.372 0 0 0 3 8h18a7.372 7.372 0 0 0-3.477-5.922zM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm8 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2zM3 9v8a1 1 0 0 0 1 1h1v3.5a1.5 1.5 0 1 0 3 0V18h8v3.5a1.5 1.5 0 1 0 3 0V18h1a1 1 0 0 0 1-1V9H3zm-3 1.5a1.5 1.5 0 1 1 3 0v5a1.5 1.5 0 1 1-3 0v-5zm21 0a1.5 1.5 0 1 1 3 0v5a1.5 1.5 0 1 1-3 0v-5z"/>
+    <!-- Hero -->
+    <div class="sp-hero">
+        <div class="sp-badge">
+            <span class="sp-badge-dot"></span>
+            تطبيق رسمي — PWA
+        </div>
+
+        <div class="sp-icon-wrap">
+            <img src="/assets/smartplan_medical/icons/icon-192x192.png" alt="{{ app_name }}" class="sp-app-icon">
+        </div>
+
+        <h1>{{ app_name }}</h1>
+        <p>حمّل التطبيق على جهازك واستمتع بتجربة سلسة — نفس النظام بالكامل بشكل تطبيق موبايل احترافي.</p>
+    </div>
+
+    <!-- Platform Cards -->
+    <div class="sp-cards" id="sp-cards">
+
+        <!-- ANDROID -->
+        <div class="sp-card sp-android" id="card-android">
+            <div class="sp-card-head">
+                <div class="sp-platform-icon">
+                    <svg viewBox="0 0 24 24" fill="#3DDC84"><path d="M17.523 2.078l1.437-2.483a.3.3 0 0 0-.108-.41.3.3 0 0 0-.41.108L17 1.825A7.16 7.16 0 0 0 12 0a7.16 7.16 0 0 0-5 1.825L5.558-.707a.3.3 0 0 0-.41-.108.3.3 0 0 0-.108.41l1.437 2.483A7.372 7.372 0 0 0 3 8h18a7.372 7.372 0 0 0-3.477-5.922zM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm8 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2zM3 9v8a1 1 0 0 0 1 1h1v3.5a1.5 1.5 0 1 0 3 0V18h8v3.5a1.5 1.5 0 1 0 3 0V18h1a1 1 0 0 0 1-1V9H3z"/></svg>
+                </div>
+                <div>
+                    <h2>Android</h2>
+                    <span>Google Chrome</span>
+                </div>
+            </div>
+
+            <ol class="sp-steps">
+                <li>افتح <strong>Google Chrome</strong> على جهازك</li>
+                <li>ادخل على: <strong>{{ site_url }}</strong></li>
+                <li>سجّل دخولك بحسابك</li>
+                <li>هيظهر بانر <strong>"تثبيت التطبيق"</strong> — اضغط عليه</li>
+                <li>أو افتح <strong>قائمة Chrome ⋮</strong> واختار <strong>"تثبيت التطبيق"</strong></li>
+                <li>التطبيق هيتضاف على شاشتك الرئيسية ✅</li>
+            </ol>
+
+            <a href="{{ site_url }}/app" class="sp-cta sp-cta-android" id="sp-android-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
                 </svg>
+                تثبيت التطبيق — Android
+            </a>
+        </div>
+
+        <!-- iOS -->
+        <div class="sp-card sp-ios" id="card-ios">
+            <div class="sp-card-head">
+                <div class="sp-platform-icon">
+                    <svg viewBox="0 0 24 24" fill="#FFFFFF"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                </div>
+                <div>
+                    <h2>iPhone / iPad</h2>
+                    <span>Safari</span>
+                </div>
+            </div>
+
+            <ol class="sp-steps">
+                <li>افتح <strong>Safari</strong> على الـ iPhone أو iPad</li>
+                <li>ادخل على: <strong>{{ site_url }}</strong></li>
+                <li>سجّل دخولك</li>
+                <li>اضغط زر <strong>المشاركة</strong> ⬆️ في أسفل الشاشة</li>
+                <li>اختار <strong>"إضافة إلى الشاشة الرئيسية"</strong></li>
+                <li>اضغط <strong>"إضافة"</strong> — التطبيق هيظهر على شاشتك ✅</li>
+            </ol>
+
+            <a href="{{ site_url }}/app" class="sp-cta sp-cta-ios">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                افتح التطبيق — iPhone
+            </a>
+        </div>
+    </div>
+
+    <!-- Features -->
+    <div class="sp-features">
+        <h3>مميزات التطبيق</h3>
+        <div class="sp-feat-grid">
+            <div class="sp-feat">
+                <span class="sp-feat-emoji">⚡</span>
+                <div class="sp-feat-name">سرعة فائقة</div>
+                <div class="sp-feat-desc">تحميل فوري وأداء عالي</div>
+            </div>
+            <div class="sp-feat">
+                <span class="sp-feat-emoji">📱</span>
+                <div class="sp-feat-name">تجربة موبايل</div>
+                <div class="sp-feat-desc">واجهة مصممة للهاتف</div>
+            </div>
+            <div class="sp-feat">
+                <span class="sp-feat-emoji">🔒</span>
+                <div class="sp-feat-name">آمن تماماً</div>
+                <div class="sp-feat-desc">تشفير كامل SSL</div>
+            </div>
+            <div class="sp-feat">
+                <span class="sp-feat-emoji">📴</span>
+                <div class="sp-feat-name">يعمل بدون نت</div>
+                <div class="sp-feat-desc">أساسيات تعمل Offline</div>
+            </div>
+            <div class="sp-feat">
+                <span class="sp-feat-emoji">🔔</span>
+                <div class="sp-feat-name">إشعارات فورية</div>
+                <div class="sp-feat-desc">تنبيهات لحظية</div>
+            </div>
+            <div class="sp-feat">
+                <span class="sp-feat-emoji">🔄</span>
+                <div class="sp-feat-name">تحديث تلقائي</div>
+                <div class="sp-feat-desc">دائماً أحدث نسخة</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trust -->
+    <div class="sp-trust">
+        <div class="sp-trust-stats">
+            <div>
+                <span class="sp-stat-val">256-bit</span>
+                <span class="sp-stat-lbl">تشفير البيانات</span>
             </div>
             <div>
-                <h2>Android</h2>
-                <span>Chrome متصفح</span>
-            </div>
-        </div>
-
-        <ol class="sp-steps">
-            <li>افتح المتصفح <strong>Google Chrome</strong> على جهازك الأندرويد</li>
-            <li>اذهب للرابط: <strong>{{ site_url }}</strong></li>
-            <li>سجّل دخولك بحسابك</li>
-            <li>هيظهر لك بانر <strong>"تثبيت التطبيق"</strong> — اضغط عليه</li>
-            <li>أو افتح <strong>قائمة Chrome ⋮</strong> واختار <strong>"تثبيت التطبيق"</strong></li>
-            <li>التطبيق هيتضاف على شاشتك الرئيسية ✅</li>
-        </ol>
-
-        <a href="{{ site_url }}/app" class="sp-download-btn" id="sp-android-install">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
-            </svg>
-            تثبيت التطبيق — Android
-        </a>
-    </div>
-
-    <!-- ═══ iOS ═══ -->
-    <div class="sp-platform-card sp-ios">
-        <div class="sp-card-header">
-            <div class="sp-platform-icon">
-                <svg viewBox="0 0 24 24" fill="#FFFFFF">
-                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-                </svg>
+                <span class="sp-stat-val">99.9%</span>
+                <span class="sp-stat-lbl">وقت التشغيل</span>
             </div>
             <div>
-                <h2>iPhone / iPad</h2>
-                <span>Safari متصفح</span>
+                <span class="sp-stat-val">0 MB</span>
+                <span class="sp-stat-lbl">حجم التثبيت</span>
             </div>
         </div>
-
-        <ol class="sp-steps">
-            <li>افتح متصفح <strong>Safari</strong> على الـ iPhone أو iPad</li>
-            <li>اذهب للرابط: <strong>{{ site_url }}</strong></li>
-            <li>سجّل دخولك بحسابك</li>
-            <li>اضغط على زر <strong>المشاركة</strong> <span style="font-size:1.2em">⬆️</span> اللي في أسفل الشاشة</li>
-            <li>انزل تحت واختار <strong>"إضافة إلى الشاشة الرئيسية"</strong></li>
-            <li>اضغط <strong>"إضافة"</strong> في أعلى يمين الشاشة ✅</li>
-        </ol>
-
-        <a href="{{ site_url }}/app" class="sp-download-btn sp-btn-ios">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
-            </svg>
-            افتح التطبيق — iPhone
-        </a>
     </div>
-</div>
 
-<!-- Features -->
-<div class="sp-features">
-    <h3>مميزات التطبيق</h3>
-    <div class="sp-features-grid">
-        <div class="sp-feature">
-            <div class="sp-feature-icon">⚡</div>
-            <div class="sp-feature-label">سرعة فائقة</div>
-            <div class="sp-feature-desc">تحميل فوري وأداء عالي</div>
-        </div>
-        <div class="sp-feature">
-            <div class="sp-feature-icon">📱</div>
-            <div class="sp-feature-label">تجربة موبايل</div>
-            <div class="sp-feature-desc">واجهة مصممة للهاتف</div>
-        </div>
-        <div class="sp-feature">
-            <div class="sp-feature-icon">🔒</div>
-            <div class="sp-feature-label">آمن تماماً</div>
-            <div class="sp-feature-desc">تشفير كامل للبيانات</div>
-        </div>
-        <div class="sp-feature">
-            <div class="sp-feature-icon">📴</div>
-            <div class="sp-feature-label">يعمل بدون نت</div>
-            <div class="sp-feature-desc">أساسيات تعمل offline</div>
+    <!-- Footer -->
+    <div class="sp-footer">
+        <p>{{ app_name }} — نظام إدارة موارد المؤسسة</p>
+        <p style="margin-top:10px;">
+            <a href="{{ site_url }}/app">الدخول للنظام مباشرة →</a>
+        </p>
+        <div class="sp-powered">
+            <img src="/assets/smartplan_medical/icons/icon-72x72.png" alt="SPS">
+            <span>Smart Plan Solutions</span>
         </div>
     </div>
-</div>
 
-<!-- Footer -->
-<div class="sp-install-footer">
-    <p>{{ app_name }} — نظام إدارة موارد المؤسسة</p>
-    <p style="margin-top:8px;">
-        <a href="{{ site_url }}/app">الدخول للنظام مباشرة →</a>
-    </p>
 </div>
 
 <script>
-    // Hide website navbar/footer
+    // Hide Frappe navbar/footer
     document.addEventListener('DOMContentLoaded', function() {
-        var nav = document.querySelector('.navbar');
-        if (nav) nav.style.display = 'none';
-        var footer = document.querySelector('footer');
-        if (footer) footer.style.display = 'none';
-        var webFooter = document.querySelector('.web-footer');
-        if (webFooter) webFooter.style.display = 'none';
+        ['navbar', 'footer', 'web-footer'].forEach(function(cls) {
+            var el = document.querySelector('.' + cls) || document.querySelector(cls);
+            if (el) el.style.display = 'none';
+        });
     });
 
-    // Handle Android install button
+    // Platform detection — show relevant card first
+    (function() {
+        var ua = navigator.userAgent;
+        var isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+        var cards = document.getElementById('sp-cards');
+        if (isIOS && cards) {
+            var iosCard = document.getElementById('card-ios');
+            if (iosCard) cards.insertBefore(iosCard, cards.firstChild);
+        }
+    })();
+
+    // Android install prompt
     var deferredPrompt = null;
     window.addEventListener('beforeinstallprompt', function(e) {
         e.preventDefault();
         deferredPrompt = e;
     });
 
-    var androidBtn = document.getElementById('sp-android-install');
+    var androidBtn = document.getElementById('sp-android-btn');
     if (androidBtn) {
         androidBtn.addEventListener('click', function(e) {
             if (deferredPrompt) {
                 e.preventDefault();
                 deferredPrompt.prompt();
-                deferredPrompt.userChoice.then(function(choice) {
-                    deferredPrompt = null;
-                });
+                deferredPrompt.userChoice.then(function() { deferredPrompt = null; });
             }
         });
     }

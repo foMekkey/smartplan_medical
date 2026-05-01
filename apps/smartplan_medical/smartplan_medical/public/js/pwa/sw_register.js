@@ -1,11 +1,14 @@
 /**
  * SmartPlan Medical — Service Worker Registration
  * Registers the SW, handles updates, and manages lifecycle.
+ * Requires nginx header: Service-Worker-Allowed: /
  */
 
 const SmartPlanSW = {
     SW_URL: '/assets/smartplan_medical/js/service-worker.js',
     registration: null,
+    retryCount: 0,
+    maxRetries: 3,
 
     async init() {
         if (!('serviceWorker' in navigator)) {
@@ -19,6 +22,7 @@ const SmartPlanSW = {
             });
 
             console.log('[PWA] Service Worker registered:', this.registration.scope);
+            this.retryCount = 0;
 
             // Handle updates
             this.registration.addEventListener('updatefound', () => {
@@ -39,6 +43,13 @@ const SmartPlanSW = {
 
         } catch (error) {
             console.error('[PWA] SW registration failed:', error);
+            // Auto-retry with exponential backoff
+            if (this.retryCount < this.maxRetries) {
+                this.retryCount++;
+                const delay = Math.pow(2, this.retryCount) * 2000;
+                console.log(`[PWA] Retrying in ${delay/1000}s (attempt ${this.retryCount}/${this.maxRetries})`);
+                setTimeout(() => this.init(), delay);
+            }
         }
     },
 

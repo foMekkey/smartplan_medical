@@ -3,6 +3,8 @@
   var SmartPlanSW = {
     SW_URL: "/assets/smartplan_medical/js/service-worker.js",
     registration: null,
+    retryCount: 0,
+    maxRetries: 3,
     async init() {
       if (!("serviceWorker" in navigator)) {
         console.warn("[PWA] Service Workers not supported");
@@ -13,6 +15,7 @@
           scope: "/"
         });
         console.log("[PWA] Service Worker registered:", this.registration.scope);
+        this.retryCount = 0;
         this.registration.addEventListener("updatefound", () => {
           const newWorker = this.registration.installing;
           if (!newWorker)
@@ -28,6 +31,12 @@
         }, 30 * 60 * 1e3);
       } catch (error) {
         console.error("[PWA] SW registration failed:", error);
+        if (this.retryCount < this.maxRetries) {
+          this.retryCount++;
+          const delay = Math.pow(2, this.retryCount) * 2e3;
+          console.log(`[PWA] Retrying in ${delay / 1e3}s (attempt ${this.retryCount}/${this.maxRetries})`);
+          setTimeout(() => this.init(), delay);
+        }
       }
     },
     showUpdateNotification() {
@@ -335,4 +344,4 @@
     Offline: offline_handler_default
   };
 })();
-//# sourceMappingURL=pwa.bundle.PA6P2OK5.js.map
+//# sourceMappingURL=pwa.bundle.UJBJQSJ5.js.map
