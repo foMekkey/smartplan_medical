@@ -1,0 +1,443 @@
+{% extends "templates/web.html" %}
+
+{% macro email_login_body() -%}
+<div class="page-card-body">
+	<div class="form-group">
+		<div class="email-field">
+			<input type="text" id="login_email" class="form-control"
+				placeholder="{{ login_label or _('Email or Username') }}" required autofocus>
+			<svg class="field-icon email-icon" width="20" height="20" viewBox="0 0 24 24"
+				fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+				<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+				<circle cx="12" cy="7" r="4"/>
+			</svg>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="password-field">
+			<input type="password" id="login_password" class="form-control"
+				placeholder="{{ _('Password') }}" autocomplete="current-password" required>
+			<svg class="field-icon password-icon" width="20" height="20" viewBox="0 0 24 24"
+				fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+				<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+				<path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+			</svg>
+			<span toggle="#login_password" class="toggle-password text-muted">{{ _("Show") }}</span>
+		</div>
+	</div>
+</div>
+
+<div class="page-card-actions">
+	<button class="btn btn-sm btn-primary btn-block btn-login" type="submit">{{ _("Login") }}</button>
+	{% if ldap_settings and ldap_settings.enabled %}
+	<button class="btn btn-sm btn-default btn-block btn-login btn-ldap-login">
+		{{ _("Login with LDAP") }}
+	</button>
+	{% endif %}
+	<div class="forgot-password-message text-center mt-3">
+		<a href="#forgot">{{ _("Forgot Password?") }}</a>
+	</div>
+</div>
+{% endmacro %}
+
+{% block head_include %}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+	--sp-bg1: #050B18;
+	--sp-bg2: #0A1628;
+	--sp-bg3: #0D1B2A;
+	--sp-accent: #00BFA6;
+	--sp-accent2: #00E5C3;
+	--sp-blue: #2979FF;
+	--sp-glass: rgba(15,30,60,0.55);
+	--sp-border: rgba(255,255,255,0.06);
+}
+
+body.for-login {
+	background: linear-gradient(145deg, var(--sp-bg1) 0%, var(--sp-bg2) 40%, var(--sp-bg3) 100%) !important;
+	min-height: 100dvh;
+	font-family: 'Cairo', 'Inter', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	overflow-x: hidden;
+}
+
+/* Ambient orbs */
+body.for-login::before {
+	content: '';
+	position: fixed; top: -15%; right: -10%;
+	width: 50vw; height: 50vw; max-width: 450px; max-height: 450px;
+	background: radial-gradient(circle, rgba(0,191,166,0.1) 0%, transparent 70%);
+	border-radius: 50%; z-index: 0; pointer-events: none;
+	animation: pulse1 12s ease-in-out infinite;
+}
+body.for-login::after {
+	content: '';
+	position: fixed; bottom: -10%; left: -10%;
+	width: 45vw; height: 45vw; max-width: 400px; max-height: 400px;
+	background: radial-gradient(circle, rgba(41,121,255,0.08) 0%, transparent 70%);
+	border-radius: 50%; z-index: 0; pointer-events: none;
+	animation: pulse2 15s ease-in-out infinite;
+}
+@keyframes pulse1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-20px,30px) scale(1.05)} }
+@keyframes pulse2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(20px,-20px) scale(1.05)} }
+
+/* Navbar */
+body.for-login .navbar { background: transparent !important; border: none !important; box-shadow: none !important; }
+
+/* Main card */
+.sp-login-card {
+	max-width: 420px; margin: 0 auto;
+	padding: 40px 32px 36px;
+	background: var(--sp-glass);
+	backdrop-filter: blur(40px) saturate(180%);
+	-webkit-backdrop-filter: blur(40px) saturate(180%);
+	border: 1px solid var(--sp-border);
+	border-radius: 28px;
+	box-shadow: 0 32px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04);
+	position: relative; z-index: 2;
+	animation: cardIn 0.7s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.sp-login-card::before {
+	content: '';
+	position: absolute; top: 0; left: 15%; right: 15%; height: 2px;
+	background: linear-gradient(90deg, transparent, var(--sp-accent), var(--sp-blue), transparent);
+	border-radius: 0 0 2px 2px;
+}
+@keyframes cardIn { from { opacity: 0; transform: translateY(40px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+/* Logo */
+.sp-login-logo { text-align: center; margin-bottom: 28px; }
+.sp-login-logo img {
+	max-width: 180px; max-height: 72px;
+	filter: drop-shadow(0 4px 20px rgba(0,191,166,0.15));
+	animation: logoGlow 4s ease-in-out infinite;
+}
+@keyframes logoGlow {
+	0%,100% { filter: drop-shadow(0 4px 20px rgba(0,191,166,0.15)); }
+	50% { filter: drop-shadow(0 4px 28px rgba(0,191,166,0.3)); }
+}
+
+/* Title area */
+.sp-login-title {
+	text-align: center; margin-bottom: 32px;
+}
+.sp-login-title h2 {
+	font-size: 1.5rem; font-weight: 800; color: #fff;
+	margin: 0 0 6px; font-family: 'Cairo', sans-serif;
+}
+.sp-login-title p {
+	color: #5A6B85; font-size: 0.85rem; margin: 0;
+}
+
+/* Form fields */
+.sp-login-card .form-group { margin-bottom: 16px; }
+.sp-login-card .email-field,
+.sp-login-card .password-field {
+	position: relative;
+}
+.sp-login-card .field-icon {
+	position: absolute; left: 14px; top: 50%;
+	transform: translateY(-50%);
+	width: 20px; height: 20px;
+	pointer-events: none;
+}
+.sp-login-card .form-control {
+	background: rgba(255,255,255,0.04) !important;
+	border: 1.5px solid rgba(255,255,255,0.08) !important;
+	border-radius: 14px !important;
+	color: #fff !important;
+	padding: 15px 16px 15px 46px !important;
+	font-size: 15px !important;
+	min-height: 52px;
+	font-family: 'Inter', sans-serif;
+	transition: all 0.25s ease;
+}
+.sp-login-card .form-control:focus {
+	background: rgba(255,255,255,0.07) !important;
+	border-color: var(--sp-accent) !important;
+	box-shadow: 0 0 0 4px rgba(0,191,166,0.12) !important;
+	outline: none !important;
+}
+.sp-login-card .form-control::placeholder {
+	color: #4A5568 !important;
+}
+.sp-login-card .toggle-password {
+	position: absolute; right: 14px; top: 50%;
+	transform: translateY(-50%);
+	color: #5A6B85 !important; font-size: 0.8rem; cursor: pointer;
+}
+
+/* Login button */
+.sp-login-card .btn-login,
+.sp-login-card .btn-primary {
+	width: 100% !important;
+	padding: 15px !important;
+	background: linear-gradient(135deg, #00BFA6 0%, #009688 100%) !important;
+	border: none !important;
+	color: #050B18 !important;
+	font-weight: 800 !important;
+	font-size: 1rem !important;
+	border-radius: 14px !important;
+	font-family: 'Cairo', sans-serif;
+	letter-spacing: 0.03em;
+	box-shadow: 0 6px 24px rgba(0,191,166,0.25);
+	transition: all 0.3s ease;
+	cursor: pointer;
+	min-height: 52px !important;
+}
+.sp-login-card .btn-login:hover,
+.sp-login-card .btn-primary:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 10px 32px rgba(0,191,166,0.35);
+}
+.sp-login-card .btn-login:active,
+.sp-login-card .btn-primary:active {
+	transform: translateY(0) scale(0.98);
+}
+
+/* Links */
+.sp-login-card a { color: var(--sp-accent) !important; font-weight: 600; }
+.sp-login-card a:hover { color: var(--sp-accent2) !important; text-decoration: none; }
+
+/* Forgot password */
+.forgot-password-message { margin-top: 16px; }
+.forgot-password-message a { font-size: 0.85rem; }
+
+/* Signup link */
+.sp-signup-link {
+	text-align: center; padding: 20px; color: #5A6B85;
+	font-size: 0.85rem; position: relative; z-index: 2;
+}
+.sp-signup-link a { color: var(--sp-accent) !important; font-weight: 700; }
+
+/* Footer */
+body.for-login footer, body.for-login .web-footer {
+	background: transparent !important; border: none !important;
+}
+body.for-login footer *, body.for-login .web-footer * {
+	color: #3A4A5C !important;
+}
+
+/* ─── Page Card overrides (disable old theme) ─── */
+body.for-login .page-card {
+	background: transparent !important;
+	border: none !important;
+	box-shadow: none !important;
+	backdrop-filter: none !important;
+	padding: 0 !important;
+	max-width: 100%;
+}
+body.for-login .login-content-bg { display: none !important; }
+body.for-login .login-content-form {
+	width: 100% !important; max-width: 100% !important;
+}
+
+/* Social login */
+.sp-login-card .social-logins .btn {
+	background: rgba(255,255,255,0.04) !important;
+	border: 1px solid rgba(255,255,255,0.08) !important;
+	color: #8899AA !important;
+	border-radius: 12px !important;
+	min-height: 46px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+	.sp-login-card {
+		margin: 0 12px;
+		padding: 32px 22px 28px;
+		border-radius: 22px;
+	}
+	.sp-login-logo img { max-width: 150px; }
+}
+
+/* Wrapper positioning */
+.sp-login-wrapper {
+	display: flex; flex-direction: column;
+	align-items: center; justify-content: center;
+	min-height: calc(100vh - 120px);
+	padding: 20px 16px;
+	position: relative; z-index: 1;
+}
+
+/* Hide datavalue theme elements */
+body.for-login .login-content-bg,
+body.for-login .login-content .page-card-head { display: none !important; }
+</style>
+{% endblock %}
+
+{% block page_content %}
+<div>
+	<noscript>
+		<div class="text-center my-5">
+			<h4>{{ _("Javascript is disabled on your browser") }}</h4>
+			<p class="text-muted">{{ _("You need to enable JavaScript for your app to work.") }}</p>
+		</div>
+	</noscript>
+
+	<section class="for-login">
+		<div class="sp-login-wrapper">
+			<div class="sp-login-card">
+				<div class="sp-login-logo">
+					<img src="{{ logo }}" alt="{{ app_name or 'SmartPlan Medical' }}">
+				</div>
+				<div class="sp-login-title">
+					<h2>{{ app_name or 'SmartPlan Medical' }}</h2>
+					<p>{{ _("Sign in to continue") }}</p>
+				</div>
+
+				<div class="login-content page-card" style="margin:0 !important;">
+					<div class="login-content-form">
+						<form class="form-signin form-login" role="form">
+							{%- if social_login -%}
+							<div class="page-card-body">
+								<div class="social-logins text-center">
+									<div class="social-login-buttons">
+										{% for provider in provider_logins %}
+										<div class="login-button-wrapper mb-2">
+											<a href="{{ provider.auth_url }}"
+												class="btn btn-block btn-default btn-sm btn-login-option">
+												{% if provider.icon %}{{ provider.icon }}{% endif %}
+												{{ _("Login with {0}").format(provider.provider_name) }}
+											</a>
+										</div>
+										{% endfor %}
+										<p class="text-muted login-divider">{{ _("or") }}</p>
+									</div>
+								</div>
+								<a href="#email" class="btn btn-block btn-default btn-sm btn-login-option">
+									{{ _("Login With Email") }}
+								</a>
+							</div>
+							{% else %}
+								{{ email_login_body() }}
+							{%- endif -%}
+						</form>
+					</div>
+				</div>
+
+				{%- if not disable_signup -%}
+				<div class="sp-signup-link">
+					{{ _("Don't have an account?") }}
+					<a href="#signup">{{ _("Sign up") }}</a>
+				</div>
+				{%- endif -%}
+			</div>
+		</div>
+	</section>
+
+	{%- if social_login -%}
+	<section class='for-email-login'>
+		<div class="sp-login-wrapper">
+			<div class="sp-login-card">
+				<div class="sp-login-logo">
+					<img src="{{ logo }}" alt="Logo">
+				</div>
+				<div class="sp-login-title">
+					<h2>{{ _("Login with Email") }}</h2>
+				</div>
+				<div class="login-content page-card" style="margin:0 !important;">
+					<div class="login-content-form">
+						<form class="form-signin form-login" role="form">
+							{{ email_login_body() }}
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	{%- endif -%}
+
+	<section class='for-signup {{ "signup-disabled" if disable_signup else "" }}'>
+		<div class="sp-login-wrapper">
+			<div class="sp-login-card">
+				<div class="sp-login-logo">
+					<img src="{{ logo }}" alt="Logo">
+				</div>
+				{%- if not disable_signup -%}
+				<div class="sp-login-title">
+					<h2>{{ _("Create Account") }}</h2>
+					<p>{{ _("Register to get started") }}</p>
+				</div>
+				<div class="login-content page-card" style="margin:0 !important;">
+					<div class="login-content-form">
+						<form class="form-signin form-signup hide" role="form">
+							<div class="page-card-body">
+								<div class="form-group">
+									<div class="email-field">
+										<input type="text" id="signup_fullname" class="form-control"
+											placeholder="{{ _('Full Name') }}" required autofocus>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="email-field">
+										<input type="email" id="signup_email" class="form-control"
+											placeholder="{{ _('Email Address') }}" required>
+									</div>
+								</div>
+							</div>
+							<div class="page-card-actions">
+								<button class="btn btn-sm btn-primary btn-block btn-signup" type="submit">
+									{{ _("Sign up") }}
+								</button>
+								<p class="text-center mt-3">
+									<a href="#login">{{ _("Already have an account? Login") }}</a>
+								</p>
+							</div>
+						</form>
+					</div>
+				</div>
+				{%- else -%}
+				<div class="sp-login-title">
+					<span class='indicator gray'>{{ _("Signup Disabled") }}</span>
+				</div>
+				{%- endif -%}
+			</div>
+		</div>
+	</section>
+
+	<section class='for-forgot'>
+		<div class="sp-login-wrapper">
+			<div class="sp-login-card">
+				<div class="sp-login-logo">
+					<img src="{{ logo }}" alt="Logo">
+				</div>
+				<div class="sp-login-title">
+					<h2>{{ _("Reset Password") }}</h2>
+					<p>{{ _("Enter your email to reset your password") }}</p>
+				</div>
+				<div class="login-content page-card" style="margin:0 !important;">
+					<div class="login-content-form">
+						<form class="form-signin form-forgot hide" role="form">
+							<div class="page-card-body">
+								<div class="form-group">
+									<div class="email-field">
+										<input type="email" id="forgot_email" class="form-control"
+											placeholder="{{ _('Email Address') }}" required autofocus>
+									</div>
+								</div>
+							</div>
+							<div class="page-card-actions">
+								<button class="btn btn-sm btn-primary btn-block btn-forgot" type="submit">
+									{{ _("Reset Password") }}
+								</button>
+								<p class="text-center mt-3">
+									<a href="#login">{{ _("Back to Login") }}</a>
+								</p>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>{% include "templates/includes/login/login.js" %}</script>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
