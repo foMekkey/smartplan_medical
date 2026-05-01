@@ -1,31 +1,34 @@
 /**
- * SmartPlan Medical — Login Page CSS (Web Context)
- * This is loaded via web_include_css for the login page
- * which doesn't have access to the Desk SCSS bundle.
+ * SmartPlan Medical — Premium Login Page
+ * Loaded via web_include_css for the login page.
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 :root {
     --sp-navy: #0D1B2A;
-    --sp-navy-light: #1B2838;
+    --sp-navy2: #0A1628;
     --sp-accent: #00BFA6;
     --sp-accent-hover: #00E5C3;
-    --sp-text-primary: #E8EDF3;
-    --sp-text-secondary: #8899AA;
-    --sp-text-muted: #5A6D80;
+    --sp-blue: #2979FF;
+    --sp-text: #E8EDF3;
+    --sp-text2: #8899AA;
+    --sp-text3: #5A6D80;
     --sp-border: rgba(255, 255, 255, 0.08);
-    --sp-glass: rgba(255, 255, 255, 0.06);
+    --sp-glass: rgba(255, 255, 255, 0.05);
 }
 
-/* Login page full override */
+/* ═══ PAGE BACKGROUND ═══ */
 .for-login {
-    background: linear-gradient(135deg, var(--sp-navy) 0%, #0A1628 50%, #081420 100%) !important;
+    background: linear-gradient(135deg, var(--sp-navy) 0%, var(--sp-navy2) 50%, #081420 100%) !important;
     min-height: 100vh;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Cairo', 'Inter', -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
+    position: relative;
+    overflow: hidden;
 }
 
+/* Ambient light orbs */
 .for-login::before,
 .for-login::after {
     content: '';
@@ -37,149 +40,224 @@
 }
 
 .for-login::before {
-    width: 400px;
-    height: 400px;
-    background: rgba(0, 191, 166, 0.07);
-    top: -100px;
-    right: -100px;
+    width: 420px; height: 420px;
+    background: rgba(0, 191, 166, 0.08);
+    top: -120px; right: -120px;
+    animation: floatOrb1 15s ease-in-out infinite;
 }
 
 .for-login::after {
-    width: 350px;
-    height: 350px;
-    background: rgba(59, 130, 246, 0.05);
-    bottom: -80px;
-    left: -80px;
+    width: 350px; height: 350px;
+    background: rgba(41, 121, 255, 0.06);
+    bottom: -100px; left: -100px;
+    animation: floatOrb2 18s ease-in-out infinite;
 }
 
+@keyframes floatOrb1 {
+    0%,100% { transform: translate(0, 0); }
+    50% { transform: translate(-30px, 40px); }
+}
+@keyframes floatOrb2 {
+    0%,100% { transform: translate(0, 0); }
+    50% { transform: translate(30px, -30px); }
+}
+
+/* ═══ NAVBAR ═══ */
 .for-login .navbar {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
 }
 
+/* ═══ LOGIN CARD ═══ */
 .for-login .page-card {
-    background: rgba(255, 255, 255, 0.05) !important;
-    backdrop-filter: blur(24px) saturate(200%) !important;
-    -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 20px !important;
+    background: rgba(15, 30, 60, 0.6) !important;
+    backdrop-filter: blur(40px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 24px !important;
     box-shadow:
-        0 24px 80px rgba(0, 0, 0, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
-    padding: 40px 32px !important;
+        0 24px 80px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+    padding: 44px 36px !important;
     max-width: 440px;
-    margin: 60px auto !important;
+    margin: 40px auto !important;
     position: relative;
     z-index: 1;
-    animation: loginAppear 0.6s ease-out;
+    animation: loginAppear 0.7s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
+/* Card top gradient line */
+.for-login .page-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 20%; right: 20%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--sp-accent), var(--sp-blue), transparent);
+    border-radius: 0 0 2px 2px;
+}
+
+/* ═══ CARD HEAD — Logo + Title ═══ */
 .for-login .page-card .page-card-head {
     text-align: center;
-    margin-bottom: 32px;
-}
-
-.for-login .page-card .page-card-head .title {
-    color: var(--sp-text-primary) !important;
-    font-size: 1.75rem;
-    font-weight: 700;
+    margin-bottom: 36px;
 }
 
 .for-login .page-card .page-card-head img {
-    max-width: 72px;
-    margin-bottom: 16px;
-    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+    max-width: 160px !important;
+    max-height: 80px !important;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.4));
+    animation: logoFloat 5s ease-in-out infinite;
 }
 
+@keyframes logoFloat {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
+.for-login .page-card .page-card-head .title {
+    color: #fff !important;
+    font-size: 1.4rem;
+    font-weight: 800;
+    font-family: 'Cairo', sans-serif;
+}
+
+/* ═══ FORM INPUTS ═══ */
 .for-login .page-card label {
-    color: var(--sp-text-secondary) !important;
-    font-weight: 500;
-    font-size: 0.85rem;
+    color: var(--sp-text2) !important;
+    font-weight: 600;
+    font-size: 0.82rem;
+    letter-spacing: 0.02em;
 }
 
 .for-login .page-card input[type="text"],
 .for-login .page-card input[type="email"],
 .for-login .page-card input[type="password"],
 .for-login .page-card .form-control {
-    background: rgba(255, 255, 255, 0.06) !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
-    color: var(--sp-text-primary) !important;
-    border-radius: 12px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+    border-radius: 14px !important;
     padding: 14px 16px !important;
     font-size: 16px !important;
     font-family: 'Inter', sans-serif;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    min-height: 48px;
+    transition: all 0.25s ease;
+    min-height: 50px;
 }
 
 .for-login .page-card input:focus,
 .for-login .page-card .form-control:focus {
-    background: rgba(255, 255, 255, 0.09) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
     border-color: var(--sp-accent) !important;
-    box-shadow: 0 0 0 3px rgba(0, 191, 166, 0.25) !important;
+    box-shadow: 0 0 0 4px rgba(0, 191, 166, 0.15) !important;
     outline: none !important;
 }
 
 .for-login .page-card input::placeholder {
-    color: var(--sp-text-muted) !important;
+    color: var(--sp-text3) !important;
 }
 
+/* Password toggle */
+.for-login .toggle-password {
+    color: var(--sp-text2) !important;
+    font-size: 0.8rem;
+}
+
+/* ═══ LOGIN BUTTON ═══ */
 .for-login .page-card .btn-primary,
 .for-login .page-card .btn-login,
 .for-login .page-card .btn-primary-dark {
     width: 100%;
-    padding: 14px !important;
-    background: linear-gradient(135deg, #00BFA6, #00A58E) !important;
+    padding: 15px !important;
+    background: linear-gradient(135deg, #00BFA6 0%, #00A58E 50%, #009688 100%) !important;
     border: none !important;
     color: #0D1B2A !important;
-    font-weight: 700 !important;
-    font-size: 1rem !important;
-    border-radius: 12px !important;
-    letter-spacing: 0.02em;
-    font-family: 'Inter', sans-serif;
+    font-weight: 800 !important;
+    font-size: 1.05rem !important;
+    border-radius: 14px !important;
+    letter-spacing: 0.03em;
+    font-family: 'Cairo', sans-serif;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 16px rgba(0, 191, 166, 0.3);
+    box-shadow: 0 6px 24px rgba(0, 191, 166, 0.3);
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
 }
 
 .for-login .page-card .btn-primary:hover,
 .for-login .page-card .btn-login:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 191, 166, 0.4);
+    box-shadow: 0 10px 32px rgba(0, 191, 166, 0.4);
 }
 
+.for-login .page-card .btn-primary:active,
+.for-login .page-card .btn-login:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* ═══ LINKS ═══ */
 .for-login .page-card a {
     color: var(--sp-accent) !important;
-    font-weight: 500;
+    font-weight: 600;
+    transition: color 0.2s;
 }
-
 .for-login .page-card a:hover {
     color: var(--sp-accent-hover) !important;
 }
 
 .for-login .page-card p,
 .for-login .page-card .text-muted {
-    color: var(--sp-text-secondary) !important;
+    color: var(--sp-text2) !important;
 }
 
-/* Footer on login */
+/* ═══ FOOTER ═══ */
 .for-login footer,
 .for-login .web-footer {
     background: transparent !important;
     border: none !important;
-    color: var(--sp-text-muted) !important;
+    color: var(--sp-text3) !important;
 }
 
-/* Mobile adjustments */
+.for-login footer *,
+.for-login .web-footer * {
+    color: var(--sp-text3) !important;
+}
+
+/* ═══ INPUT GROUP (icon inside input) ═══ */
+.for-login .input-group-text {
+    background: transparent !important;
+    border: none !important;
+    color: var(--sp-text3) !important;
+}
+
+/* ═══ SOCIAL LOGIN BUTTONS ═══ */
+.for-login .btn-default,
+.for-login .social-logins .btn {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: var(--sp-text) !important;
+    border-radius: 12px !important;
+}
+
+/* ═══ RESPONSIVE ═══ */
 @media (max-width: 576px) {
     .for-login .page-card {
-        margin: 24px 16px !important;
-        padding: 28px 20px !important;
-        border-radius: 16px !important;
+        margin: 20px 14px !important;
+        padding: 32px 22px !important;
+        border-radius: 20px !important;
+    }
+
+    .for-login .page-card .page-card-head img {
+        max-width: 140px !important;
+    }
+
+    .for-login .page-card .page-card-head .title {
+        font-size: 1.2rem;
     }
 }
 
+/* ═══ ANIMATIONS ═══ */
 @keyframes loginAppear {
     from { opacity: 0; transform: translateY(30px) scale(0.96); }
     to { opacity: 1; transform: translateY(0) scale(1); }
