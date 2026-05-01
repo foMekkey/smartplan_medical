@@ -62,21 +62,24 @@
         return;
       }
       if (action === "toggle-sidebar") {
-        let sidebar = document.querySelector(".desk-sidebar");
-        if (!sidebar)
-          sidebar = document.querySelector(".layout-side-section");
-        if (sidebar) {
-          const isVisible = sidebar.style.display !== "none";
-          sidebar.style.display = isVisible ? "none" : "block";
-          sidebar.style.position = "fixed";
-          sidebar.style.top = "0";
-          sidebar.style.left = "0";
-          sidebar.style.bottom = "68px";
-          sidebar.style.width = "280px";
-          sidebar.style.zIndex = "1060";
-          sidebar.style.background = "#fff";
-          sidebar.style.boxShadow = isVisible ? "none" : "4px 0 20px rgba(0,0,0,0.15)";
-          sidebar.style.overflowY = "auto";
+        const html = document.documentElement;
+        const isOpen = html.classList.contains("sp-sidebar-open");
+        if (isOpen) {
+          html.classList.remove("sp-sidebar-open");
+          const overlay = document.querySelector(".sp-sidebar-overlay");
+          if (overlay)
+            overlay.remove();
+        } else {
+          html.classList.add("sp-sidebar-open");
+          if (!document.querySelector(".sp-sidebar-overlay")) {
+            const overlay = document.createElement("div");
+            overlay.className = "sp-sidebar-overlay";
+            overlay.addEventListener("click", () => {
+              html.classList.remove("sp-sidebar-open");
+              overlay.remove();
+            });
+            document.body.appendChild(overlay);
+          }
         }
         return;
       }
@@ -424,4 +427,4 @@
     Forms: form_enhancer_default
   };
 })();
-//# sourceMappingURL=mobile_ux.bundle.S3ER44NK.js.map
+//# sourceMappingURL=mobile_ux.bundle.R6NOCUDL.js.map
